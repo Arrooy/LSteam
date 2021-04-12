@@ -1,0 +1,33 @@
+{% extends 'base.twig' %}
+
+{% block title %}{{formTitle}}{% endblock %}
+
+{% block content %}
+    <h1>{{formTitle}}</h1>
+    {% if formErrors.db %}
+        <p style="color: red;">{{ formErrors.db }}</p>
+    {% endif %}
+    <form action="{{ formAction }}" method="{{ formMethod }}" accept-charset="utf-8">
+        <label>Email
+            <input type="text"
+                name="email"
+                value="{% if formData.email %}{{ formData.email }}{% endif %}">
+        </label>
+        
+        {% if formErrors.email %}
+            <p style="color: red;">{{ formErrors.email }}</p>
+        {% endif %}
+        <br>
+        <label>Password
+            <input 
+                name="password"
+                type="password">
+        </label>
+        {% if formErrors.password %}
+            <p style="color: red;">{{ formErrors.password }}</p>
+        {% endif %}
+        <br>
+        <input type="submit" value="{{submitValue}}">
+      
+    </form>
+{% endblock %}

@@ -1,0 +1,64 @@
+<?php
+declare(strict_types=1);
+
+namespace SallePW\SlimApp\Controller;
+ 
+use SallePW\SlimApp\Controller\GenericFormController;
+
+use Slim\Routing\RouteContext;
+use Slim\Views\Twig;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
+
+use SallePW\SlimApp\Model\UserRepository;
+use SallePW\SlimApp\Model\User;
+
+use Exception;
+use DateTime;
+
+final class LogInController extends GenericFormController
+{
+    public function __construct(private Twig $twig, private UserRepository $userRepository) {
+        parent::__construct($twig);
+    }
+
+    public function show(Request $request, Response $response): Response
+    {
+        return parent::showForm($request,$response,"handle-login","LogIn","Please LogIn",[]);
+    }
+
+    public function handleFormSubmission(Request $request, Response $response): Response
+    {
+        $data = $request->getParsedBody();
+        
+        $errors = parent::checkForm($request);
+        
+        if(!empty($errors)){
+            return parent::showForm($request,$response,"handle-login","LogIn","Please LogIn",$errors);
+        }
+
+        try {
+            $data = $request->getParsedBody();
+    
+            $result = $this->userRepository->getId($data['email'], $data['password']);
+            
+        } catch (Exception $exception) {
+            $errors['password'] = 'Error: ' . $exception->getMessage();
+            return parent::showForm($request,$response,"handle-login","LogIn","Please LogIn",$errors);
+        }
+
+        $routeParser = RouteContext::fromRequest($request)->getRouteParser();
+        
+        // S'inicia la sessió de l'usuari.
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }  
+
+        $_SESSION['id'] = $result;
+
+        // Redirect a Search.
+        return $response
+        ->withHeader('Location',$routeParser->urlFor("search"))
+        ->withStatus(301);
+    }
+}
