@@ -40,3 +40,13 @@ Parar tots els containers <br>
 ```
 sudo docker stop $(sudo docker ps -aq)
 ```
+
+## Per iniciar el composer
+Per iniciar el composer i intalar-ho tot:
+```
+composer dump-autoload
+```
+Per carregar el DotENV:
+```
+composer require "symfony/dotenv"
+```
