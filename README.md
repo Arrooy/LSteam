@@ -1,7 +1,7 @@
 ## Com executar la AC. 
-1 - Obrir una terminal i buscar la carpeta del projecte
-2 - docker-compose up -d
-3 - obrir adminer i crear les dues taules.
+1 - Obrir una terminal i buscar la carpeta del projecte<br>
+2 - docker-compose up -d<br>
+3 - obrir adminer i crear les dues taules.<br>
 
     CREATE TABLE `User` (
     `id` INT(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -29,4 +29,14 @@
 Nota. L'entorn php requereix de la llibreria composer.
 
 
-;Adria Arroyo.
+## Comandos útils per Docker
+
+Eliminar tots els containers <br>
+```
+sudo docker rm $(sudo docker ps -aq)
+```
+<br>
+Parar tots els containers <br>
+```
+sudo docker stop $(sudo docker ps -aq)
+```
