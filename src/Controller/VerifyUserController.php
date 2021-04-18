@@ -75,7 +75,6 @@ final class VerifyUserController {
             $mail->AltBody = 'Click this link to start the xperience! <a href="' . $base . '"> Link</a>';
 
             $mail->send();
-            echo 'Message has been sent';
         } catch (Exception $e) {
             echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
         }
