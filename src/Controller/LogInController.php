@@ -39,10 +39,10 @@ final class LogInController extends GenericFormController
         try {
             $data = $request->getParsedBody();
 
-            $hashedPassword = password_hash($data['password'], PASSWORD_DEFAULT);
-            $result = $this->userRepository->getId($data['email'], $hashedPassword);
+            $result = $this->userRepository->getId($data['email'], $data['password']);
             
         } catch (Exception $exception) {
+
             $errors['password'] = 'Error: ' . $exception->getMessage();
             return parent::showForm($request,$response,"handle-login","LogIn","Login",$errors);
         }
@@ -58,7 +58,7 @@ final class LogInController extends GenericFormController
 
         // Redirect a Search.
         return $response
-        ->withHeader('Location',$routeParser->urlFor("search"))
+        ->withHeader('Location',$routeParser->urlFor("home"))
         ->withStatus(301);
     }
 }

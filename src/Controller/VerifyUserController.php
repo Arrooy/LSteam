@@ -24,12 +24,21 @@ final class VerifyUserController {
         $token = $request->getQueryParams()['token'];
         $isSuccess = $this->userRepository->verifyUser($token);
 
+        if ($isSuccess){
+            $message = "User confirmation done! Check your inbox to complete the registration and earn 50€!";
+        }else{
+            $message = "Error! Impossible to verify the user. Maybe you are already verified?";
+        }
         return $this->twig->render(
             $response,
             'verifyUser.twig',
             [
                 'isSuccess' => $isSuccess,
-                'message' => "Missatge de testing" //TODO: posar un missatge correcte
+                'message' => $message,
+                // Hrefs de la base
+                'log_in_href' => $routeParser->urlFor('login'),
+                'sign_up_href' => $routeParser->urlFor('register'),
+                'home_href' => $routeParser->urlFor('home')
             ]
         );
     }

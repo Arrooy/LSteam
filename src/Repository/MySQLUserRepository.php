@@ -9,6 +9,7 @@ use SallePW\SlimApp\Model\UserRepository;
 
 use Exception;
 
+use DateTime;
 final class MySQLUserRepository implements UserRepository
 {
     private const DATE_FORMAT = 'Y-m-d H:i:s';
@@ -22,29 +23,23 @@ final class MySQLUserRepository implements UserRepository
 
     public function getId(string $email, string $password): int{
         $query = <<< 'QUERY'
-        SELECT * FROM users WHERE email=:email AND password=:password
+        SELECT * FROM users WHERE email=:email
         QUERY;
         
         $statement = $this->database->connection()->prepare($query);
         $statement->bindParam('email', $email, PDO::PARAM_STR);
-        $statement->bindParam('password', $password, PDO::PARAM_STR);
 
 
         $statement->execute();
         $res = $statement->fetch();
-        
 
-        if(!$res){
-            throw new Exception('User not found!');
-        }else if($res['password'] != $password){
-            throw new Exception('Incorrect password!');
+        if(!(is_array($res) && password_verify($password,$res['password']))){
+            throw new Exception('Credentials dont match any user');
         }
 
         return (int)$res['id'];
     }
 
-
-    
     // Mira si un usuari existeix a la taula d'usuraris
     // verificats basant-se en el email.
     public function emailExists(String $email) : bool{
@@ -57,7 +52,8 @@ final class MySQLUserRepository implements UserRepository
 
         $statement->execute();
         $res = $statement->fetch();
-        if (count($res) == 0) return true;
+
+        if ($res != false) return true;
 
         $query = <<< 'QUERY'
         SELECT * FROM usersPending WHERE email=:email
@@ -68,7 +64,7 @@ final class MySQLUserRepository implements UserRepository
 
         $statement->execute();
         $res = $statement->fetch();
-        return count($res) == 0;
+        return $res != false;
     }
 
     // Mira si un usuari existeix a la taula d'usuraris
@@ -83,7 +79,7 @@ final class MySQLUserRepository implements UserRepository
 
         $statement->execute();
         $res = $statement->fetch();
-        if (count($res) == 0) return true;
+        if ($res != false) return true;
 
         $query = <<< 'QUERY'
         SELECT * FROM usersPending WHERE username=:username
@@ -94,7 +90,7 @@ final class MySQLUserRepository implements UserRepository
 
         $statement->execute();
         $res = $statement->fetch();
-        return count($res) == 0;
+        return $res != false;
     }
 
     // Mira si un token existeix en la taula de pending users
@@ -108,14 +104,20 @@ final class MySQLUserRepository implements UserRepository
         $statement->execute();
         $res = $statement->fetch();
 
-        if (count($res) == 0) return NULL;
+        error_log(print_r($res, TRUE));
+        if($res){
+            error_log(print_r("RES IS TRUE", TRUE));
+        }else{
+            error_log(print_r("RES IS FAS", TRUE));
+        }
+        if (!is_array($res)) return NULL;
 
         return new User(
             $res['username'],
             $res['email'],
             $res['password'],
-            $res['birthday'],
-            $res['email'],
+            new DateTime($res['birthday']),
+            $res['phone'] ?? ''
         );
     }
 

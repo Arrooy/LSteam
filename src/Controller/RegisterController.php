@@ -50,7 +50,8 @@ final class RegisterController extends GenericFormController
                 $data['phone'],
             );
 
-
+            error_log(print_r("USER PASSWORD hash IS", TRUE));
+            error_log(print_r($user->password(), TRUE));
             $this->userRepository->savePendingUser($user);
 
 
