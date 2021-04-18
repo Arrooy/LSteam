@@ -57,7 +57,7 @@ final class MySQLUserRepository implements UserRepository
 
         $statement->execute();
         $res = $statement->fetch();
-        if ($res != false) return true;
+        if (count($res) == 0) return true;
 
         $query = <<< 'QUERY'
         SELECT * FROM usersPending WHERE email=:email
@@ -68,7 +68,7 @@ final class MySQLUserRepository implements UserRepository
 
         $statement->execute();
         $res = $statement->fetch();
-        return $res != false;
+        return count($res) == 0;
     }
 
     // Mira si un usuari existeix a la taula d'usuraris
@@ -83,7 +83,7 @@ final class MySQLUserRepository implements UserRepository
 
         $statement->execute();
         $res = $statement->fetch();
-        if ($res != false) return true;
+        if (count($res) == 0) return true;
 
         $query = <<< 'QUERY'
         SELECT * FROM usersPending WHERE username=:username
@@ -94,7 +94,7 @@ final class MySQLUserRepository implements UserRepository
 
         $statement->execute();
         $res = $statement->fetch();
-        return $res != false;
+        return count($res) == 0;
     }
 
     // Mira si un token existeix en la taula de pending users
@@ -108,7 +108,7 @@ final class MySQLUserRepository implements UserRepository
         $statement->execute();
         $res = $statement->fetch();
 
-        if ($res != false) return NULL;
+        if (count($res) == 0) return NULL;
 
         return new User(
             $res['username'],
@@ -133,7 +133,7 @@ final class MySQLUserRepository implements UserRepository
         $statement->execute();
         $res = $statement->fetch();
 
-        if ($res != false) return NULL;
+        if (count($res) == 0) return NULL;
 
         return $res['token'];
     }
@@ -153,8 +153,12 @@ final class MySQLUserRepository implements UserRepository
     }
 
     public function verifyUser(string $token) : bool{
+
+        error_log(print_r($token, TRUE));
         $user = $this->getPendingUser($token);
 
+        error_log(print_r("ABOUT TO VERIFY", TRUE));
+        error_log(print_r($user, TRUE));
         if ($user != NULL) {
             $this->deletePendingUser($token);
             $this->saveUser($user);

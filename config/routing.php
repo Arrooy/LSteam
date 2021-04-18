@@ -7,6 +7,7 @@ use SallePW\SlimApp\Controller\LogInController;
 use SallePW\SlimApp\Controller\SearchController;
 use SallePW\SlimApp\Controller\LandingController;
 
+use SallePW\SlimApp\Controller\VerifyUserController;
 use SallePW\SlimApp\Middleware\VerifySessionMiddleware;
 
 $app->get(
@@ -29,19 +30,19 @@ $app->post(
     RegisterController::class . ":handleFormSubmission"
 )->setName('handle-register');
 
-$app->get(
-    '/search',
-    SearchController::class . ":show"
-)->setName('search')->add(VerifySessionMiddleware::class);
-
-$app->post(
-    '/search',
-    SearchController::class . ":handleSearch"
-)->setName('handle-search')->add(VerifySessionMiddleware::class);
+//$app->get(
+//    '/search',
+//    SearchController::class . ":show"
+//)->setName('search')->add(VerifySessionMiddleware::class);
+//
+//$app->post(
+//    '/search',
+//    SearchController::class . ":handleSearch"
+//)->setName('handle-search')->add(VerifySessionMiddleware::class);
 
 $app->get(
     '/activate',
-    SearchController::class . ":verifyUser"
+    VerifyUserController::class . ":verifyUser"
 )->setName('verify');
 
 $app->post(

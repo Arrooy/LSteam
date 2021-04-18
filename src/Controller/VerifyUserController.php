@@ -21,7 +21,7 @@ final class VerifyUserController {
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
 
         //TODO: verificar que funcioni
-        $token = $request->getAttribute('token');
+        $token = $request->getQueryParams()['token'];
         $isSuccess = $this->userRepository->verifyUser($token);
 
         return $this->twig->render(

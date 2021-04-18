@@ -37,12 +37,10 @@ $container->set('db', function () {
     );
 });
 
-$container->set(UserRepository::class, function (ContainerInterface $container) {
+$container->set(
+    UserRepository::class,
+    function (ContainerInterface $container) {
     return new MySQLUserRepository($container->get('db'));
-});
-
-$container->set(MySQLUserSaveRepository::class, function (ContainerInterface $container) {
-    return new MySQLUserSaveRepository($container->get('db'));
 });
 
 $container->set(
@@ -59,12 +57,6 @@ $container->set(
     }
 );
 
-$container->set(
-    SearchController::class,
-    function (Container $c) {
-        return new SearchController($c->get("view"), $c->get(MySQLUserSaveRepository::class));
-    }
-);
 
 $container->set(
     LandingController::class,
@@ -76,6 +68,6 @@ $container->set(
 $container->set(
     VerifyUserController::class,
     function (Container $c) {
-        return new VerifyUserController($c->get("view"), $c->get(MySQLUserRepository::class));
+        return new VerifyUserController($c->get("view"), $c->get(UserRepository::class));
     }
 );
