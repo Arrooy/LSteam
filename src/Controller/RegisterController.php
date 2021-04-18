@@ -58,8 +58,8 @@ final class RegisterController extends GenericFormController
             $linkContent = $routeParser->urlFor('verify') . '?token=' . getUserToken($user);
 
             //We send the email to the User
-            mail($data['email'], 'Activation LSteam', $linkContent)
-            
+            mail($data['email'], 'Activation LSteam', $linkContent);
+
             $this->userRepository->saveUser($user);
 
         } catch (Exception $exception) {
