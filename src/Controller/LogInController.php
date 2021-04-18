@@ -38,8 +38,8 @@ final class LogInController extends GenericFormController
 
         try {
             $data = $request->getParsedBody();
-            //TODO: Aplicar el hash al password
-            $hashedPassword = password_hash($data['password'], PASSWORD_DEFAULT),
+
+            $hashedPassword = password_hash($data['password'], PASSWORD_DEFAULT);
             $result = $this->userRepository->getId($data['email'], $hashedPassword);
             
         } catch (Exception $exception) {
