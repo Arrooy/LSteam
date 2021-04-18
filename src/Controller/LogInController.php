@@ -29,8 +29,7 @@ final class LogInController extends GenericFormController
 
     public function handleFormSubmission(Request $request, Response $response): Response
     {
-        $data = $request->getParsedBody();
-        
+
         $errors = parent::checkForm($request);
         
         if(!empty($errors)){
