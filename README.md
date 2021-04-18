@@ -10,7 +10,7 @@
     `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `username` varchar(255) NOT NULL,
     `password` varchar(255) NOT NULL,
-    `birthday` date NOT NULL,
+    `birthday` datetime NOT NULL,
     `phone` varchar(20) NOT NULL,
     `profilePic` blob NULL
     );
@@ -19,7 +19,7 @@
     `token` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `username` varchar(255) NOT NULL,
     `password` varchar(255) NOT NULL,
-    `birthday` date NOT NULL,
+    `birthday` datetime NOT NULL,
     `phone` varchar(20) NOT NULL,
     `profilePic` blob NULL
     )
