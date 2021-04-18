@@ -22,6 +22,10 @@ final class LandingController
     {   
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
 
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+
         return $this->twig->render(
             $response,
             'landing.twig',
