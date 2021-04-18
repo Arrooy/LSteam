@@ -22,11 +22,13 @@ final class MySQLUserRepository implements UserRepository
 
     public function getId(string $email, string $password): int{
         $query = <<< 'QUERY'
-        SELECT * FROM users WHERE email=:email
+        SELECT * FROM users WHERE email=:email AND password=:password
         QUERY;
-
+        
         $statement = $this->database->connection()->prepare($query);
         $statement->bindParam('email', $email, PDO::PARAM_STR);
+        $statement->bindParam('password', $password, PDO::PARAM_STR);
+
 
         $statement->execute();
         $res = $statement->fetch();
