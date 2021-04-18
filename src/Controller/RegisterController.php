@@ -51,6 +51,14 @@ final class RegisterController extends GenericFormController
             
                 new DateTime()
             );
+
+            $routeParser = RouteContext::fromRequest($request)->getRouteParser();
+
+            //Generate the link to send in the email to activate
+            $linkContent = $routeParser->urlFor('verify') . '?token=' . getUserToken($user);
+
+            //We send the email to the User
+            mail($data['email'], 'Activation LSteam', $linkContent)
             
             $this->userRepository->saveUser($user);
 
