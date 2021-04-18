@@ -25,11 +25,6 @@ final class User
         return $this->password;
     }
 
-    public function createdAt(): DateTime
-    {
-        return $this->createdAt;
-    }
-
     /**
      * @return string
      */

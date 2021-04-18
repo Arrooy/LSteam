@@ -42,7 +42,8 @@
 
                                         <label class="label">Username</label>
                                         <p class="control has-icons-left">
-                                            <input class="input" type="text" name="username" placeholder="Username">
+                                            <input class="input" type="text" name="username" placeholder="Username"
+                                                   value="{% if formData.username %}{{ formData.username }}{% endif %}">
                                             <span class="icon is-small is-left">
                                                 <i class="fas fa-user"></i>
                                             </span>
@@ -56,7 +57,8 @@
                                 <div class="field">
                                     <label class="label">Password</label>
                                     <p class="control has-icons-left">
-                                        <input class="input" type="password" name="password" placeholder="Password">
+                                        <input class="input" type="password" name="password" placeholder="Password"
+                                               value="{% if formData.password %}{{ formData.password }}{% endif %}">
                                         <span class="icon is-small is-left">
                                             <i class="fas fa-lock"></i>
                                         </span>
@@ -72,7 +74,8 @@
 
                                         <label class="label">Repeat password</label>
                                         <p class="control has-icons-left">
-                                            <input class="input" type="password" name="password_repeat" placeholder="Same password">
+                                            <input class="input" type="password" name="password_repeat" placeholder="Same password"
+                                                   value="{% if formData.password_repeat %}{{ formData.password_repeat }}{% endif %}">
                                             <span class="icon is-small is-left">
                                             <i class="fas fa-lock"></i>
                                         </span>
@@ -85,7 +88,8 @@
                                     <div class="field">
                                         <label class="label">Birthday</label>
                                         <p class="control">
-                                            <input type="date" name="birthday" id="birthday">
+                                            <input type="date" name="birthday" id="birthday"
+                                                   value="{% if formData.birthday %}{{ formData.birthday }}{% endif %}">
                                         </p>
                                         {% if formErrors.birthday %}
                                             <p class="help is-danger">{{ formErrors.birthday }}</p>
@@ -103,7 +107,8 @@
                                                     </p>
 
                                                     <p class="control is-expanded">
-                                                        <input class="input" type="tel" name="phone" placeholder="Your phone number">
+                                                        <input class="input" type="tel" name="phone" placeholder="Your phone number"
+                                                               value="{% if formData.phone %}{{ formData.phone }}{% endif %}">
                                                     </p>
                                                 </div>
                                                 {% if formErrors.phone %}
