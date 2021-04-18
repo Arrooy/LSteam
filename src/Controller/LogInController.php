@@ -55,6 +55,9 @@ final class LogInController extends GenericFormController
         }  
 
         $_SESSION['id'] = $result;
+        $_SESSION['email'] = $data['email'];
+        $_SESSION['username'] = '';
+
 
         // Redirect a Search.
         return $response

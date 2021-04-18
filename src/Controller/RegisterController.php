@@ -5,6 +5,7 @@ namespace SallePW\SlimApp\Controller;
  
 use SallePW\SlimApp\Controller\GenericFormController;
 
+use Slim\Interfaces\RouteParserInterface;
 use Slim\Routing\RouteContext;
 use Slim\Views\Twig;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -13,8 +14,11 @@ use Psr\Http\Message\ResponseInterface as Response;
 use SallePW\SlimApp\Model\UserRepository;
 use SallePW\SlimApp\Model\User;
 
-use Exception;
 use DateTime;
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
 
 final class RegisterController extends GenericFormController
 {
@@ -50,18 +54,14 @@ final class RegisterController extends GenericFormController
                 $data['phone'],
             );
 
-            error_log(print_r("USER PASSWORD hash IS", TRUE));
-            error_log(print_r($user->password(), TRUE));
             $this->userRepository->savePendingUser($user);
-
 
             $routeParser = RouteContext::fromRequest($request)->getRouteParser();
 
-            //Generate the link to send in the email to activate
-            $linkContent = $routeParser->urlFor('verify') . '?token=' . $this->userRepository->getUserToken($user);
+            $base = 'http://localhost:8030/activate';//$routeParser->urlFor('verify');
 
             //We send the email to the User
-            mail($data['email'], 'Activation LSteam', $linkContent);
+            $this->sendEmail($user, $base);
 
         } catch (Exception $exception) {
             //  Email used or db exception. 
@@ -76,4 +76,32 @@ final class RegisterController extends GenericFormController
         ->withHeader('Location', $routeParser->urlFor("home"))
         ->withStatus(301);
     }
+    public function sendEmail(User $user, String $base): void{
+
+        $mail = new PHPMailer(true);
+
+        try {
+            //Server settings
+//            $mail->SMTPDebug = SMTP::DEBUG_SERVER;                //Enable verbose debug output
+            $mail->isSMTP();                                      //Send using SMTP
+            $mail->Host       = 'mail.smtpbucket.com';            //Set the SMTP server to send through
+            $mail->Port       = 8025;                              //TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
+
+            //Recipients
+            $mail->setFrom('lsteam@lsteam.com', 'LSTEAM BACKEND TEAM');
+            $mail->addAddress($user->email(), $user->getUsername());
+            //Content
+            $mail->isHTML(true);                                  //Set email format to HTML
+            $mail->Subject = 'Activation LSteam';
+
+            //Generate the link to send in the email to activate
+            $mail->Body    = 'Click this link to verify! <a href="' . $base . '?token=' . $this->userRepository->getUserToken($user) . '"> Link</a>';
+            $mail->AltBody = 'Click this link to verify! <a href="' . $base . '?token=' . $this->userRepository->getUserToken($user) . '"> Link</a>';
+
+            $mail->send();
+        } catch (Exception $e) {
+            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+        }
+    }
 }
+
