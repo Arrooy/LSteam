@@ -21,22 +21,20 @@ final class RegisterController extends GenericFormController
     public function __construct(private Twig $twig,
         private UserRepository $userRepository) 
     {
-        parent::__construct($twig);
+        parent::__construct($twig, false);
     }
 
     public function show(Request $request, Response $response): Response
     {
-        return parent::showForm($request,$response,"handle-register","Register","Register a new user",[]);
+        return parent::showForm($request,$response,"handle-register","Register","Register",[]);
     }
 
     public function handleFormSubmission(Request $request, Response $response): Response
     {
-        $data = $request->getParsedBody();
-        
         $errors = parent::checkForm($request);
         
         if(!empty($errors)){
-            return parent::showForm($request,$response,"handle-register","Register","Register a new user",$errors);
+            return parent::showForm($request,$response,"handle-register","Register","Register",$errors);
         }
 
         try {
@@ -53,7 +51,7 @@ final class RegisterController extends GenericFormController
         } catch (Exception $exception) {
             //  Email used or db exception. 
             $errors['email'] = 'Error: ' . $exception->getMessage();
-            return parent::showForm($request,$response,"handle-register","Register","Register a new user",$errors);
+            return parent::showForm($request,$response,"handle-register","Register","Register",$errors);
         }
 
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();

@@ -10,42 +10,39 @@
     {% block head %}
     {% endblock %}
     <link rel="stylesheet" href="{{ full_url_for('home') }}/../assets/css/styles.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
     <link rel="icon" href="{{ full_url_for('home') }}/../assets/img/logo.svg">
+
 </head>
 <body>
 <header>
     <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
-            <a class="navbar-item">
+            <a class="navbar-item" href="{{ home_href }}">
                 <img src="{{ full_url_for('home') }}/../assets/img/logo_small.png">
-            </a>
-
-            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
             </a>
         </div>
 
         <div id="navbarBasicExample" class="navbar-menu">
             <div class="navbar-start">
-                <a class="navbar-item">
+                <a class="navbar-item" href="{{ home_href }}">
                     Home
                 </a>
 
-                <a class="navbar-item">
+                <a class="navbar-item" href="{{ home_href }}">
                     Store
                 </a>
 
-                <a class="navbar-item">
+                <a class="navbar-item" href="{{ home_href }}">
                     Wishlist
                 </a>
 
-                <a class="navbar-item">
+                <a class="navbar-item" href="{{ home_href }}">
                     Profile
                 </a>
 
-                <a class="navbar-item">
+                <a class="navbar-item" href="{{ home_href }}">
                     Friends
                 </a>
             </div>
@@ -53,10 +50,10 @@
             <div class="navbar-end">
                 <div class="navbar-item">
                     <div class="buttons">
-                        <a class="button is-primary">
+                        <a class="button is-primary" href="{{ sign_up_href }}">
                             <strong>Sign up</strong>
                         </a>
-                        <a class="button is-light">
+                        <a class="button is-light" href="{{ log_in_href }}">
                             Log in
                         </a>
                     </div>
@@ -78,6 +75,8 @@
         <p>
             The website content is licensed <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY NC SA 4.0</a>.
         </p>
+
+
     </div>
 </footer>
 </body>

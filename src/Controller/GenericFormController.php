@@ -10,12 +10,13 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 abstract class GenericFormController
 {
-    public function __construct(private Twig $twig){}
+    public function __construct(private Twig $twig, private bool $is_login){}
     
     protected function showForm(Request $request, Response $response, 
     string $formAction, string $submitValue, string $formTitle, array $errors): Response{
         
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
+        $is_login = $this->is_login;
 
         return $this->twig->render(
             $response,
@@ -24,8 +25,14 @@ abstract class GenericFormController
                 'formErrors' => $errors,
                 'formAction' => $routeParser->urlFor($formAction),
                 'formMethod' => "POST",
+                'is_login' => $is_login,
                 'submitValue' => $submitValue,
-                'formTitle' => $formTitle
+                'formTitle' => $formTitle,
+
+                // Hrefs de la base
+                'log_in_href' => $routeParser->urlFor('login'),
+                'sign_up_href' => $routeParser->urlFor('register'),
+                'home_href' => $routeParser->urlFor('home')
             ]
         );
     }

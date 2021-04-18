@@ -50,6 +50,7 @@ $container->set(
         return new LogInController($c->get("view"),$c->get(UserRepository::class));
     }
 );
+
 $container->set(
     RegisterController::class,
     function (Container $c) {
@@ -67,6 +68,6 @@ $container->set(
 $container->set(
     LandingController::class,
     function (Container $c) {
-        return new LandingController($c->get("view"),$c->get(UserRepository::class));
+        return new LandingController($c->get("view"));
     }
 );

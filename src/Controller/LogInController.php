@@ -19,12 +19,12 @@ use DateTime;
 final class LogInController extends GenericFormController
 {
     public function __construct(private Twig $twig, private UserRepository $userRepository) {
-        parent::__construct($twig);
+        parent::__construct($twig,true);
     }
 
     public function show(Request $request, Response $response): Response
     {
-        return parent::showForm($request,$response,"handle-login","LogIn","Please LogIn",[]);
+        return parent::showForm($request,$response,"handle-login","LogIn","Login",[]);
     }
 
     public function handleFormSubmission(Request $request, Response $response): Response
@@ -34,7 +34,7 @@ final class LogInController extends GenericFormController
         $errors = parent::checkForm($request);
         
         if(!empty($errors)){
-            return parent::showForm($request,$response,"handle-login","LogIn","Please LogIn",$errors);
+            return parent::showForm($request,$response,"handle-login","LogIn","Login",$errors);
         }
 
         try {
@@ -44,7 +44,7 @@ final class LogInController extends GenericFormController
             
         } catch (Exception $exception) {
             $errors['password'] = 'Error: ' . $exception->getMessage();
-            return parent::showForm($request,$response,"handle-login","LogIn","Please LogIn",$errors);
+            return parent::showForm($request,$response,"handle-login","LogIn","Login",$errors);
         }
 
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();

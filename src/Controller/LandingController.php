@@ -15,38 +15,20 @@ use GuzzleHttp\Client;
 
 final class LandingController
 {
-    private Twig $twig;
 
-    public function __construct(Twig $twig)
-    {
-        $this->twig = $twig;
-    }
+    public function __construct(private Twig $twig){}
 
     public function show(Request $request, Response $response): Response
     {   
-        //$routeParser = RouteContext::fromRequest($request)->getRouteParser();
+        $routeParser = RouteContext::fromRequest($request)->getRouteParser();
+
         return $this->twig->render(
-        //return $this->container->get('view')->render(
             $response,
             'landing.twig',
             [
-                
-            ]
-        );
-    }
-
-    public function handleLanding(Request $request, Response $response): Response 
-    {
-        //$routeParser = RouteContext::fromRequest($request)->getRouteParser();
-
-        //$data = $request->getParsedBody();
-                
-        
-        return $this->twig->render(
-        //return $this->container->get('view')->render(
-            $response,
-            'langing.twig',
-            [           
+                'log_in_href' => $routeParser->urlFor('login'),
+                'sign_up_href' => $routeParser->urlFor('register'),
+                'home_href' => $routeParser->urlFor('home')
             ]
         );
     }

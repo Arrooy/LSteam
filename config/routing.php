@@ -12,7 +12,7 @@ use SallePW\SlimApp\Middleware\VerifySessionMiddleware;
 $app->get(
     '/login',
     LogInController::class . ":show"
-)->setName('home');
+)->setName('login');
 
 $app->post(
     '/login',
@@ -47,10 +47,5 @@ $app->post(
 $app->get(
     '/',
     LandingController::class . ":show"
-)->setName('landing');
-
-$app->post(
-    '/',
-    LandingController::class . ":handleLanding"
-)->setName('handle-landing');
+)->setName('home');
 
