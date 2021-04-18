@@ -1,3 +1,5 @@
+# LSteam
+
 ## Com executar la AC. 
 1. Obrir una terminal i buscar la carpeta del projecte
 1. <code>docker-compose up -d</code>
@@ -31,6 +33,7 @@
     Login: http://localhost:8030/login
     Registre: http://localhost:8030/register
     Search: http://localhost:8030/search
+    Landing Page: http://localhost:8030/
 
 Nota. L'entorn php requereix de la llibreria composer.
 
@@ -63,7 +66,7 @@ Probablement per iniciar el sistema haureu de ficar al .env un format semblant a
 ```
 MYSQL_USER=root
 MYSQL_ROOT_PASSWORD=admin
-MYSQL_HOST=lsteam
+MYSQL_HOST=db
 MYSQL_PORT=3306
-MYSQL_DATABASE=test
+MYSQL_DATABASE=lsteam
 ```
