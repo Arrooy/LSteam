@@ -9,6 +9,7 @@ use Slim\Views\Twig;
 use SallePW\SlimApp\Controller\LogInController;
 use SallePW\SlimApp\Controller\SearchController;
 use SallePW\SlimApp\Controller\RegisterController;
+use SallePW\SlimApp\Controller\LandingController;
 
 use SallePW\SlimApp\Repository\PDOSingleton;
 use SallePW\SlimApp\Repository\MySQLUserRepository;
@@ -60,5 +61,12 @@ $container->set(
     SearchController::class,
     function (Container $c) {
         return new SearchController($c->get("view"),$c->get(MySQLUserSaveRepository::class));
+    }
+);
+
+$container->set(
+    LandingController::class,
+    function (Container $c) {
+        return new LandingController($c->get("view"),$c->get(UserRepository::class));
     }
 );

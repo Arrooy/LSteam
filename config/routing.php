@@ -5,6 +5,7 @@ declare(strict_types=1);
 use SallePW\SlimApp\Controller\RegisterController;
 use SallePW\SlimApp\Controller\LogInController;
 use SallePW\SlimApp\Controller\SearchController;
+use SallePW\SlimApp\Controller\LandingController;
 
 use SallePW\SlimApp\Middleware\VerifySessionMiddleware;
 
@@ -42,4 +43,14 @@ $app->post(
     '/logOut',
     SearchController::class . ":logOut"
 )->setName('handle-logOut');
+
+$app->get(
+    '/',
+    LandingController::class . ":show"
+)->setName('landing');
+
+$app->post(
+    '/',
+    LandingController::class . ":handleLanding"
+)->setName('handle-landing');
 
