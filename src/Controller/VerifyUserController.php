@@ -24,7 +24,7 @@ final class VerifyUserController {
     public function verifyUser(Request $request, Response $response): Response {
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
 
-        //TODO: verificar que funcioni
+
         $token = $request->getQueryParams()['token'];
         $isSuccess = $this->userRepository->verifyUser($token);
 
@@ -35,7 +35,7 @@ final class VerifyUserController {
                 session_start();
             }
 
-            //$this->sendEmail($_SESSION['email'],'http://localhost:8030/');
+            $this->sendEmail($_SESSION['email'],'http://localhost:8030/');
         }else{
             $message = "Error! Impossible to verify the user. Maybe you are already verified?";
         }
