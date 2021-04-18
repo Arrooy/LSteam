@@ -57,7 +57,17 @@ final class MySQLUserRepository implements UserRepository
 
         $statement->execute();
         $res = $statement->fetch();
+        if ($res != false) return true;
 
+        $query = <<< 'QUERY'
+        SELECT * FROM usersPending WHERE email=:email
+        QUERY;
+
+        $statement = $this->database->connection()->prepare($query);
+        $statement->bindParam('email', $email, PDO::PARAM_STR);
+
+        $statement->execute();
+        $res = $statement->fetch();
         return $res != false;
     }
 
@@ -73,7 +83,17 @@ final class MySQLUserRepository implements UserRepository
 
         $statement->execute();
         $res = $statement->fetch();
+        if ($res != false) return true;
 
+        $query = <<< 'QUERY'
+        SELECT * FROM usersPending WHERE username=:username
+        QUERY;
+
+        $statement = $this->database->connection()->prepare($query);
+        $statement->bindParam('username', $username, PDO::PARAM_STR);
+
+        $statement->execute();
+        $res = $statement->fetch();
         return $res != false;
     }
 
