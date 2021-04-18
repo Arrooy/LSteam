@@ -4,6 +4,7 @@ declare(strict_types=1);
 use DI\Container;
 use Psr\Container\ContainerInterface;
 
+use SallePW\SlimApp\Controller\VerifyUserController;
 use Slim\Views\Twig;
 
 use SallePW\SlimApp\Controller\LogInController;
@@ -61,7 +62,7 @@ $container->set(
 $container->set(
     SearchController::class,
     function (Container $c) {
-        return new SearchController($c->get("view"),$c->get(MySQLUserSaveRepository::class));
+        return new SearchController($c->get("view"), $c->get(MySQLUserSaveRepository::class));
     }
 );
 
@@ -69,5 +70,12 @@ $container->set(
     LandingController::class,
     function (Container $c) {
         return new LandingController($c->get("view"));
+    }
+);
+
+$container->set(
+    VerifyUserController::class,
+    function (Container $c) {
+        return new VerifyUserController($c->get("view"), $c->get(MySQLUserRepository::class));
     }
 );
