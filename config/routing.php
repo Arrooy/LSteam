@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use SallePW\SlimApp\Controller\LogOutController;
 use SallePW\SlimApp\Controller\RegisterController;
 use SallePW\SlimApp\Controller\LogInController;
 use SallePW\SlimApp\Controller\SearchController;
@@ -47,8 +48,8 @@ $app->get(
 
 $app->post(
     '/logOut',
-    SearchController::class . ":logOut"
-)->setName('handle-logOut');
+    LogOutController::class . ":handle_log_out"
+)->setName('logOut');
 
 $app->get(
     '/',

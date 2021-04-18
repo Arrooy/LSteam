@@ -4,11 +4,11 @@ declare(strict_types=1);
 use DI\Container;
 use Psr\Container\ContainerInterface;
 
+use SallePW\SlimApp\Controller\LogOutController;
 use SallePW\SlimApp\Controller\VerifyUserController;
 use Slim\Views\Twig;
 
 use SallePW\SlimApp\Controller\LogInController;
-use SallePW\SlimApp\Controller\SearchController;
 use SallePW\SlimApp\Controller\RegisterController;
 use SallePW\SlimApp\Controller\LandingController;
 
@@ -69,5 +69,12 @@ $container->set(
     VerifyUserController::class,
     function (Container $c) {
         return new VerifyUserController($c->get("view"), $c->get(UserRepository::class));
+    }
+);
+
+$container->set(
+    LogOutController::class,
+    function (Container $c) {
+        return new LogOutController();
     }
 );

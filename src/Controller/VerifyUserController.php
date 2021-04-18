@@ -35,7 +35,7 @@ final class VerifyUserController {
                 session_start();
             }
 
-            $this->sendEmail($_SESSION['email'],'http://localhost:8030/');
+            //$this->sendEmail($_SESSION['email'],'http://localhost:8030/');
         }else{
             $message = "Error! Impossible to verify the user. Maybe you are already verified?";
         }
@@ -45,8 +45,11 @@ final class VerifyUserController {
             [
                 'isSuccess' => $isSuccess,
                 'message' => $message,
+                'is_login' => isset($_SESSION['id']),
+
                 // Hrefs de la base
                 'log_in_href' => $routeParser->urlFor('login'),
+                'log_out_href' => $routeParser->urlFor('logOut'),
                 'sign_up_href' => $routeParser->urlFor('register'),
                 'home_href' => $routeParser->urlFor('home')
             ]
