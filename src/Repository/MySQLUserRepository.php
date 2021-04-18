@@ -63,11 +63,11 @@ final class MySQLUserRepository implements UserRepository
     // verificats basant-se en el username.
     public function usernameExists(String $username) : bool{
         $query = <<< 'QUERY'
-        SELECT * FROM users WHERE email=:email
+        SELECT * FROM users WHERE username=:username
         QUERY;
 
         $statement = $this->database->connection()->prepare($query);
-        $statement->bindParam('email', $email, PDO::PARAM_STR);
+        $statement->bindParam('username', $username, PDO::PARAM_STR);
 
         $statement->execute();
         $res = $statement->fetch();
@@ -106,7 +106,7 @@ final class MySQLUserRepository implements UserRepository
         $username = $user->getUsername();
 
         $statement = $this->database->connection()->prepare($query);
-        $statement->bindParam('token', $username, PDO::PARAM_STR);
+        $statement->bindParam('username', $username, PDO::PARAM_STR);
 
         $statement->execute();
         $res = $statement->fetch();
@@ -167,10 +167,6 @@ final class MySQLUserRepository implements UserRepository
     }
 
     public function savePendingUser(User $user): void {
-        // Check if user already exists.
-        if($this->emailExists($user)) {
-            throw new Exception('This email is already used!');
-        }
 
         $query = <<<'QUERY'
         INSERT INTO usersPending(username, email, password, birthday, phone)

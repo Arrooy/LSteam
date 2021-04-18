@@ -8,4 +8,5 @@ interface UserRepository
     public function saveUser(User $user): void;
     public function verifyUser(string $token): bool;
     public function getId(string $email, string $password): int;
+    public function getUserToken(User $user) : ?string;
 }

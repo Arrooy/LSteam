@@ -51,8 +51,8 @@ abstract class GenericFormController
         if (empty($data['email']) || !filter_var($data['email'], FILTER_VALIDATE_EMAIL))
         {
             $errors['email'] = 'The email address is not valid';
-        }elseif( !str_contains($data['email'], '@salle.url.edu')) {
-            $errors['email'] = 'The email domain not accepted. Try using a @salle.url.edu domain';
+        }elseif(!(str_contains($data['email'], '@salle.url.edu') || str_contains($data['email'], '@students.salle.url.edu'))) {
+            $errors['email'] = 'The email domain not accepted. Try using a @salle.url.edu or students.salle.url.edu domain';
         }elseif($this->userRepository->emailExists($data['email'])){
             $errors['email'] = 'The email address is already used';
         }
@@ -84,7 +84,7 @@ abstract class GenericFormController
             $errors['password_repeat'] = "Passwords must match";
         }
 
-        if(!empty($data['phone'] && (mb_strlen($data['phone'], "utf8") != 9 || ($data['phone'][0] != 6 && $data['phone'][0] != 7) || ($data['phone'][0] == 7 && $data['phone'][1] == 0)))
+        if(!empty($data['phone'] && (mb_strlen($data['phone'], "utf8") != 9 || ($data['phone'][0] != 6 && $data['phone'][0] != 7) || ($data['phone'][0] == 7 && $data['phone'][1] == 0))))
         {
             $errors['phone'] = "The phone number is not valid.";
         }
@@ -98,9 +98,8 @@ abstract class GenericFormController
         if($bday >= new DateTime()){
             $errors['birthday'] = "You must be over 18 to register";
         }
-        error_log(print_r($data['birthday'], TRUE));
 
-        error_log(print_r($errors, TRUE));
+//        error_log(print_r($errors, TRUE));
 
         return $errors;
     }

@@ -50,15 +50,17 @@ final class RegisterController extends GenericFormController
                 $data['phone'],
             );
 
+
+            $this->userRepository->savePendingUser($user);
+
+
             $routeParser = RouteContext::fromRequest($request)->getRouteParser();
 
             //Generate the link to send in the email to activate
-            $linkContent = $routeParser->urlFor('verify') . '?token=' . getUserToken($user);
+            $linkContent = $routeParser->urlFor('verify') . '?token=' . $this->userRepository->getUserToken($user);
 
             //We send the email to the User
             mail($data['email'], 'Activation LSteam', $linkContent);
-
-            $this->userRepository->saveUser($user);
 
         } catch (Exception $exception) {
             //  Email used or db exception. 
