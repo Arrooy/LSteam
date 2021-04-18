@@ -31,6 +31,7 @@ final class RegisterController extends GenericFormController
 
     public function handleFormSubmission(Request $request, Response $response): Response
     {
+
         //checks errors of register Data
         $errors = parent::checkForm($request);
         

@@ -98,7 +98,7 @@ abstract class GenericFormController
         if($bday >= new DateTime()){
             $errors['birthday'] = "You must be over 18 to register";
         }
-        error_log(print_r($data['birthday'] , TRUE));
+        error_log(print_r($data['birthday'], TRUE));
 
         error_log(print_r($errors, TRUE));
 

@@ -19,7 +19,7 @@ use DateTime;
 final class LogInController extends GenericFormController
 {
     public function __construct(private Twig $twig, private UserRepository $userRepository) {
-        parent::__construct($twig,true);
+        parent::__construct($twig,$userRepository,true);
     }
 
     public function show(Request $request, Response $response): Response
