@@ -32,12 +32,17 @@ $app->post(
 $app->get(
     '/search',
     SearchController::class . ":show"
-)->setName('search')->add(VerifySessionMiddleware::class);;
+)->setName('search')->add(VerifySessionMiddleware::class);
 
 $app->post(
     '/search',
     SearchController::class . ":handleSearch"
-)->setName('handle-search')->add(VerifySessionMiddleware::class);;
+)->setName('handle-search')->add(VerifySessionMiddleware::class);
+
+$app->get(
+    '/activate',
+    SearchController::class . ":verifyUser"
+)->setName('verify');
 
 $app->post(
     '/logOut',

@@ -97,6 +97,51 @@ final class MySQLUserRepository implements UserRepository
         );
     }
 
+    // Mira si un token existeix en la taula de pending users
+    public function getUserToken(User $user) : ?string{
+        $query = <<< 'QUERY'
+        SELECT token FROM usersPending WHERE username=:username
+        QUERY;
+
+        $username = $user->getUsername();
+
+        $statement = $this->database->connection()->prepare($query);
+        $statement->bindParam('token', $username, PDO::PARAM_STR);
+
+        $statement->execute();
+        $res = $statement->fetch();
+
+        if ($res != false) return NULL;
+
+        return $res['token'];
+    }
+
+    // Mira si un token existeix en la taula de pending users
+    public function deletePendingUser(string $token) : bool{
+        $query = <<< 'QUERY'
+        DELETE FROM usersPending WHERE token=:token
+        QUERY;
+        $statement = $this->database->connection()->prepare($query);
+        $statement->bindParam('token', $token, PDO::PARAM_STR);
+
+        $statement->execute();
+        $res = $statement->fetch();
+
+        return $res != NULL; // TODO: verificar que funciona
+    }
+
+    public function verifyUser(string $token) : bool{
+        $user = $this->getPendingUser($token);
+
+        if ($user != NULL) {
+            $this->deletePendingUser($token);
+            $this->saveUser($user);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function saveUser(User $user): void {
 
         $query = <<<'QUERY'
