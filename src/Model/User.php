@@ -8,13 +8,15 @@ use DateTime;
 final class User
 {
     public function __construct(
+        private string $username,
         private string $email,
         private string $password,
-        private DateTime $createdAt
+        private DateTime $birthday,
+        private string $phone
+        //TODO: afegir imatge
     ) {}
 
-    public function email(): string
-    {
+    public function email(): string {
         return $this->email;
     }
 
@@ -26,5 +28,29 @@ final class User
     public function createdAt(): DateTime
     {
         return $this->createdAt;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUsername(): string
+    {
+        return $this->username;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getBirthday(): DateTime
+    {
+        return $this->birthday;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPhone(): string
+    {
+        return $this->phone;
     }
 }

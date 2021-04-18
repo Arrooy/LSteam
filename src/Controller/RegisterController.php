@@ -52,7 +52,7 @@ final class RegisterController extends GenericFormController
                 new DateTime()
             );
             
-            $this->userRepository->save($user);
+            $this->userRepository->saveUser($user);
 
         } catch (Exception $exception) {
             //  Email used or db exception. 
