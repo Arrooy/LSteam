@@ -43,7 +43,7 @@ abstract class GenericFormController
         $data = $request->getParsedBody();
         $errors = [];
         
-        if (empty($data['email']) || !filter_var($data['email'], FILTER_VALIDATE_EMAIL) || str_contains($data['email'], '@salle.url.edu')) 
+        if (empty($data['email']) || !filter_var($data['email'], FILTER_VALIDATE_EMAIL) || !str_contains($data['email'], '@salle.url.edu')) 
         {
             $errors['email'] = 'The email address is not valid';
         }
@@ -52,20 +52,24 @@ abstract class GenericFormController
             $errors['username'] = 'The username is not valid';
         }elseif(exists($data['username']))
         {
-            $errors['username'] = 'The username already exists'
+            $errors['username'] = 'The username already exists';
         }
         if (empty($data['password']) || strlen($data['password']) < 6) 
         {
             $errors['password'] = 'The password must contain at least 6 characters.';
         }
-        elseif(!(preg_match('/[A-Z]/', $data['password']) && preg_match('/[a-z]/', $data['password']))
+        elseif(!(preg_match('/[A-Z]/', $data['password']) && preg_match('/[a-z]/', $data['password'])))
         {
             $errors['password'] = "The password must contain at least 1 uppercase and 1 lowercase.";
         }
-        elseif(!preg_match("#[0-9]+#",$data['password'])
+        elseif(!preg_match("#[0-9]+#",$data['password']))
         {
             $errors['password'] = "The password must contain at least 1 number.";
-        }*/
+        }
+        if(mb_strlen($data['phone'], "utf8") != 9 || ($data['phone'][0] != 6 && $data['phone'][0] != 7) || ($data['phone'][0] == 7 && $data['phone'][1] == 0))
+        {
+            $errors['phone'] = "The phone number is not valid.";
+        }
         
         error_log(print_r($errors, TRUE)); 
 

@@ -47,7 +47,7 @@ final class RegisterController extends GenericFormController
                 $data['password_repeat'],
                 $data['username'],
                 $data['phone'],
-                $data['birthday']
+                $data['birthday'],
             
                 new DateTime()
             );
