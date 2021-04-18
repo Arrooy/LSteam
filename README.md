@@ -50,3 +50,14 @@ Per carregar el DotENV:
 ```
 composer require "symfony/dotenv"
 ```
+
+## .env File
+
+Probablement per iniciar el sistema haureu de ficar al .env un format semblant al següent:
+```
+MYSQL_USER=root
+MYSQL_ROOT_PASSWORD=admin
+MYSQL_HOST=db
+MYSQL_PORT=3306
+MYSQL_DATABASE=test
+```
