@@ -92,7 +92,6 @@ final class MySQLUserRepository implements UserRepository
 
         $statement->execute();
         $res = $statement->fetch();
-
         return $res != false;
     }
 
