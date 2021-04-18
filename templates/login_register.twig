@@ -4,53 +4,58 @@
 
 {% block content %}
     <section class="section">
-    <div class="hero is-fullheight-with-navbar">
-    <div class="columns is-centered">
-        <div class="column box is-half">
-    <h1 class="title">{{ formTitle }}</h1>
-    {% if formErrors.db %}
-        <p class="is-danger">{{ formErrors.db }}</p>
-    {% endif %}
-    <form action="{{ formAction }}" method="{{ formMethod }}" accept-charset="utf-8">
+        <div class="hero is-fullheight-with-navbar">
+            <div class="hero-body">
+                <div class="container">
+                    <div class="columns is-centered">
+                        <div class="column box is-two-thirds">
+                            <h1 class="title ">{{ formTitle }}</h1>
+                            {% if formErrors.db %}
+                                <p class="is-danger">{{ formErrors.db }}</p>
+                            {% endif %}
+                            <form action="{{ formAction }}" method="{{ formMethod }}" accept-charset="utf-8">
 
-        <div class="field">
-            <label class="label">Email</label>
-            <div class="field">
+                                <div class="field">
+                                    <label class="label">Email</label>
+                                    <div class="field">
 
-                <div class="control">
-                    <input class="input" type="text" placeholder="La Salle email"
-                           name="email"
-                           value="{% if formData.email %}{{ formData.email }}{% endif %}">
-                </div>
-                    </div>
-            {% if formErrors.email %}
-                <p class="help is-danger">{{ formErrors.email }}</p>
-            {% endif %}
-        </div>
+                                        <div class="control">
+                                            <input class="input" type="text" placeholder="La Salle email"
+                                                   name="email"
+                                                   value="{% if formData.email %}{{ formData.email }}{% endif %}">
+                                        </div>
+                                    </div>
+                                    {% if formErrors.email %}
+                                        <p class="help is-danger">{{ formErrors.email }}</p>
+                                    {% endif %}
+                                </div>
 
-        <div class="field">
+                                <div class="field">
 
-            <label class="label">Password</label>
-            <p class="control has-icons-left">
-                <input class="input" type="password" name="password" placeholder="Password">
-                <span class="icon is-small is-left">
+                                    <label class="label">Password</label>
+                                    <p class="control has-icons-left">
+                                        <input class="input" type="password" name="password" placeholder="Password">
+                                        <span class="icon is-small is-left">
                     <i class="fas fa-lock"></i>
                 </span>
-            </p>
-            {% if formErrors.password %}
-                <p class="help is-danger">{{ formErrors.password }}</p>
-            {% endif %}
-        </div>
-        <div class="field">
-            <p class="control">
-                <input type="submit" class="button is-success" value="{{ submitValue }}">
-            </p>
-        </div>
+                                    </p>
+                                    {% if formErrors.password %}
+                                        <p class="help is-danger">{{ formErrors.password }}</p>
+                                    {% endif %}
+                                </div>
+                                <div class="field">
+                                    <p class="control">
+                                        <input type="submit" class="button is-success" value="{{ submitValue }}">
+                                    </p>
+                                </div>
 
 
-    </form>
-    </div>
-    </div>
-    </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </section>
 {% endblock %}
