@@ -5,6 +5,6 @@ namespace SallePW\SlimApp\Model;
 
 interface UserRepository
 {
-    public function save(User $user): void;
+    public function saveUser(User $user): void;
     public function getId(string $email, string $password): int;
 }

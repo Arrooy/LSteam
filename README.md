@@ -2,15 +2,15 @@
 1. Obrir una terminal i buscar la carpeta del projecte
 1. <code>docker-compose up -d</code>
 1. configurar adminer:
-   1. Crear la Base de Dades anomenada "lsteam"
-   1. Crear les dues taules
-    
+   1. Crear la Base de Dades anomenada "lsteam" amb les dues taules
     ~~~~
+    CREATE DATABASE lsteam;
+  
     CREATE TABLE `users` (
     `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `username` varchar(255) NOT NULL,
     `password` varchar(255) NOT NULL,
-    `birthday` date NOT NULL,
+    `birthday` datetime NOT NULL,
     `phone` varchar(20) NOT NULL,
     `profilePic` blob NULL
     );
@@ -19,7 +19,7 @@
     `token` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `username` varchar(255) NOT NULL,
     `password` varchar(255) NOT NULL,
-    `birthday` date NOT NULL,
+    `birthday` datetime NOT NULL,
     `phone` varchar(20) NOT NULL,
     `profilePic` blob NULL
     )

@@ -56,28 +56,30 @@ final class MysqlUserRepository implements UserRepository
         return $res != false;
     }
 
-    public function save(User $user): void
-    {
-
+    public function saveUser(User $user): void {
         // Check if user already exists.
-        if($this->exists($user)){
+        if($this->exists($user)) {
             throw new Exception('This email is already used!');
         }
 
         $query = <<<'QUERY'
-        INSERT INTO User(email, password, created_at)
-        VALUES(:email, :password, :created_at)
+        INSERT INTO users(username, email, password, birthday, phone)
+        VALUES(:username, :email, :password, :birthday, :phone)
         QUERY;
         
         $statement = $this->database->connection()->prepare($query);
 
+        $username = $user->getUsername();
         $email = $user->email();
         $password = $user->password();
-        $createdAt = $user->createdAt()->format(self::DATE_FORMAT);
+        $birthady = $user->getBirthday()->format(self::DATE_FORMAT);
+        $phone = $user->getPhone();
 
+        $statement->bindParam('username', $username, PDO::PARAM_STR);
         $statement->bindParam('email', $email, PDO::PARAM_STR);
         $statement->bindParam('password', $password, PDO::PARAM_STR);
-        $statement->bindParam('created_at', $createdAt, PDO::PARAM_STR);
+        $statement->bindParam('birthday', $birthady, PDO::PARAM_STR);
+        $statement->bindParam('phone', $phone, PDO::PARAM_STR);
 
         $statement->execute();
     }
