@@ -43,12 +43,12 @@ final class RegisterController extends GenericFormController
             
             $user = new User(
                 $data['email'],
-                $data['password'],
+                password_hash($data['password'], PASSWORD_DEFAULT),
                 $data['password_repeat'],
                 $data['username'],
                 $data['phone'],
                 $data['birthday']
-                
+            
                 new DateTime()
             );
             
