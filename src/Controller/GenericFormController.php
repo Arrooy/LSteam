@@ -84,7 +84,7 @@ abstract class GenericFormController
             $errors['password_repeat'] = "Passwords must match";
         }
 
-        if(mb_strlen($data['phone'], "utf8") != 9 || ($data['phone'][0] != 6 && $data['phone'][0] != 7) || ($data['phone'][0] == 7 && $data['phone'][1] == 0))
+        if(!empty($data['phone'] && (mb_strlen($data['phone'], "utf8") != 9 || ($data['phone'][0] != 6 && $data['phone'][0] != 7) || ($data['phone'][0] == 7 && $data['phone'][1] == 0)))
         {
             $errors['phone'] = "The phone number is not valid.";
         }
