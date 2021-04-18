@@ -98,10 +98,6 @@ final class MySQLUserRepository implements UserRepository
     }
 
     public function saveUser(User $user): void {
-        // Check if user already exists.
-        if($this->emailExists($user)) {
-            throw new Exception('This email is already used!');
-        }
 
         $query = <<<'QUERY'
         INSERT INTO users(username, email, password, birthday, phone)

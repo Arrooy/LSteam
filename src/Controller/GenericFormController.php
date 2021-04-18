@@ -3,12 +3,14 @@ declare(strict_types=1);
 
 namespace SallePW\SlimApp\Controller;
 
+use DateInterval;
 use SallePW\SlimApp\Model\UserRepository;
 use Slim\Routing\RouteContext;
 use Slim\Views\Twig;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
+use DateTime;
 abstract class GenericFormController
 {
     public function __construct(private Twig $twig,
@@ -46,9 +48,11 @@ abstract class GenericFormController
         $data = $request->getParsedBody();
         $errors = [];
 
-        if (empty($data['email']) || !filter_var($data['email'], FILTER_VALIDATE_EMAIL) || !str_contains($data['email'], '@salle.url.edu'))
+        if (empty($data['email']) || !filter_var($data['email'], FILTER_VALIDATE_EMAIL))
         {
             $errors['email'] = 'The email address is not valid';
+        }elseif( !str_contains($data['email'], '@salle.url.edu')) {
+            $errors['email'] = 'The email domain not accepted. Try using a @salle.url.edu domain';
         }elseif($this->userRepository->emailExists($data['email'])){
             $errors['email'] = 'The email address is already used';
         }
@@ -63,7 +67,7 @@ abstract class GenericFormController
 
         if (empty($data['password']) || strlen($data['password']) <= 6)
         {
-            $errors['password'] = 'The password must contain at least 6 characters.';
+            $errors['password'] = 'The password must contain at least 7 characters.';
         }
 
         elseif(!(preg_match('/[A-Z]/', $data['password']) && preg_match('/[a-z]/', $data['password'])))
@@ -84,6 +88,17 @@ abstract class GenericFormController
         {
             $errors['phone'] = "The phone number is not valid.";
         }
+
+        // Es crea objecte de dateTime
+        $bday= new DateTime($data['birthday']);
+        // Afegim 18 anys
+        $bday->add(new DateInterval("P18Y"));
+
+        // Mirem si la data supera l'actual per saber si és major d'edat
+        if($bday >= new DateTime()){
+            $errors['birthday'] = "You must be over 18 to register";
+        }
+        error_log(print_r($data['birthday'] , TRUE));
 
         error_log(print_r($errors, TRUE));
 

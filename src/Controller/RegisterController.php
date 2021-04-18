@@ -42,14 +42,11 @@ final class RegisterController extends GenericFormController
             $data = $request->getParsedBody();
             
             $user = new User(
+                $data['username'],
                 $data['email'],
                 password_hash($data['password'], PASSWORD_DEFAULT),
-                $data['password_repeat'],
-                $data['username'],
+                new DateTime($data['birthday']),
                 $data['phone'],
-                $data['birthday'],
-            
-                new DateTime()
             );
 
             $routeParser = RouteContext::fromRequest($request)->getRouteParser();
