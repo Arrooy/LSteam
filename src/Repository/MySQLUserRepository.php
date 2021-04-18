@@ -9,7 +9,7 @@ use SallePW\SlimApp\Model\UserRepository;
 
 use Exception;
 
-final class MysqlUserRepository implements UserRepository
+final class MySQLUserRepository implements UserRepository
 {
     private const DATE_FORMAT = 'Y-m-d H:i:s';
 
@@ -22,7 +22,7 @@ final class MysqlUserRepository implements UserRepository
 
     public function getId(string $email, string $password): int{
         $query = <<< 'QUERY'
-        SELECT * FROM User WHERE email=:email
+        SELECT * FROM users WHERE email=:email
         QUERY;
 
         $statement = $this->database->connection()->prepare($query);
@@ -40,14 +40,16 @@ final class MysqlUserRepository implements UserRepository
 
         return (int)$res['id'];
     }
+
+
     
     // Mira si un usuari existeix a la taula d'usuraris
     // verificats basant-se en el email.
-    public function emailExists(User $user) : bool{
+    public function emailExists(String $email) : bool{
         $query = <<< 'QUERY'
         SELECT * FROM users WHERE email=:email
         QUERY;
-        $email = $user->email();
+
         $statement = $this->database->connection()->prepare($query);
         $statement->bindParam('email', $email, PDO::PARAM_STR);
 
@@ -59,11 +61,11 @@ final class MysqlUserRepository implements UserRepository
 
     // Mira si un usuari existeix a la taula d'usuraris
     // verificats basant-se en el username.
-    public function usernameExists(User $user) : bool{
+    public function usernameExists(String $username) : bool{
         $query = <<< 'QUERY'
         SELECT * FROM users WHERE email=:email
         QUERY;
-        $email = $user->email();
+
         $statement = $this->database->connection()->prepare($query);
         $statement->bindParam('email', $email, PDO::PARAM_STR);
 
@@ -111,13 +113,13 @@ final class MysqlUserRepository implements UserRepository
         $username = $user->getUsername();
         $email = $user->email();
         $password = $user->password();
-        $birthady = $user->getBirthday()->format(self::DATE_FORMAT);
+        $birthday = $user->getBirthday()->format(self::DATE_FORMAT);
         $phone = $user->getPhone();
 
         $statement->bindParam('username', $username, PDO::PARAM_STR);
         $statement->bindParam('email', $email, PDO::PARAM_STR);
         $statement->bindParam('password', $password, PDO::PARAM_STR);
-        $statement->bindParam('birthday', $birthady, PDO::PARAM_STR);
+        $statement->bindParam('birthday', $birthday, PDO::PARAM_STR);
         $statement->bindParam('phone', $phone, PDO::PARAM_STR);
 
         $statement->execute();

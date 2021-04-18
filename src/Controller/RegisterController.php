@@ -21,7 +21,7 @@ final class RegisterController extends GenericFormController
     public function __construct(private Twig $twig,
         private UserRepository $userRepository) 
     {
-        parent::__construct($twig, false);
+        parent::__construct($twig, $userRepository, false);
     }
 
     public function show(Request $request, Response $response): Response
