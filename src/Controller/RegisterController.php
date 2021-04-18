@@ -31,6 +31,7 @@ final class RegisterController extends GenericFormController
 
     public function handleFormSubmission(Request $request, Response $response): Response
     {
+        //checks errors of register Data
         $errors = parent::checkForm($request);
         
         if(!empty($errors)){
@@ -43,6 +44,11 @@ final class RegisterController extends GenericFormController
             $user = new User(
                 $data['email'],
                 $data['password'],
+                $data['password_repeat'],
+                $data['username'],
+                $data['phone'],
+                $data['birthday']
+                
                 new DateTime()
             );
             
