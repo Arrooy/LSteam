@@ -1,25 +1,29 @@
 ## Com executar la AC. 
-1 - Obrir una terminal i buscar la carpeta del projecte<br>
-2 - docker-compose up -d<br>
-3 - obrir adminer i crear les dues taules.<br>
+1. Obrir una terminal i buscar la carpeta del projecte
+1. <code>docker-compose up -d</code>
+1. configurar adminer:
+   1. Crear la Base de Dades anomenada "lsteam"
+   1. Crear les dues taules
+    
+    ~~~~
+    CREATE TABLE `users` (
+    `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `username` varchar(255) NOT NULL,
+    `password` varchar(255) NOT NULL,
+    `birthday` date NOT NULL,
+    `phone` varchar(20) NOT NULL,
+    `profilePic` blob NULL
+    );
 
-    CREATE TABLE `User` (
-    `id` INT(11) unsigned NOT NULL AUTO_INCREMENT,
-    `email` VARCHAR(255) NOT NULL DEFAULT '',
-    `password` VARCHAR(255) NOT NULL DEFAULT '',
-    `created_at` DATETIME NOT NULL,
-    PRIMARY KEY (`id`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-    CREATE TABLE `Search` (
-    `id` INT(11) unsigned NOT NULL AUTO_INCREMENT,
-    `user_id` INT(11) unsigned NOT NULL,
-    `search` VARCHAR(255) NOT NULL DEFAULT '',
-    `created_at` DATETIME NOT NULL,
-    PRIMARY KEY (`id`),
-    FOREIGN KEY (`user_id`) REFERENCES User(`id`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
+    CREATE TABLE `usersPending` (
+    `token` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `username` varchar(255) NOT NULL,
+    `password` varchar(255) NOT NULL,
+    `birthday` date NOT NULL,
+    `phone` varchar(20) NOT NULL,
+    `profilePic` blob NULL
+    )
+    ~~~~
 4 - Ja hauria de funcionar tot. 
 
     Login: http://localhost:8030/login
@@ -57,7 +61,7 @@ Probablement per iniciar el sistema haureu de ficar al .env un format semblant a
 ```
 MYSQL_USER=root
 MYSQL_ROOT_PASSWORD=admin
-MYSQL_HOST=db
+MYSQL_HOST=lsteam
 MYSQL_PORT=3306
 MYSQL_DATABASE=test
 ```
