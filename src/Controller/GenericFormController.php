@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace SallePW\SlimApp\Controller;
 
 use DateInterval;
+use Exception;
 use SallePW\SlimApp\Model\UserRepository;
 use Slim\Routing\RouteContext;
 use Slim\Views\Twig;
@@ -45,12 +46,7 @@ abstract class GenericFormController
 
     abstract protected function handleFormSubmission(Request $request, Response $response): Response;
 
-    protected function checkForm(Request $request): array{
-        $data = $request->getParsedBody();
-        $errors = [];
-
-        
-
+    private function checkPassword(array $data, array &$errors){
         if (empty($data['password']) || strlen($data['password']) <= 6)
         {
             $errors['password'] = 'The password must contain at least 7 characters.';
@@ -66,6 +62,13 @@ abstract class GenericFormController
             $errors['password'] = "The password must contain at least 1 number.";
         }
 
+    }
+
+    protected function checkForm(Request $request): array{
+        $data = $request->getParsedBody();
+        $errors = [];
+
+        $this->checkPassword($data,$errors);
         
         if($this->is_login == false){
             if (empty($data['email']) || !filter_var($data['email'], FILTER_VALIDATE_EMAIL))
@@ -76,9 +79,6 @@ abstract class GenericFormController
             }elseif($this->userRepository->emailExists($data['email'])){
                 $errors['email'] = 'The email address is already used';
             }
-
-
-
             
             if(!ctype_alnum($data['username']))
             {
@@ -94,19 +94,22 @@ abstract class GenericFormController
             {
                 $errors['phone'] = "The phone number is not valid.";
             }
+            try{
+                // Es crea objecte de dateTime
+                $bday= new DateTime($data['birthday']);
 
-            // Es crea objecte de dateTime
-            $bday= new DateTime($data['birthday']);
-            // Afegim 18 anys
-            $bday->add(new DateInterval("P18Y"));
+                // Afegim 18 anys
+                $bday->add(new DateInterval("P18Y"));
 
-            // Mirem si la data supera l'actual per saber si és major d'edat
-            if($bday >= new DateTime()){
-                $errors['birthday'] = "You must be over 18 to register";
+                // Mirem si la data supera l'actual per saber si és major d'edat
+                if($bday >= new DateTime()){
+                    $errors['birthday'] = "You must be over 18 to register";
+                }
+            } catch (Exception $exception) {
+                // No hauria de passar mai....
+                $errors['birthday'] = "El format de la data introduida no es correcte.";
             }
         }
-
-//        error_log(print_r($errors, TRUE));
 
         return $errors;
     }

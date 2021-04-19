@@ -48,12 +48,8 @@ final class LogInController extends GenericFormController
         }
 
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
-        
-        // S'inicia la sessió de l'usuari.
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-        }  
 
+        // TODO: revisar aixo-
         $_SESSION['id'] = $result;
         $_SESSION['email'] = $data['email'];
         $_SESSION['username'] = '';

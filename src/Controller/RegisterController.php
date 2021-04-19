@@ -5,6 +5,7 @@ namespace SallePW\SlimApp\Controller;
  
 use SallePW\SlimApp\Controller\GenericFormController;
 
+use SallePW\SlimApp\Model\GifRepository;
 use Slim\Interfaces\RouteParserInterface;
 use Slim\Routing\RouteContext;
 use Slim\Views\Twig;
@@ -18,12 +19,13 @@ use DateTime;
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
-use PHPMailer\PHPMailer\Exception;
+use Exception;
 
 final class RegisterController extends GenericFormController
 {
     public function __construct(private Twig $twig,
-        private UserRepository $userRepository) 
+        private UserRepository $userRepository,
+        private GifRepository $gifRepository)
     {
         parent::__construct($twig, $userRepository, false);
     }
@@ -37,6 +39,8 @@ final class RegisterController extends GenericFormController
 
         //checks errors of register Data
         $errors = parent::checkForm($request);
+
+        $routeParser = RouteContext::fromRequest($request)->getRouteParser();
         
         if(!empty($errors)){
             return parent::showForm($request, $response,"handle-register","Register","Register",$errors);
@@ -55,9 +59,9 @@ final class RegisterController extends GenericFormController
 
             $this->userRepository->savePendingUser($user);
 
-            $routeParser = RouteContext::fromRequest($request)->getRouteParser();
-
             $base = 'http://localhost:8030/activate';//$routeParser->urlFor('verify');
+
+            $_SESSION['email'] = $user->email();
 
             //We send the email to the User
             $this->sendEmail($user, $base);
@@ -68,12 +72,19 @@ final class RegisterController extends GenericFormController
             return parent::showForm($request,$response,"handle-register","Register","Register",$errors);
         }
 
-        $routeParser = RouteContext::fromRequest($request)->getRouteParser();
-        
-        // Redirect a Search.
-        return $response
-        ->withHeader('Location', $routeParser->urlFor("home"))
-        ->withStatus(301);
+        // Mostrem vista register done.
+        return $this->twig->render(
+            $response,
+            'register_done.twig',
+            [
+                'user_email' => $user->email(),
+                'gif_url' => $this->gifRepository->getRandomGif("success"),
+                'log_in_href' => $routeParser->urlFor('login'),
+                'log_out_href' => $routeParser->urlFor('logOut'),
+                'sign_up_href' => $routeParser->urlFor('register'),
+                'home_href' => $routeParser->urlFor('home')
+            ]
+        );
     }
     public function sendEmail(User $user, String $base): void{
 

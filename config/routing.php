@@ -9,7 +9,10 @@ use SallePW\SlimApp\Controller\SearchController;
 use SallePW\SlimApp\Controller\LandingController;
 
 use SallePW\SlimApp\Controller\VerifyUserController;
+use SallePW\SlimApp\Middleware\StartSessionMiddleware;
 use SallePW\SlimApp\Middleware\VerifySessionMiddleware;
+
+$app->add(StartSessionMiddleware::class);
 
 $app->get(
     '/login',

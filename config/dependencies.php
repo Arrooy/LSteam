@@ -6,6 +6,7 @@ use Psr\Container\ContainerInterface;
 
 use SallePW\SlimApp\Controller\LogOutController;
 use SallePW\SlimApp\Controller\VerifyUserController;
+use SallePW\SlimApp\Repository\GIF;
 use Slim\Views\Twig;
 
 use SallePW\SlimApp\Controller\LogInController;
@@ -37,6 +38,10 @@ $container->set('db', function () {
     );
 });
 
+$container->set('gif', function () {
+    return GIF::getInstance($_ENV['GIPHY_API_KEY']);
+});
+
 $container->set(
     UserRepository::class,
     function (ContainerInterface $container) {
@@ -53,7 +58,7 @@ $container->set(
 $container->set(
     RegisterController::class,
     function (Container $c) {
-        return new RegisterController($c->get("view"),$c->get(UserRepository::class));
+        return new RegisterController($c->get("view"),$c->get(UserRepository::class), $c->get('gif'));
     }
 );
 
@@ -68,7 +73,7 @@ $container->set(
 $container->set(
     VerifyUserController::class,
     function (Container $c) {
-        return new VerifyUserController($c->get("view"), $c->get(UserRepository::class));
+        return new VerifyUserController($c->get("view"), $c->get(UserRepository::class), $c->get('gif'));
     }
 );
 

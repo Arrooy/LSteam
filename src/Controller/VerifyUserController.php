@@ -9,6 +9,7 @@ use PHPMailer\PHPMailer\SMTP;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
+use SallePW\SlimApp\Model\GifRepository;
 use SallePW\SlimApp\Model\User;
 use SallePW\SlimApp\Model\UserRepository;
 use SallePW\SlimApp\Model\UserSaveRepository;
@@ -19,7 +20,8 @@ use Slim\Routing\RouteContext;
 
 final class VerifyUserController {
 
-    public function __construct(private Twig $twig, private UserRepository $userRepository){}
+    public function __construct(private Twig $twig, private UserRepository $userRepository,
+                                private GifRepository $gifRepository){}
 
     public function verifyUser(Request $request, Response $response): Response {
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
@@ -30,14 +32,11 @@ final class VerifyUserController {
 
         if ($isSuccess){
             $message = "User confirmation done! Check your inbox to complete the registration and earn 50€!";
-
-            if (session_status() == PHP_SESSION_NONE) {
-                session_start();
-            }
-
-            $this->sendEmail($_SESSION['email'],'http://localhost:8030/');
+            $gif_query = "money";
+            $this->sendEmail($_SESSION['email'],'http://localhost:8030/login');
         }else{
             $message = "Error! Impossible to verify the user. Maybe you are already verified?";
+            $gif_query = "sad";
         }
         return $this->twig->render(
             $response,
@@ -46,6 +45,7 @@ final class VerifyUserController {
                 'isSuccess' => $isSuccess,
                 'message' => $message,
                 'is_login' => isset($_SESSION['id']),
+                'gif_url' => $this->gifRepository->getRandomGif($gif_query),
 
                 // Hrefs de la base
                 'log_in_href' => $routeParser->urlFor('login'),
@@ -55,6 +55,7 @@ final class VerifyUserController {
             ]
         );
     }
+
     public function sendEmail(String $email, String $base): void{
 
         $mail = new PHPMailer(true);
