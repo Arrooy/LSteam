@@ -42,7 +42,6 @@ class GIF implements GifRepository
 
         # Decodifiquem el body
         $jsonResponse = json_decode($res->getBody()->getContents(), true);
-//        error_log(print_r($jsonResponse['data'][0]['url'], TRUE));
         return $jsonResponse['data'][0]['images']['original']['url'];
     }
 
