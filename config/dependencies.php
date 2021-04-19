@@ -5,7 +5,9 @@ use DI\Container;
 use Psr\Container\ContainerInterface;
 
 use SallePW\SlimApp\Controller\LogOutController;
+use SallePW\SlimApp\Controller\StoreController;
 use SallePW\SlimApp\Controller\VerifyUserController;
+use SallePW\SlimApp\Repository\CheapSharkRepository;
 use SallePW\SlimApp\Repository\GIF;
 use Slim\Views\Twig;
 
@@ -38,8 +40,12 @@ $container->set('db', function () {
     );
 });
 
-$container->set('gif', function () {
+$container->set('gif_db', function () {
     return GIF::getInstance($_ENV['GIPHY_API_KEY']);
+});
+
+$container->set('game_db', function () {
+    return CheapSharkRepository::getInstance();
 });
 
 $container->set(
@@ -58,7 +64,7 @@ $container->set(
 $container->set(
     RegisterController::class,
     function (Container $c) {
-        return new RegisterController($c->get("view"),$c->get(UserRepository::class), $c->get('gif'));
+        return new RegisterController($c->get("view"),$c->get(UserRepository::class), $c->get('gif_db'));
     }
 );
 
@@ -73,7 +79,7 @@ $container->set(
 $container->set(
     VerifyUserController::class,
     function (Container $c) {
-        return new VerifyUserController($c->get("view"), $c->get(UserRepository::class), $c->get('gif'));
+        return new VerifyUserController($c->get("view"), $c->get(UserRepository::class), $c->get('gif_db'));
     }
 );
 
@@ -81,5 +87,13 @@ $container->set(
     LogOutController::class,
     function (Container $c) {
         return new LogOutController();
+    }
+);
+
+
+$container->set(
+   StoreController::class,
+    function (Container $c) {
+        return new StoreController($c->get('view'),$c->get('game_db'));
     }
 );

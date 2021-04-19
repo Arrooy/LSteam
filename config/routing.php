@@ -8,6 +8,7 @@ use SallePW\SlimApp\Controller\LogInController;
 use SallePW\SlimApp\Controller\SearchController;
 use SallePW\SlimApp\Controller\LandingController;
 
+use SallePW\SlimApp\Controller\StoreController;
 use SallePW\SlimApp\Controller\VerifyUserController;
 use SallePW\SlimApp\Middleware\StartSessionMiddleware;
 use SallePW\SlimApp\Middleware\VerifySessionMiddleware;
@@ -58,4 +59,9 @@ $app->get(
     '/',
     LandingController::class . ":show"
 )->setName('home');
+
+$app->get(
+    '/store',
+    StoreController::class . ":show"
+)->setName('store');
 

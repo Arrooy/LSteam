@@ -11,7 +11,6 @@ class GIF implements GifRepository
     private Client $client;
     private static ?GIF $instance = null;
 
-
     private function __construct(
         private String $api_key
     ){
