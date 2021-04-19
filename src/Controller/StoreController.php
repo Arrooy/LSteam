@@ -25,12 +25,15 @@ class StoreController
             $response,
             'store.twig',
             [
+
                 'game_deals' => $this->gameRepository->getDeals(),
-                'is_login' => isset($_SESSION['id']),
+                'is_user_logged' => isset($_SESSION['id']),
+
                 'log_in_href' => $routeParser->urlFor('login'),
                 'log_out_href' => $routeParser->urlFor('logOut'),
                 'sign_up_href' => $routeParser->urlFor('register'),
-                'home_href' => $routeParser->urlFor('home')
+                'home_href' => $routeParser->urlFor('home'),
+                'store_href' =>  $routeParser->urlFor('store'),
             ]
         );
     }

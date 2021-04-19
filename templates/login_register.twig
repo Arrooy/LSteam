@@ -12,6 +12,7 @@
                             {% if formErrors.db %}
                                 <p class="is-danger">{{ formErrors.db }}</p>
                             {% endif %}
+
                             <form action="{{ formAction }}" method="{{ formMethod }}" accept-charset="utf-8">
 
                                 <div class="field">
@@ -24,7 +25,7 @@
                                     <div class="field">
 
                                         <div class="control has-icons-left">
-                                            <input class="input {% if formErrors.email %}{{ "is-danger" }}{% endif %}" type="text" placeholder="La Salle email"
+                                            <input class="input {% if not is_login and formErrors.email %}{{ "is-danger" }}{% endif %}" type="text" placeholder="La Salle email"
                                                    name="email"
                                                    value="{% if formData.email %}{{ formData.email }}{% endif %}">
                                             <span class="icon is-small is-left">
@@ -32,9 +33,11 @@
                                             </span>
                                         </div>
                                     </div>
-                                    {% if formErrors.email %}
+
+                                    {% if not is_login and formErrors.email %}
                                         <p class="help is-danger">{{ formErrors.email }}</p>
                                     {% endif %}
+
                                 </div>
 
                                 {% if not is_login %}
@@ -57,13 +60,13 @@
                                 <div class="field">
                                     <label class="label">Password</label>
                                     <p class="control has-icons-left">
-                                        <input class="input {% if formErrors.password %}{{ "is-danger" }}{% endif %}" type="password" name="password" placeholder="Password"
+                                        <input class="input {% if not is_login and formErrors.password %}{{ "is-danger" }}{% endif %}" type="password" name="password" placeholder="Password"
                                                value="{% if formData.password %}{{ formData.password }}{% endif %}">
                                         <span class="icon is-small is-left">
                                             <i class="fas fa-lock"></i>
                                         </span>
                                     </p>
-                                    {% if formErrors.password %}
+                                    {% if not is_login and formErrors.password %}
                                         <p class="help is-danger">{{ formErrors.password }}</p>
                                     {% endif %}
                                 </div>
@@ -123,7 +126,11 @@
                                     <p class="control">
                                         <input type="submit" class="button is-success" value="{{ submitValue }}">
                                     </p>
+                                    {% if is_login and (formErrors.email or formErrors.username or formErrors.password) %}
+                                        <p class="help is-danger">The credentials introduced are not valid</p>
+                                    {% endif %}
                                 </div>
+
                             </form>
                         </div>
                     </div>

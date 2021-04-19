@@ -67,7 +67,13 @@ final class RegisterController extends GenericFormController
             $this->sendEmail($user, $base);
 
         } catch (Exception $exception) {
-            //  Email used or db exception. 
+            //  Email used or db exception. (No pasa mai si tot va be aka email funciona i bbdd pot guardar usuari)
+
+            /*
+             *  TODO: plantejarse si posar aqui un error del servidor rollo 502 enlloc de un twig.
+             *   Potser es mes adecuat al ser un error intern...
+             * */
+
             $errors['email'] = 'Error: ' . $exception->getMessage();
             return parent::showForm($request,$response,"handle-register","Register","Register",$errors);
         }

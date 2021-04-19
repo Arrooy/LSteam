@@ -22,18 +22,16 @@ final class LandingController
     {   
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
 
-        error_log(print_r("La session es:", TRUE));
-        error_log(print_r($_SESSION, TRUE));
-
         return $this->twig->render(
             $response,
             'landing.twig',
             [
-                'is_login' => isset($_SESSION['id']),
+                'is_user_logged' => isset($_SESSION['id']),
                 'log_in_href' => $routeParser->urlFor('login'),
                 'log_out_href' => $routeParser->urlFor('logOut'),
                 'sign_up_href' => $routeParser->urlFor('register'),
-                'home_href' => $routeParser->urlFor('home')
+                'home_href' => $routeParser->urlFor('home'),
+                'store_href' =>  $routeParser->urlFor('store'),
             ]
         );
     }
