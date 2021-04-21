@@ -24,8 +24,7 @@ abstract class GenericFormController
 
         return $this->twig->render(
             $response,
-            'login_register.twig',
-            [
+            'login_register.twig', [
                 'formData' => $request->getParsedBody(),
                 'formErrors' => $errors,
                 'formAction' => $routeParser->urlFor($formAction),
@@ -38,6 +37,7 @@ abstract class GenericFormController
                 'log_in_href' => $routeParser->urlFor('login'),
                 'log_out_href' => $routeParser->urlFor('logOut'),
                 'sign_up_href' => $routeParser->urlFor('register'),
+                'profile_href' => $routeParser->urlFor('profile'),
                 'home_href' => $routeParser->urlFor('home')
             ]
         );

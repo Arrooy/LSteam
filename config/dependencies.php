@@ -5,6 +5,7 @@ use DI\Container;
 use Psr\Container\ContainerInterface;
 
 use SallePW\SlimApp\Controller\LogOutController;
+use SallePW\SlimApp\Controller\ProfileController;
 use SallePW\SlimApp\Controller\VerifyUserController;
 use Slim\Views\Twig;
 
@@ -76,5 +77,12 @@ $container->set(
     LogOutController::class,
     function (Container $c) {
         return new LogOutController();
+    }
+);
+
+$container->set(
+    ProfileController::class,
+    function (Container $c) {
+        return new ProfileController($c->get("view"), $c->get(UserRepository::class));
     }
 );
