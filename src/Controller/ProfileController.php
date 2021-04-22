@@ -6,20 +6,15 @@ namespace SallePW\SlimApp\Controller;
 use DateInterval;
 use DateTime;
 use Error;
-use PDO;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Message\UploadedFileInterface;
 use Ramsey\Uuid\Uuid;
 use SallePW\SlimApp\Model\User;
 use SallePW\SlimApp\Model\UserRepository;
-use SallePW\SlimApp\Repository\MySQLUserRepository;
 use Slim\Views\Twig;
 use Slim\Routing\RouteContext;
 
-final class ProfileController
-{
-
+final class ProfileController {
     public const DATE_FORMAT = 'Y-m-d';
     private const UPLOADS_DIR = 'uploads';
 
@@ -97,13 +92,6 @@ final class ProfileController
             $this->print("[The man] Updated!");
         }
 
-        /*$this->print("[The man] [Nom]   : " . $errors['username']);
-        $this->print("[The man] [email] : " . $errors['email']);
-        $this->print("[The man] [phone] : " . $errors['phone']);
-        $this->print("[The man] [bd]    : " . $errors['birthday']);
-        $this->print("[The man] [pic]   : " . $errors['profilePic']);
-        $this->print("[The man] [final] : " . empty($errors));*/
-
         return $this->show($request, $response, $errors);
     }
 
@@ -126,7 +114,7 @@ final class ProfileController
             if (!in_array(strtolower($format), self::ALLOWED_EXTENSIONS, true))
                 return sprintf(self::INVALID_EXTENSION_ERROR, $format);
 
-            if ($img_size > pow(2, 19))
+            if ($img_size > pow(2, 20))
                 return sprintf(self::INVALID_SIZE_ERROR, $format);
 
             try {

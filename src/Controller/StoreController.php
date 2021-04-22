@@ -10,8 +10,7 @@ use SallePW\SlimApp\Model\GameRepository;
 use Slim\Routing\RouteContext;
 use Slim\Views\Twig;
 
-class StoreController
-{
+class StoreController {
     public function __construct(private Twig $twig,
     private GameRepository $gameRepository){}
 
@@ -25,7 +24,6 @@ class StoreController
             $response,
             'store.twig',
             [
-
                 'game_deals' => $this->gameRepository->getDeals(),
                 'is_user_logged' => isset($_SESSION['id']),
 
