@@ -46,6 +46,7 @@ sudo docker rm $(sudo docker ps -aq)
 ```
 <br>
 Parar tots els containers <br>
+
 ```
 sudo docker stop $(sudo docker ps -aq)
 ```
@@ -69,4 +70,5 @@ MYSQL_ROOT_PASSWORD=admin
 MYSQL_HOST=db
 MYSQL_PORT=3306
 MYSQL_DATABASE=lsteam
+GIPHY_API_KEY=zRrKyJno4h4mhFWgzdT8hyfshV1JUdDw
 ```
