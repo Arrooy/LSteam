@@ -31,7 +31,8 @@ final class LogInController extends GenericFormController
     {
 
         $errors = parent::checkForm($request);
-        
+        error_log(print_r("Array is",true));
+        error_log(print_r($errors,true));
         if(!empty($errors)){
             return parent::showForm($request,$response,"handle-login","LogIn","Login",$errors);
         }
@@ -40,6 +41,8 @@ final class LogInController extends GenericFormController
             $data = $request->getParsedBody();
 
             $result = $this->userRepository->getId($data['email'], $data['password']);
+
+            $_SESSION['id'] = $result;
             
         } catch (Exception $exception) {
 
@@ -48,20 +51,10 @@ final class LogInController extends GenericFormController
         }
 
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
-        
-        // S'inicia la sessió de l'usuari.
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-        }  
-
-        $_SESSION['id'] = $result;
-        $_SESSION['email'] = $data['email'];
-        $_SESSION['username'] = '';
-
 
         // Redirect a Search.
         return $response
-        ->withHeader('Location',$routeParser->urlFor("home"))
+        ->withHeader('Location',$routeParser->urlFor("store"))
         ->withStatus(301);
     }
 }

@@ -22,8 +22,11 @@ final class LogOutController {
     public function handle_log_out(Request $request, Response $response): Response {
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
 
-        session_abort();
-        unset($_SESSION);
+        if (session_status() == PHP_SESSION_ACTIVE) {
+            error_log("Bye Bye session!");
+            session_destroy();
+            unset( $_SESSION );
+        }
 
         return $response
         ->withHeader('Location', $routeParser->urlFor("home"))

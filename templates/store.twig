@@ -1,0 +1,28 @@
+{% extends 'base.twig' %}
+
+{% block title %}{{ formTitle }}{% endblock %}
+{% block content %}
+    <section class="section">
+        <div class="hero is-fullheight-with-navbar">
+            <div class="hero-body">
+                <div class="container">
+                    <p>Wellcome to store! Showing first 60 deals:</p>
+                    {% if game_deals %}
+                        <ol>
+                            {% for deal in game_deals %}
+                                    <li> <div>
+                                            <p>{{ deal.title }}</p>
+                                            <p>{{ deal.gameid }}</p>
+                                            <p>{{ deal.price }}</p>
+                                            <p>{{ deal.thumbnail }}</p>
+
+                                        </div>
+                                    </li>
+                            {% endfor %}
+                        </ol>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

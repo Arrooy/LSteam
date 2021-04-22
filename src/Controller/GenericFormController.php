@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace SallePW\SlimApp\Controller;
 
 use DateInterval;
+use Exception;
 use SallePW\SlimApp\Model\UserRepository;
 use Slim\Routing\RouteContext;
 use Slim\Views\Twig;
@@ -24,7 +25,12 @@ abstract class GenericFormController
 
         return $this->twig->render(
             $response,
-            'login_register.twig', [
+            'login_register.twig',
+            [
+                //TODO: confirmar si is_user_loged i is_login estan al reves
+                'is_user_logged' => isset($_SESSION['id']),
+
+
                 'formData' => $request->getParsedBody(),
                 'formErrors' => $errors,
                 'formAction' => $routeParser->urlFor($formAction),
@@ -38,19 +44,15 @@ abstract class GenericFormController
                 'log_out_href' => $routeParser->urlFor('logOut'),
                 'sign_up_href' => $routeParser->urlFor('register'),
                 'profile_href' => $routeParser->urlFor('profile'),
-                'home_href' => $routeParser->urlFor('home')
+                'home_href' => $routeParser->urlFor('home'),
+                'store_href' =>  $routeParser->urlFor('store'),
             ]
         );
     }
 
     abstract protected function handleFormSubmission(Request $request, Response $response): Response;
 
-    protected function checkForm(Request $request): array{
-        $data = $request->getParsedBody();
-        $errors = [];
-
-        
-
+    private function checkPassword(array $data, array &$errors){
         if (empty($data['password']) || strlen($data['password']) <= 6)
         {
             $errors['password'] = 'The password must contain at least 7 characters.';
@@ -65,48 +67,76 @@ abstract class GenericFormController
         {
             $errors['password'] = "The password must contain at least 1 number.";
         }
+    }
 
-        
-        if($this->is_login == false){
-            if (empty($data['email']) || !filter_var($data['email'], FILTER_VALIDATE_EMAIL))
-            {
-                $errors['email'] = 'The email address is not valid';
-            }elseif(!(str_contains($data['email'], '@salle.url.edu') || str_contains($data['email'], '@students.salle.url.edu'))) {
-                $errors['email'] = 'The email domain not accepted. Try using a @salle.url.edu or students.salle.url.edu domain';
-            }elseif($this->userRepository->emailExists($data['email'])){
+    protected function checkForm(Request $request): array{
+        $data = $request->getParsedBody();
+        $errors = [];
+
+        //Fem que el mateix camp (email) tingui els dos significats i pertant, totes les verificacions
+        if($this->is_login)
+            $data['username'] = $data['email'];
+
+        if (empty($data['email']) || !filter_var($data['email'], FILTER_VALIDATE_EMAIL))
+        {
+            $errors['email'] = 'The email address is not valid';
+        }elseif(!(str_contains($data['email'], '@salle.url.edu') || str_contains($data['email'], '@students.salle.url.edu'))) {
+            $errors['email'] = 'The email domain not accepted. Try using a @salle.url.edu or students.salle.url.edu domain';
+        }
+
+        if(!ctype_alnum($data['username']))
+        {
+            $errors['username'] = 'The username is not valid';
+        }
+
+        // Si no es genera un error per username, silenciem el error de email perque el login es correcte.
+        if (!isset($errors['username'])) {
+            unset($errors['email']);
+        }
+
+        if (!isset($errors['email'])) {
+            unset($errors['username']);
+        }
+
+        $this->checkPassword($data,$errors);
+
+        if(!$this->is_login){
+
+            if($this->userRepository->emailExists($data['email'])){
                 $errors['email'] = 'The email address is already used';
             }
 
-
-
-            
-            if(!ctype_alnum($data['username']))
-            {
-                $errors['username'] = 'The username is not valid';
-            }elseif($this->userRepository->usernameExists($data['username']))
+            if(!$this->is_login && $this->userRepository->usernameExists($data['username']))
             {
                 $errors['username'] = 'The username already exists';
             }
+
             if( $data['password'] != $data['password_repeat']){
                 $errors['password_repeat'] = "Passwords must match";
             }
+
             if(!empty($data['phone'] && (mb_strlen($data['phone'], "utf8") != 9 || ($data['phone'][0] != 6 && $data['phone'][0] != 7) || ($data['phone'][0] == 7 && $data['phone'][1] == 0))))
             {
                 $errors['phone'] = "The phone number is not valid.";
             }
 
-            // Es crea objecte de dateTime
-            $bday= new DateTime($data['birthday']);
-            // Afegim 18 anys
-            $bday->add(new DateInterval("P18Y"));
+            try{
+                // Es crea objecte de dateTime
+                $bday= new DateTime($data['birthday']);
 
-            // Mirem si la data supera l'actual per saber si és major d'edat
-            if($bday >= new DateTime()){
-                $errors['birthday'] = "You must be over 18 to register";
+                // Afegim 18 anys
+                $bday->add(new DateInterval("P18Y"));
+
+                // Mirem si la data supera l'actual per saber si és major d'edat
+                if($bday >= new DateTime()){
+                    $errors['birthday'] = "You must be over 18 to register";
+                }
+
+            } catch (Exception $exception) {
+                // No hauria de passar mai....
+                $errors['birthday'] = "El format de la data introduida no es correcte.";
             }
         }
-
-//        error_log(print_r($errors, TRUE));
 
         return $errors;
     }

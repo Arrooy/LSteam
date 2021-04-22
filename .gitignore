@@ -1,6 +1,5 @@
 /vendor/
 /var/
 /public/uploads/
-.env
 .idea
 .idea/**/*

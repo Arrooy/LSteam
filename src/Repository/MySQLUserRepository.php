@@ -21,14 +21,39 @@ final class MySQLUserRepository implements UserRepository
         $this->database = $database;
     }
 
-    public function getId(string $email, string $password): int{
+    public function getId(string $emailOrUsername, string $password): int{
+        try{
+            return $this->getIdByEmail($emailOrUsername,$password);
+        }catch (Exception $exception){
+            return $this->getIdByUsername($emailOrUsername,$password);
+        }
+    }
+
+    private function getIdByEmail(string $email, string $password): int{
         $query = <<< 'QUERY'
         SELECT * FROM users WHERE email=:email
         QUERY;
-        
+
         $statement = $this->database->connection()->prepare($query);
         $statement->bindParam('email', $email, PDO::PARAM_STR);
 
+        $statement->execute();
+        $res = $statement->fetch();
+
+        if(!(is_array($res) && password_verify($password,$res['password']))){
+            throw new Exception('Credentials dont match any user');
+        }
+
+        return (int)$res['id'];
+    }
+
+    private function getIdByUsername(string $username, string $password): int{
+        $query = <<< 'QUERY'
+        SELECT * FROM users WHERE username=:username
+        QUERY;
+
+        $statement = $this->database->connection()->prepare($query);
+        $statement->bindParam('username', $username, PDO::PARAM_STR);
 
         $statement->execute();
         $res = $statement->fetch();

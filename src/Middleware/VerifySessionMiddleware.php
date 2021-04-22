@@ -14,8 +14,6 @@ final class VerifySessionMiddleware
     public function __invoke(Request $request, RequestHandler $next): Response
     {
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
-        
-        session_start();
 
         if (session_status() != PHP_SESSION_ACTIVE || !isset($_SESSION['id'])){    
 
