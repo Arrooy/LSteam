@@ -9,6 +9,7 @@ use Error;
 use PDO;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\UploadedFileInterface;
 use Ramsey\Uuid\Uuid;
 use SallePW\SlimApp\Model\User;
 use SallePW\SlimApp\Model\UserRepository;
@@ -38,7 +39,7 @@ final class ProfileController
         error_log(print_r($msg, TRUE));
     }
 
-    public function show(Request $request, Response $response, array $errors = NULL): Response {
+    public function show(Request $request, Response $response, array $errors): Response {
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
 
         $user = $this->userRepository->getUser($_SESSION['id']);
@@ -47,10 +48,9 @@ final class ProfileController
         $profilePic = self::UPLOADS_DIR . DIRECTORY_SEPARATOR ."$profilePic";
 
         return $this->twig->render($response, 'profile.twig', [
-            'errors' => $errors,
+            'formErrors' => $errors,
 
             'formData' => $request->getParsedBody(),
-            'formErrors' => [],
             'formAction' => $routeParser->urlFor("profile"),
             'formMethod' => "POST",
             'is_login' => isset($_SESSION['id']),
@@ -76,19 +76,45 @@ final class ProfileController
         $uploadedFiles = $request->getUploadedFiles()['files'];
         $user = $this->userRepository->getUser($_SESSION['id']);
 
-        if ($uploadedFiles == NULL) $nFiles = 0;
-        else $nFiles = count($uploadedFiles);
+        $errors = $this->checkForm($request, $user);
 
         $profilePic = $user->getProfilePic();
         $uploadedFile = array_pop($uploadedFiles);
+
+        $imgErr = $this->checkImage($uploadedFile, $profilePic);
+        if (!empty($imgErr)) $errors['profilePic'] = $imgErr;
+
+        if (empty($errors)) {
+            $data = $request->getParsedBody();
+            $this->userRepository->updateUser(new User(
+                empty($data['username']) ? $user->getUsername() : $data['username'],
+                empty($data['email']) ? $user->email() : $data['email'],
+                "",
+                new DateTime($data['birthday']),
+                empty($data['phone']) ? $user->getPhone() : $data['phone'],
+                $profilePic
+            ));
+            $this->print("[The man] Updated!");
+        }
+
+        /*$this->print("[The man] [Nom]   : " . $errors['username']);
+        $this->print("[The man] [email] : " . $errors['email']);
+        $this->print("[The man] [phone] : " . $errors['phone']);
+        $this->print("[The man] [bd]    : " . $errors['birthday']);
+        $this->print("[The man] [pic]   : " . $errors['profilePic']);
+        $this->print("[The man] [final] : " . empty($errors));*/
+
+        return $this->show($request, $response, $errors);
+    }
+
+    protected function checkImage($uploadedFile, &$profilePic) : ?string {
         $original_name = $uploadedFile->getClientFilename();
+        $error = NULL;
 
         if (!empty($original_name)) {
             if ($uploadedFile->getError() !== UPLOAD_ERR_OK)
-                $errors[] = sprintf(
-                    self::UNEXPECTED_ERROR,
-                    $uploadedFile->getClientFilename()
-                );
+                return sprintf(self::UNEXPECTED_ERROR,
+                    $uploadedFile->getClientFilename());
 
             $uuid = Uuid::uuid4();
             $name = $uuid->toString();
@@ -97,61 +123,44 @@ final class ProfileController
             $format = $fileInfo['extension'];
             $img_size = $uploadedFile->getSize();
 
-            if (!in_array($format, self::ALLOWED_EXTENSIONS, true))
-                $errors['profilePic'] = sprintf(self::INVALID_EXTENSION_ERROR, $format);
+            if (!in_array(strtolower($format), self::ALLOWED_EXTENSIONS, true))
+                return sprintf(self::INVALID_EXTENSION_ERROR, $format);
 
-            if ($img_size > pow(2, 20))
-                $errors['profilePic'] = sprintf(self::INVALID_SIZE_ERROR, $format);
+            if ($img_size > pow(2, 19))
+                return sprintf(self::INVALID_SIZE_ERROR, $format);
 
             try {
                 $uploadedFile->moveTo(self::UPLOADS_DIR . DIRECTORY_SEPARATOR . $name . "." . $format);
                 $sizeInfo = getimagesize(self::UPLOADS_DIR . DIRECTORY_SEPARATOR . $name . "." . $format);
-                if ($sizeInfo[0] != 500 || $sizeInfo[1] != 500)
-                    $errors['profilePic'] = sprintf(self::INVALID_DIMENSIONS_ERROR, $format);
-
-                if (!empty($errors)) {
-                    if ($profilePic != self::DEFAULT_IMG) unlink(self::UPLOADS_DIR . DIRECTORY_SEPARATOR . $profilePic);
-                    $profilePic = $name . "." . $format;
-                } else {
+                if ($sizeInfo[0] != 500 || $sizeInfo[1] != 500) {
                     unlink(self::UPLOADS_DIR . DIRECTORY_SEPARATOR . $name . "." . $format);
+                    return sprintf(self::INVALID_DIMENSIONS_ERROR, $format);
                 }
+
+                if ($profilePic != self::DEFAULT_IMG) unlink(self::UPLOADS_DIR . DIRECTORY_SEPARATOR . $profilePic);
+                $profilePic = $name . "." . $format;
+
             } catch (Error $e) {
-                $errors['profilePic'] = $e->getMessage();
+                return $e->getMessage();
             }
         }
-
-        $data = $request->getParsedBody();
-        $this->userRepository->updateUser(new User(
-            empty($data['username']) ? $user->getUsername() : $data['username'],
-            empty($data['email']) ? $user->email() : $data['email'],
-            "",
-            new DateTime($data['birthday']),
-            empty($data['phone']) ? $user->getPhone() : $data['phone'],
-            $profilePic
-        ));
-
-        if (!empty($errors)) return $this->show($request, $response, $errors);
-
-        $routeParser = RouteContext::fromRequest($request)->getRouteParser();
-        return $response
-            ->withHeader('Location', $routeParser->urlFor("profile"))
-            ->withStatus(301);
+        return NULL;
     }
 
-    protected function checkForm(Request $request): array{
+    protected function checkForm(Request $request, User $user): array{
         $data = $request->getParsedBody();
         $errors = [];
 
         if (empty($data['email']) || !filter_var($data['email'], FILTER_VALIDATE_EMAIL))
             $errors['email'] = 'The email address is not valid';
-        elseif(!(str_contains($data['email'], '@salle.url.edu') || str_contains($data['email'], '@students.salle.url.edu')))
+        elseif(!(str_ends_with($data['email'], '@salle.url.edu') || str_ends_with($data['email'], '@students.salle.url.edu')))
             $errors['email'] = 'The email domain not accepted. Try using a @salle.url.edu or students.salle.url.edu domain';
-        elseif($this->userRepository->emailExists($data['email']))
+        elseif((strcmp($user->email(), $data['email']) != 0) && ($this->userRepository->emailExists($data['email'])))
             $errors['email'] = 'The email address is already used';
 
         if(!ctype_alnum($data['username']))
             $errors['username'] = 'The username is not valid';
-        elseif($this->userRepository->usernameExists($data['username']))
+        elseif((strcmp($user->getUsername(), $data['username']) != 0) && ($this->userRepository->usernameExists($data['username'])))
             $errors['username'] = 'The username already exists';
 
         if(!empty($data['phone'] && (mb_strlen($data['phone'], "utf8") != 9 || ($data['phone'][0] != 6 && $data['phone'][0] != 7) || ($data['phone'][0] == 7 && $data['phone'][1] == 0))))
@@ -163,9 +172,7 @@ final class ProfileController
         $bday->add(new DateInterval("P18Y"));
 
         // Mirem si la data supera l'actual per saber si és major d'edat
-        if($bday >= new DateTime()){
-            $errors['birthday'] = "You must be over 18 to register";
-        }
+        if($bday >= new DateTime()) $errors['birthday'] = "You must be over 18 to register";
 
         return $errors;
     }
