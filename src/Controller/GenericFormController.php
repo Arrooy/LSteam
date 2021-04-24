@@ -27,9 +27,7 @@ abstract class GenericFormController
             $response,
             'login_register.twig',
             [
-                //TODO: confirmar si is_user_loged i is_login estan al reves
                 'is_user_logged' => isset($_SESSION['id']),
-
 
                 'formData' => $request->getParsedBody(),
                 'formErrors' => $errors,

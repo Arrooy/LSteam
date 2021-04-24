@@ -4,6 +4,7 @@ declare(strict_types=1);
 use DI\Container;
 use Psr\Container\ContainerInterface;
 
+use SallePW\SlimApp\Controller\ChangePasswordController;
 use SallePW\SlimApp\Controller\LogOutController;
 use SallePW\SlimApp\Controller\ProfileController;
 use SallePW\SlimApp\Controller\StoreController;
@@ -103,5 +104,12 @@ $container->set(
     ProfileController::class,
     function (Container $c) {
         return new ProfileController($c->get("view"), $c->get(UserRepository::class));
+    }
+);
+
+$container->set(
+    ChangePasswordController::class,
+    function (Container $c) {
+        return new ChangePasswordController($c->get("view"), $c->get(UserRepository::class));
     }
 );

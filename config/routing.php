@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use SallePW\SlimApp\Controller\ChangePasswordController;
 use SallePW\SlimApp\Controller\LogOutController;
 use SallePW\SlimApp\Controller\ProfileController;
 use SallePW\SlimApp\Controller\RegisterController;
@@ -65,4 +66,14 @@ $app->get(
     '/store',
     StoreController::class . ":show"
 )->setName('store');
+
+$app->get(
+    '/profile/changePassword',
+    ChangePasswordController::class . ":show"
+)->setName('changePassword');
+
+$app->post(
+    '/profile/changePassword',
+    ChangePasswordController::class . ":handleUpdate"
+)->setName('changePasswordUpdate');
 

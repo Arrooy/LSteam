@@ -29,10 +29,7 @@ final class LogInController extends GenericFormController
 
     public function handleFormSubmission(Request $request, Response $response): Response
     {
-
         $errors = parent::checkForm($request);
-        error_log(print_r("Array is",true));
-        error_log(print_r($errors,true));
         if(!empty($errors)){
             return parent::showForm($request,$response,"handle-login","LogIn","Login",$errors);
         }

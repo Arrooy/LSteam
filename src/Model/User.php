@@ -17,6 +17,14 @@ final class User
     ) {}
 
     /**
+     * @param string $password
+     */
+    public function setPassword(string $password): void
+    {
+        $this->password = $password;
+    }
+
+    /**
      * @return string
      */
     public function getEmail(): string

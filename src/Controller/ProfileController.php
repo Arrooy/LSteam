@@ -48,7 +48,7 @@ final class ProfileController {
             'formData' => $request->getParsedBody(),
             'formAction' => $routeParser->urlFor("profile"),
             'formMethod' => "POST",
-            'is_login' => isset($_SESSION['id']),
+            'is_user_logged' => isset($_SESSION['id']),
             'submitValue' => "Update profile",
             'formTitle' => "Profile",
 
@@ -58,11 +58,14 @@ final class ProfileController {
             'birthday' => $user->getBirthday()->format(self::DATE_FORMAT),
             'profilePic' => $profilePic,
 
+            'change_password_href' => $routeParser->urlFor('changePassword'),
+
             // Hrefs de la base
             'log_in_href' => $routeParser->urlFor('login'),
             'log_out_href' => $routeParser->urlFor('logOut'),
             'sign_up_href' => $routeParser->urlFor('register'),
             'profile_href' => $routeParser->urlFor('profile'),
+            'store_href' =>  $routeParser->urlFor('store'),
             'home_href' => $routeParser->urlFor('home')
         ]);
     }
@@ -84,12 +87,12 @@ final class ProfileController {
             $this->userRepository->updateUser(new User(
                 empty($data['username']) ? $user->getUsername() : $data['username'],
                 empty($data['email']) ? $user->email() : $data['email'],
-                "",
+                $user->password(),
                 new DateTime($data['birthday']),
                 empty($data['phone']) ? $user->getPhone() : $data['phone'],
                 $profilePic
             ));
-            $this->print("[The man] Updated!");
+            $errors['success'] = "Profile updated correctly!";
         }
 
         return $this->show($request, $response, $errors);

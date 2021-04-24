@@ -15,11 +15,9 @@ final class VerifySessionMiddleware
     {
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
 
-        if (session_status() != PHP_SESSION_ACTIVE || !isset($_SESSION['id'])){    
-
-            return $next->handle($request)
-            ->withHeader('Location', $routeParser->urlFor('home'))
-            ->withStatus(302);
+        if (session_status() != PHP_SESSION_ACTIVE || !isset($_SESSION['id'])){
+            header('Location: ' . $routeParser->urlFor('home'));
+            exit();
         }
 
         return $next->handle($request);
