@@ -65,3 +65,7 @@ $app->get(
     StoreController::class . ":show"
 )->setName('store');
 
+$app->post(
+    '/store/buy/{gameId}',
+    StoreController::class . ":buy"
+)->setName('handle-store-buy');

@@ -3,26 +3,130 @@
 {% block title %}{{ formTitle }}{% endblock %}
 {% block content %}
     <section class="section">
-        <div class="hero is-fullheight-with-navbar">
-            <div class="hero-body">
-                <div class="container">
-                    <p>Wellcome to store! Showing first 60 deals:</p>
-                    {% if game_deals %}
-                        <ol>
-                            {% for deal in game_deals %}
-                                    <li> <div>
-                                            <p>{{ deal.title }}</p>
-                                            <p>{{ deal.gameid }}</p>
-                                            <p>{{ deal.price }}</p>
-                                            <p>{{ deal.thumbnail }}</p>
 
-                                        </div>
-                                    </li>
-                            {% endfor %}
-                        </ol>
-                    {% endif %}
+        <h1 class="title is-1">LSteam Store</h1>
+        <h2 class="subtitle ">Wellcome to store! These are the 60 best deals:</h2>
+
+        {# <p>{{ deal.gameid }}</p> #}
+        {# <p>{{ deal.price }}</p> #}
+        {# <p>{{ deal.thumbnail }}</p> #}
+
+
+
+        {% if flash_messages is not empty %}
+
+            {% for notification in flash_messages %}
+                <div class="notification is-danger">
+                    <button class="delete"></button>
+                    <p>{{ notification }}</p>
                 </div>
+            {% endfor %}
+
+        {% endif %}
+        {% if game_deals %}
+
+            {% set i = 0 %}
+
+            {% set numberOfCols = random(2,3) %}
+
+            {% for deal in game_deals %}
+
+                {% if i is divisible by(numberOfCols) %}
+                    {% if i != 0 %}
+                        </div>
+
+                        {% set numberOfCols = random(2,3) %}
+                    {% endif %}
+
+                    <div class="tile is-ancestor" id="{{ numberOfCols }}">
+
+                {% endif %}
+
+                <div class="tile is-parent gameContainer">
+                    <img class="tile is-child gameImage" src="{{ deal.thumbnail }}">
+
+                    <div class="gameSpecs">
+                        <div class="gameSpecsInside">
+
+                            <div>
+                                <h3 class="title white">{{ deal.title }}</h3>
+                                <p class="subtitle white">{{ deal.price }}$</p>
+                            </div>
+
+                            <form action="{{ buyAction }}" method="POST" accept-charset="utf-8">
+                                <input type="submit" class="button is-success" value="Buy" style="align-self:flex-start">
+                            </form>
+
+                            <span class="icon star">
+                                  <i class="fas fa-star"></i>
+                            </span>
+
+                        </div>
+                    </div>
+                </div>
+                {% set i = i + 1 %}
+            {% endfor %}
             </div>
-        </div>
+            {% if not (i is divisible by(numberOfCols)) %}
+
+            {% endif %}
+        {% endif %}
+
+
+{#        <div class="tabs is-fullwidth">#}
+{#            <ul>#}
+{#                <li>#}
+{#                    <a class="notification is-warning">#}
+{#                        <span class="icon"><i class="fas fa-angle-left" aria-hidden="true"></i></span>#}
+{#                        <span>Previous games</span>#}
+{#                    </a>#}
+{#                </li>#}
+
+{#                <li>#}
+{#                    <a class="notification is-success">#}
+{#                        <span>More games</span>#}
+{#                        <span class="icon"><i class="fas fa-angle-right" aria-hidden="true"></i></span>#}
+{#                    </a>#}
+{#                </li>#}
+{#            </ul>#}
+{#        </div>#}
+
     </section>
+    <script>
+        {#    Script per a tancar les alertes de l'usauri#}
+        document.addEventListener('DOMContentLoaded', () => {
+            (document.querySelectorAll('.notification .delete') || []).forEach(($delete) => {
+                const $notification = $delete.parentNode;
+
+                $delete.addEventListener('click', () => {
+                    $notification.parentNode.removeChild($notification);
+                });
+            });
+        });
+    </script>
 {% endblock %}
+
+
+{# Tiles diferents que no molen #}
+{# <div class="tile is-parent"> #}
+{# <article class="tile is-child box"> #}
+{# <img class="image is-3by4" src="{{ deal.thumbnail }}" alt="Game image" > #}
+
+{# <h4 class="title">{{ deal.title }}</h4> #}
+{# <p class="subtitle">{{ deal.price }}</p> #}
+{# </article> #}
+{# </div> #}
+
+{# <div class="tile is-parent"> #}
+{# <article class="tile is-child box")"> #}
+{# <img class="image" src="{{ deal.thumbnail }}"> #}
+{# <div class=""> #}
+{# <h3 class="title is-5">{{ deal.title|title }}</h3> #}
+{# <p class="subtitle is-6">{{ deal.price }}$</p> #}
+{# </div> #}
+{# <form> #}
+
+{# </form> #}
+
+{# </article> #}
+{# </div>   #}

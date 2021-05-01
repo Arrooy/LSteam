@@ -9,7 +9,8 @@ class Game
         private String $title,
         private int $gameid,
         private float $price,
-        private String $thumbnail
+        private String $thumbnail,
+
     ) {}
 
     /**

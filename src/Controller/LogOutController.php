@@ -23,7 +23,6 @@ final class LogOutController {
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
 
         if (session_status() == PHP_SESSION_ACTIVE) {
-            error_log("Bye Bye session!");
             session_destroy();
             unset( $_SESSION );
         }

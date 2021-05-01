@@ -7,6 +7,7 @@ use Psr\Container\ContainerInterface;
 use SallePW\SlimApp\Controller\LogOutController;
 use SallePW\SlimApp\Controller\StoreController;
 use SallePW\SlimApp\Controller\VerifyUserController;
+use SallePW\SlimApp\Repository\CachingCheapSharkRepository;
 use SallePW\SlimApp\Repository\CheapSharkRepository;
 use SallePW\SlimApp\Repository\GIF;
 use Slim\Views\Twig;
@@ -17,9 +18,9 @@ use SallePW\SlimApp\Controller\LandingController;
 
 use SallePW\SlimApp\Repository\PDOSingleton;
 use SallePW\SlimApp\Repository\MySQLUserRepository;
-use SallePW\SlimApp\Repository\MySQLUserSaveRepository;
 
 use SallePW\SlimApp\Model\UserRepository;
+use Slim\Flash\Messages;
 
 $container = new Container();
 
@@ -44,9 +45,17 @@ $container->set('gif_db', function () {
     return GIF::getInstance($_ENV['GIPHY_API_KEY']);
 });
 
-$container->set('game_db', function () {
+$container->set('game_db', function (Container $c) {
     return CheapSharkRepository::getInstance();
+//    return new CachingCheapSharkRepository($cheapSharkRepo, "['cache.store']);
 });
+
+$container->set(
+    'flash',
+    function () {
+        return new Messages();
+    }
+);
 
 $container->set(
     UserRepository::class,
@@ -94,6 +103,6 @@ $container->set(
 $container->set(
    StoreController::class,
     function (Container $c) {
-        return new StoreController($c->get('view'),$c->get('game_db'));
+        return new StoreController($c->get('view'),$c->get('game_db'), $c->get('flash'));
     }
 );
