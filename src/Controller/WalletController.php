@@ -68,6 +68,7 @@ final class WalletController
                 'ammount' => $error,
 
                 'is_user_logged' => isset($_SESSION['id']),
+                'profilePic' => (!isset($_SESSION['profilePic']) ? "" : $_SESSION['profilePic']),
 
                 //href base
                 'log_in_href' => $routeParser->urlFor('login'),

@@ -46,4 +46,28 @@ class Game
     {
         return $this->thumbnail;
     }
+    
+     /**
+     * @return int
+     */
+    public function getMetacriticScore(): int
+    {
+        return $this->metacriticScore;
+    }
+
+     /**
+     * @return DateTime
+     */
+    public function getReleaseDate(): DateTime
+    {
+        return $this->releaseDate;
+    }
+
+     /**
+     * @return bool
+     */
+    public function getOwned(): bool
+    {
+        return $this->owned;
+    }
 }

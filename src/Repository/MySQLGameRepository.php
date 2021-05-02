@@ -16,22 +16,42 @@ final class MySQLGameRepository implements GameRepository
         $this->database = $database;
     }
 
-    public function addBoughtGame(int $gameId, int $userId): bool
+    public function addBoughtGame(Game $game, int $userId): bool
     {
         try {
-
-        $query = <<<'QUERY'
-        INSERT INTO ownedGames(gameId, userId)
-        VALUES(:gid, :uid)
-        QUERY;
+            $query = <<<'QUERY'
+            INSERT INTO games(gameId, titol, price, thumbnail, metacriticStore, releaseDate)
+            VALUES(:gameId, :titol, :price, :thumbnail, :metacriticStore, :releaseDate)
+            QUERY;
 
             $statement = $this->database->connection()->prepare($query);
-            $statement->bindParam('gid', $gameId, PDO::PARAM_STR);
-            $statement->bindParam('uid', $userId, PDO::PARAM_STR);
+
+            $statement->bindParam('gameId', $game->getGameId(), PDO::PARAM_STR);
+            $statement->bindParam('titol', $game->getTitol(), PDO::PARAM_STR);
+            $statement->bindParam('price', $game->getPrice(), PDO::PARAM_STR);
+            $statement->bindParam('thumbnail', $game->getThumbnail(), PDO::PARAM_STR);
+            $statement->bindParam('metacriticStore', $game->getMetacritireleaseDatecStore(), PDO::PARAM_STR);
+            $statement->bindParam('releaseDate', $game->getReleaseDate(), PDO::PARAM_STR);
+            $statement->bindParam('owned', $game->getOwned(), PDO::PARAM_STR);
 
             $statement->execute();
 
-            //TODO: Verificar que s'ha pogut fer!
+            try{
+                $query = <<<'QUERY'
+                INSERT INTO ownedGames(gameId, userId)
+                VALUES(:gameId, :userId)
+                QUERY;
+
+                $statement = $this->database->connection()->prepare($query);
+
+                $statement->bindParam('gameId', $game->getGameId(), PDO::PARAM_STR);
+                $statement->bindParam('userId', $userId(), PDO::PARAM_STR);
+                
+                $statement->execute();
+
+            } catch (Exception $e) {
+                return false
+            }
             return true;
 
         } catch (Exception $e) {
