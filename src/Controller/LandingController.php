@@ -25,7 +25,7 @@ final class LandingController
             $response,
             'landing.twig',
             [
-
+                'is_user_logged' => isset($_SESSION['id']),
 
                 // Hrefs de la base
                 'profilePic' => (!isset($_SESSION['profilePic']) ? "" : $routeParser->urlFor('home') . $_SESSION['profilePic']),

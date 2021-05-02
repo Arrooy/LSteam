@@ -64,7 +64,7 @@ $app->get(
 )->setName('home');
 
 $app->get(
-    '/store/',
+    '/store',
     StoreController::class . ":show"
 )->setName('store');
 
@@ -76,12 +76,12 @@ $app->post(
 $app->get(
     '/profile/changePassword',
     ChangePasswordController::class . ":show"
-)->setName('changePassword');
+)->setName('changePassword')->add($app->getContainer()->get('verifySessionMiddleware'));;
 
 $app->post(
     '/profile/changePassword',
     ChangePasswordController::class . ":handleUpdate"
-)->setName('changePasswordUpdate');
+)->setName('changePasswordUpdate')->add($app->getContainer()->get('verifySessionMiddleware'));;
 
 $app->get(
     '/user/myGames',

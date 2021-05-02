@@ -29,12 +29,14 @@ class StoreController
         $messages = $this->flash->getMessages();
 
         $deals = $this->cheapSharkRepository->getDeals();
-        $ownedGames = $this->gameRepository->getOwnedGames($_SESSION['id']);
+        if (isset($_SESSION['id'])){
+            $ownedGames = $this->gameRepository->getOwnedGames($_SESSION['id']);
 
-        foreach ($deals as $deal) {
-            foreach ($ownedGames as $game) {
-                if (strcmp($deal->getGameId(), $game->getGameId()) == 0) {
-                    $deal->setOwned(true);
+            foreach ($deals as $deal) {
+                foreach ($ownedGames as $game) {
+                    if (strcmp($deal->getGameId(), $game->getGameId()) == 0) {
+                        $deal->setOwned(true);
+                    }
                 }
             }
         }
