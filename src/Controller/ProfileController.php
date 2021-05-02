@@ -66,7 +66,8 @@ final class ProfileController {
             'sign_up_href' => $routeParser->urlFor('register'),
             'profile_href' => $routeParser->urlFor('profile'),
             'store_href' =>  $routeParser->urlFor('store'),
-            'home_href' => $routeParser->urlFor('home')
+            'home_href' => $routeParser->urlFor('home'),
+            'wallet_href' => $routeParser->urlFor('getWallet')
         ]);
     }
 

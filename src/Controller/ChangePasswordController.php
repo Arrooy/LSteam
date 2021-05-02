@@ -40,7 +40,8 @@ final class ChangePasswordController {
             'log_out_href' => $routeParser->urlFor('logOut'),
             'sign_up_href' => $routeParser->urlFor('register'),
             'profile_href' => $routeParser->urlFor('profile'),
-            'home_href' => $routeParser->urlFor('home')
+            'home_href' => $routeParser->urlFor('home'),
+            'wallet_href' => $routeParser->urlFor('getWallet')
         ]);
     }
 

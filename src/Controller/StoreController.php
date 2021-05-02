@@ -48,6 +48,7 @@ class StoreController
                 'home_href' => $routeParser->urlFor('home'),
                 'store_href' =>  $routeParser->urlFor('store'),
                 'profile_href' =>  $routeParser->urlFor('profile'),
+                'wallet_href' => $routeParser->urlFor('getWallet'),
             ]
         );
     }

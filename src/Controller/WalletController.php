@@ -69,12 +69,14 @@ final class WalletController
 
                 'is_user_logged' => isset($_SESSION['id']),
 
+                //href base
                 'log_in_href' => $routeParser->urlFor('login'),
                 'log_out_href' => $routeParser->urlFor('logOut'),
                 'sign_up_href' => $routeParser->urlFor('register'),
                 'profile_href' => $routeParser->urlFor('profile'),
                 'home_href' => $routeParser->urlFor('home'),
                 'store_href' =>  $routeParser->urlFor('store'),
+                'wallet_href' => $routeParser->urlFor('getWallet'),
             ]
         );
     }
