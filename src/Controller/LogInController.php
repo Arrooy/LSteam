@@ -24,25 +24,26 @@ final class LogInController extends GenericFormController
         parent::__construct($twig,$userRepository,true, $flash);
     }
 
-    public function show(Request $request, Response $response): Response
-    {
-
+    public function show(Request $request, Response $response): Response {
         return parent::showForm($request,$response,"handle-login","LogIn","Login",[]);
     }
 
-    public function handleFormSubmission(Request $request, Response $response): Response
-    {
+    public function handleFormSubmission(Request $request, Response $response): Response {
         $errors = parent::checkForm($request);
-        if(!empty($errors)){
+        if(!empty($errors))
             return parent::showForm($request,$response,"handle-login","LogIn","Login",$errors);
-        }
 
         try {
             $data = $request->getParsedBody();
-
             $result = $this->userRepository->getId($data['email'], $data['password']);
 
+            $user = $this->userRepository->getUser($result);
+
             $_SESSION['id'] = $result;
+
+            error_log(print_r($user->getProfilePic(), true));
+            $_SESSION['profilePic'] = ProfileController::UPLOADS_DIR . DIRECTORY_SEPARATOR . $user->getProfilePic();
+            error_log(print_r($_SESSION['profilePic'], true));
             
         } catch (Exception $exception) {
 

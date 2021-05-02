@@ -16,7 +16,7 @@ use Slim\Routing\RouteContext;
 
 final class ProfileController {
     public const DATE_FORMAT = 'Y-m-d';
-    private const UPLOADS_DIR = 'uploads';
+    public const UPLOADS_DIR = 'uploads';
 
     private const DEFAULT_IMG = 'default.jpg';
 
@@ -101,6 +101,7 @@ final class ProfileController {
                 $profilePic
             ));
 
+            $_SESSION['profilePic'] = ProfileController::UPLOADS_DIR . DIRECTORY_SEPARATOR . $profilePic;
             $errors['success'] = "Profile updated correctly!";
         }
 
