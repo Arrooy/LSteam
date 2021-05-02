@@ -15,7 +15,9 @@
         `price` float,
         `thumbnail` varchar(1000),
         `metacriticStore` int,
-        `releaseDate` DateTime
+        `releaseDate` DateTime,
+        `cheapestPrice` float,
+         `wished` BOOL
     );
 
     CREATE TABLE `users` (
@@ -45,6 +47,16 @@
     PRIMARY KEY(gameId, userId),
     FOREIGN KEY (userId) REFERENCES users(id)
     );
+   
+   DROP TABLE IF EXISTS wishedGames;
+    CREATE TABLE wishedGames (
+    gameId int NOT NULL,
+    userId int NOT NULL,
+    PRIMARY KEY(gameId, userId),
+    FOREIGN KEY (userId) REFERENCES users(id)
+    );
+   
+   
     ~~~~
 4 - sudo chmod 777 public/uploads/
 5 - Ja hauria de funcionar tot. 

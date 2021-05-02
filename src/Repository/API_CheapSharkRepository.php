@@ -53,6 +53,8 @@ class API_CheapSharkRepository implements CheapSharkRepository
                 $bigger_thumbnail,
                 $game['metacriticScore'],
                 new DateTime("@$release_date"),
+                0.0,
+                false,
                 false,
             ));
         }
@@ -98,54 +100,11 @@ class API_CheapSharkRepository implements CheapSharkRepository
             $bigger_thumbnail,
             $deal['gameInfo']['metacriticScore'],
             new DateTime('@' . $release_date),
-//          $deal['cheapestPrice']['price'],
-            false,
+            $deal['cheapestPrice']['price'] ?? -1.0,
+            False,
+            False,
         );
-
     }
-//
-//    // Donada una llista de games, retorna l'informacio d'aquets de l'API.
-//    public function getGamesByIds(array $game_ids): array
-//    {
-//        $res = $this->client->request('GET', 'https://www.cheapshark.com/api/1.0/games',
-//            [
-//                'query' => [
-//                    'ids' => implode(",", $game_ids),
-//                ]
-//            ]);
-//
-//        # Decodifiquem el body
-//        $jsonResponse = json_decode($res->getBody()->getContents(), true);
-//
-//        $games = [];
-//
-//        # Guardem els resultats que ens interesen.
-//        foreach ($jsonResponse as $gameId => $game) {
-//
-//            error_log(print_r($game_ids,true));
-//
-////            $deals = [];
-////
-////            foreach ($game['deals'] as $deal){
-////
-////                array_push($deals,new Deal());
-////            }
-//
-//            //Processem el thumbnail per aconseguir la versio augmentada.
-//            $bigger_thumbnail = $this->tryGetBiggerThumbnail($game['info']['thumb']);
-//
-//            array_push($games, new DetailedGame($game['info']['title'],
-//                $gameId,
-//                0.0,
-//                $bigger_thumbnail,
-//                $game['cheapestPriceEver']['price'],
-//                [],
-//            ));
-//        }
-//
-//        return $games;
-//    }
-
 
     private function tryGetBiggerThumbnail(string $thumb): string
     {

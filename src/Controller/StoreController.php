@@ -43,7 +43,7 @@ class StoreController
 
         return $this->twig->render(
             $response,
-            'store.twig',
+            'generic_game_display.twig',
             [
                 'formTitle' => "LSteam Store",
                 'formSubtitle' => "Wellcome to store! These are the 60 best deals:",
@@ -53,6 +53,7 @@ class StoreController
                 'game_deals' => $deals,
                 'is_user_logged' => isset($_SESSION['id']),
 
+                // Nota: El game id s'ignora aqui. Twig fa repace per al valor correcte.
                 'buyAction' => $routeParser->urlFor('handle-store-buy',['gameId' => 1]),
 
                 // Hrefs de la base
@@ -65,6 +66,7 @@ class StoreController
                 'store_href' =>  $routeParser->urlFor('store'),
                 'wallet_href' => $routeParser->urlFor('getWallet'),
                 'myGames_href' => $routeParser->urlFor('myGames'),
+                'wishlist_href' => $routeParser->urlFor('wishlist'),
             ]
         );
     }
@@ -76,7 +78,6 @@ class StoreController
         if(isset($_SESSION['id'])){
             $gameId = basename($request->getUri());
             $game = $this->cheapSharkRepository->getGame($gameId);
-
             $resulting_money = $this->userRepository->getMoney($_SESSION['id']) - $game->getPrice();
 
             if ($resulting_money >= 0) {
@@ -103,7 +104,7 @@ class StoreController
         error_log(print_r($games,true));
         return $this->twig->render(
             $response,
-            'store.twig',
+            'generic_game_display.twig',
             [
 
                 'formTitle' => "All my games",
@@ -113,6 +114,7 @@ class StoreController
                 'isMyGames' => true,
                 'is_user_logged' => isset($_SESSION['id']),
 
+                // Nota: El game id s'ignora aqui. Twig fa repace per al valor correcte.
                 'buyAction' => $routeParser->urlFor('handle-store-buy',['gameId' => 1]),
 
                 'profilePic' => (!isset($_SESSION['profilePic']) ? "" : $routeParser->urlFor('home') . $_SESSION['profilePic']),
@@ -123,7 +125,9 @@ class StoreController
                 'home_href' => $routeParser->urlFor('home'),
                 'store_href' =>  $routeParser->urlFor('store'),
                 'wallet_href' => $routeParser->urlFor('getWallet'),
-                'myGames_href' => $routeParser->urlFor('myGames'),            ]
+                'myGames_href' => $routeParser->urlFor('myGames'),
+                'wishlist_href' => $routeParser->urlFor('wishlist'),
+                ]
         );
     }
 }

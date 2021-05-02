@@ -54,6 +54,7 @@ abstract class GenericFormController
                 'store_href' =>  $routeParser->urlFor('store'),
                 'wallet_href' => $routeParser->urlFor('getWallet'),
                 'myGames_href' => $routeParser->urlFor('myGames'),
+                'wishlist_href' => $routeParser->urlFor('wishlist'),
             ]
         );
     }

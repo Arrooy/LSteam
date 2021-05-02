@@ -4,9 +4,20 @@
 {% block content %}
     <section class="section">
 
-        <h1 class="title is-1">{{ formTitle }}</h1>
-        <h2 class="subtitle ">{{ formSubtitle }}</h2>
 
+        {% if game_deals is empty%}
+            {% if isMyGames %}
+                <h1 class="title is-1">No games purcased yet :(</h1>
+
+            {%  elseif isWishlist%}
+                <h1 class="title is-1">No games saved yet :(</h1>
+
+            {% endif %}
+            <a href="{{ store_href }}">Click here to go to the store</a>
+        {% else %}
+            <h1 class="title is-1">{{ formTitle }}</h1>
+            <h2 class="subtitle ">{{ formSubtitle }}</h2>
+        {% endif %}
         {% if flash_messages is not empty %}
 
             {% for notification in flash_messages %}
@@ -18,7 +29,6 @@
 
         {% endif %}
         {% if game_deals %}
-
 
             {% set i = 0 %}
             {% if isMyGames %}
@@ -55,6 +65,7 @@
                                 <h3 class="title white">{{ deal.title }}</h3>
                                 <p class="subtitle white">{{ deal.price }}$</p>
                                 {% if isMyGames %}
+                                    <p class="subtitle white">Cheapest price ever {{ deal.cheapestPriceEver }}$</p>
                                     <p class="subtitle white">Metacritic Score: {{ deal.metacriticScore }}</p>
                                     <p class="subtitle white">Release year {{ deal.releaseDate|date('d - M - Y') }}</p>
                                 {% endif %}
@@ -69,18 +80,18 @@
                                 </form>
                             {% endif %}
                             {% endif %}
-
-                            <span class="icon star">
+                            <span class="icon {% if deal.wished %} negated {% endif%} star">
                                   <i class="fas fa-star"></i>
                             </span>
-
                         </div>
                     </div>
                 </div>
                 {% set i = i + 1 %}
             {% endfor %}
+
             </div>
         {% endif %}
+
 
 {#        <div class="tabs is-fullwidth">#}
 {#            <ul>#}

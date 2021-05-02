@@ -49,15 +49,20 @@ final class MySQLGameRepository implements GameRepository
             $title = $game->getTitle();
             $price = $game->getPrice();
             $getThumbnail = $game->getThumbnail();
-            $getMetacritireleaseDatecStor = $game->getMetacritireleaseDatecStore();
+            $getMetacritireleaseDatecStor = $game->getMetacriticScore();
             $getReleaseDate = $game->getReleaseDate()->format(self::DATE_FORMAT);
 
+            $cheapestPrice = $game->getCheapestPriceEver();
+            $isWished = $game->isWished() ? "1" : "0";
+
+            error_log("WISHED IS ");
+            error_log(print_r($game, true));
             if ($this->checkGame($game->getGameId(), $game->getPrice())) {
                 error_log(print_r("is innn", true));
 
                 $query = <<<'QUERY'
-                INSERT INTO Game(gameId, titol, price, thumbnail, metacriticStore, releaseDate)
-                VALUES(:gameId, :titol, :price, :thumbnail, :metacriticStore, :releaseDate)
+                INSERT INTO Game(gameId, titol, price, thumbnail, metacriticStore, releaseDate, cheapestPrice, wished)
+                VALUES(:gameId, :titol, :price, :thumbnail, :metacriticStore, :releaseDate, :cheapestPrice, :isWished)
                 QUERY;
 
                 $statement = $this->database->connection()->prepare($query);
@@ -68,6 +73,9 @@ final class MySQLGameRepository implements GameRepository
                 $statement->bindParam('thumbnail', $getThumbnail, PDO::PARAM_STR);
                 $statement->bindParam('metacriticStore', $getMetacritireleaseDatecStor, PDO::PARAM_STR);
                 $statement->bindParam('releaseDate', $getReleaseDate, PDO::PARAM_STR);
+
+                $statement->bindParam('cheapestPrice', $cheapestPrice, PDO::PARAM_STR);
+                $statement->bindParam('isWished', $isWished , PDO::PARAM_STR);
 
                 $statement->execute();
                 error_log(print_r("8", true));
@@ -128,7 +136,7 @@ final class MySQLGameRepository implements GameRepository
     }
 
     public function getOwnedGames(int $userId): array {
-
+        //TODO: AFEGIR LA VARIABLE WISHED AMB LA TAULA SQL CORRECTE.
         $query = <<<'QUERY'
         SELECT * 
         FROM ownedGames, Game 
@@ -144,9 +152,24 @@ final class MySQLGameRepository implements GameRepository
         while(true) {
             $res = $statement->fetch();
             if (!$res) break;
-            array_push($games, new Game($res['titol'], (int)$res['gameId'], (float)$res['price'], $res['thumbnail'],  (int)$res['metacriticStore'], new DateTime($res['releaseDate']), true));
+
+            array_push($games, new Game($res['titol'], (int)$res['gameId'], (float)$res['price'], $res['thumbnail'],
+
+                (int)$res['metacriticStore'], new DateTime($res['releaseDate']),(float) $res['cheapestPrice'], true,true));
         }
 
         return $games;
+    }
+
+    public function addWishedGame(int $gameId, int $userId): bool
+    {
+        // TODO: Implement addWishedGame() method.
+        return false;
+    }
+
+    public function getWishedGames(int $userId): array
+    {
+        // TODO: Implement getWishedGames() method.
+        return [];
     }
 }

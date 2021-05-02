@@ -13,6 +13,7 @@ use SallePW\SlimApp\Controller\WalletController;
 
 use SallePW\SlimApp\Controller\StoreController;
 use SallePW\SlimApp\Controller\VerifyUserController;
+use SallePW\SlimApp\Controller\WishListController;
 use SallePW\SlimApp\Middleware\StartSessionMiddleware;
 use SallePW\SlimApp\Middleware\VerifySessionMiddleware;
 
@@ -98,3 +99,13 @@ $app->post(
     WalletController::class . ":handleUpdate"
 )->setName('postWallet')->add($app->getContainer()->get('verifySessionMiddleware'));
 
+
+$app->get(
+    '/user/wishlist',
+    WishListController::class . ":show"
+)->setName('wishlist')->add($app->getContainer()->get('verifySessionMiddleware'));
+
+$app->get(
+    '/user/wishlist/{gameId}',
+    WishListController::class . ":showSingleGame"
+)->setName('wishlist')->add($app->getContainer()->get('verifySessionMiddleware'));

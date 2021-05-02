@@ -9,6 +9,7 @@ use SallePW\SlimApp\Controller\LogOutController;
 use SallePW\SlimApp\Controller\ProfileController;
 use SallePW\SlimApp\Controller\StoreController;
 use SallePW\SlimApp\Controller\VerifyUserController;
+use SallePW\SlimApp\Controller\WishListController;
 use SallePW\SlimApp\Middleware\VerifySessionMiddleware;
 use SallePW\SlimApp\Model\GameRepository;
 use SallePW\SlimApp\Repository\API_CheapSharkRepository;
@@ -144,5 +145,12 @@ $container->set(
     WalletController::class,
     function (Container $c) {
         return new WalletController($c->get("view"), $c->get(UserRepository::class));
+    }
+);
+
+$container->set(
+    WishListController::class,
+    function (Container $c) {
+        return new WishListController($c->get("view"), $c->get(GameRepository::class));
     }
 );

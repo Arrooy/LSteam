@@ -1,39 +1,40 @@
 <?php
-declare(strict_types=1);
+
 
 namespace SallePW\SlimApp\Controller;
 
-use Psr\Http\Message\ServerRequestInterface as Request;
+
+use SallePW\SlimApp\Model\GameRepository;
+
 use Psr\Http\Message\ResponseInterface as Response;
-
-use SallePW\SlimApp\Model\UserRepository;
-
-use Slim\Views\Twig;
 use Slim\Routing\RouteContext;
-use GuzzleHttp\Client;
+use Slim\Views\Twig;
+use Slim\Psr7\Request;
 
-
-final class WalletController
+class WishListController
 {
+    public function __construct(private Twig $twig,
+                                private GameRepository $gameRepository){}
 
-    public function __construct(private Twig $twig, private UserRepository $userRepository){}
-
-    public function show(Request $request, Response $response): Response
-    {   
+    public function show(Request $request, Response $response): Response {
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
 
-        $errors = [];
-
-        $money = $this->userRepository->getMoney($_SESSION['id']);
+        $wishes = $this->gameRepository->getWishedGames($_SESSION['id']);
 
         return $this->twig->render(
             $response,
-            'wallet.twig',
+            'generic_game_display.twig',
             [
-                'money' => number_format($money,2,',','.'),
+                'formTitle' => "Wishlsit",
+                'formSubtitle' => "Showing all saved games:",
 
+                'game_deals' => $wishes,
                 'is_user_logged' => isset($_SESSION['id']),
-                'errors' => $errors,
+
+                'isWishlist' => true,
+                // Nota: El game id s'ignora aqui. Twig fa repace per al valor correcte.
+                'buyAction' => $routeParser->urlFor('handle-store-buy',['gameId' => 1]),
+
                 // Hrefs de la base
                 'profilePic' => (!isset($_SESSION['profilePic']) ? "" : $routeParser->urlFor('home') . $_SESSION['profilePic']),
                 'log_in_href' => $routeParser->urlFor('login'),
@@ -49,51 +50,26 @@ final class WalletController
         );
     }
 
-    public function handleUpdate(Request $request, Response $response): Response
-    {   
-        $data = $request->getParsedBody();
-
+    public function showSingleGame(Request $request, Response $response): Response {
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
 
-        $errors = [];
+        // TODO fer el twig.
 
-        $curr_money = $this->userRepository->getMoney($_SESSION['id']);
-        $add_value = $data['money'];
-
-        if($add_value > PHP_INT_MAX){
-
-            $errors['tooBig'] = true;
-        }else{
-
-        if ($add_value != "" && !is_numeric($add_value)){
-            $errors['isNumeric'] = true;
-
-            // Mai pasara. no fa falta implemetar la ui.
-        }else{
-
-            $errors['positiveVal'] = ($add_value <= 0);
-
-            if(!$errors['positiveVal']){
-                $curr_money += $add_value;
-                $this->userRepository->setMoney($_SESSION['id'], (int)$curr_money);
-            }
-
-        }
-
-        }
-
+        $gameId = basename($request->getUri());
         return $this->twig->render(
             $response,
-            'wallet.twig',
+            'single_game.twig',
             [
-                'money' => number_format($curr_money,2,',','.'),
-                
-                'errors' => $errors,
+                'formTitle' => "Wishlsit",
 
                 'is_user_logged' => isset($_SESSION['id']),
-                'profilePic' => (!isset($_SESSION['profilePic']) ? "" : $routeParser->urlFor('home') . $_SESSION['profilePic']),
+
+                'isWishlist' => true,
+                // Nota: El game id s'ignora aqui. Twig fa repace per al valor correcte.
+                'buyAction' => $routeParser->urlFor('handle-store-buy',['gameId' => 1]),
 
                 // Hrefs de la base
+                'profilePic' => (!isset($_SESSION['profilePic']) ? "" : $routeParser->urlFor('home') . $_SESSION['profilePic']),
                 'log_in_href' => $routeParser->urlFor('login'),
                 'log_out_href' => $routeParser->urlFor('logOut'),
                 'sign_up_href' => $routeParser->urlFor('register'),

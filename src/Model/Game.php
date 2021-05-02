@@ -14,8 +14,8 @@ class Game
         private String $thumbnail,
         private int $metacriticScore,
         private DateTime $releaseDate,
-// TODO: AFEGIR
-//        private float $cheapestPriceEver
+        private float $cheapestPriceEver,
+        private bool $wished,
         private bool $owned,
     ) {}
 
@@ -91,10 +91,22 @@ class Game
         $this->owned = $owned;
     }
 
-
-
-    public function getMetacritireleaseDatecStore()
+    /**
+     * @return bool
+     */
+    public function isWished(): bool
     {
-        return $this->metacriticScore;
+        return $this->wished;
     }
+
+    /**
+     * @return float
+     */
+    public function getCheapestPriceEver(): float
+    {
+        return $this->cheapestPriceEver;
+    }
+
+
+
 }
