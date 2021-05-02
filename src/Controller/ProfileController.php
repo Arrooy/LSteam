@@ -56,7 +56,7 @@ final class ProfileController {
             'email' => $user->email(),
             'phone' => $user->getPhone(),
             'birthday' => $user->getBirthday()->format(self::DATE_FORMAT),
-            'profilePic' => $profilePic,
+            'profilePic' => (!isset($_SESSION['profilePic']) ? "" : $routeParser->urlFor('home') . $_SESSION['profilePic']),
 
             'change_password_href' => $routeParser->urlFor('changePassword'),
 
@@ -65,9 +65,10 @@ final class ProfileController {
             'log_out_href' => $routeParser->urlFor('logOut'),
             'sign_up_href' => $routeParser->urlFor('register'),
             'profile_href' => $routeParser->urlFor('profile'),
-            'store_href' =>  $routeParser->urlFor('store'),
             'home_href' => $routeParser->urlFor('home'),
-            'wallet_href' => $routeParser->urlFor('getWallet')
+            'store_href' =>  $routeParser->urlFor('store'),
+            'wallet_href' => $routeParser->urlFor('getWallet'),
+            'myGames_href' => $routeParser->urlFor('myGames'),
         ]);
     }
 

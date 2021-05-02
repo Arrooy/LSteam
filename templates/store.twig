@@ -19,17 +19,25 @@
         {% endif %}
         {% if game_deals %}
 
+
             {% set i = 0 %}
+            {% if isMyGames %}
+                {% set numberOfCols = 1 %}
+                {% else %}
 
-            {% set numberOfCols = random(2,3) %}
-
+                    {% set numberOfCols = random(2,3) %}
+            {% endif %}
             {% for deal in game_deals %}
 
                 {% if i is divisible by(numberOfCols) %}
                     {% if i != 0 %}
                         </div>
+                        {% if isMyGames %}
+                            {% set numberOfCols = 1 %}
+                        {% else %}
 
-                        {% set numberOfCols = random(2,3) %}
+                            {% set numberOfCols = random(2,3) %}
+                        {% endif %}
                     {% endif %}
 
                     <div class="tile is-ancestor" id="{{ numberOfCols }}">
@@ -46,13 +54,14 @@
                                 <h3 class="title white">{{ deal.title }}</h3>
                                 <p class="subtitle white">{{ deal.price }}$</p>
                             </div>
-
+                            {% if not isMyGames %}
                             {% if deal.owned %}
-                                <input type="submit" class="button is-grey-light" value="Owned" style="align-self:flex-start">
+                                <input type="submit" class="button" disabled value="Owned" style="align-self:flex-start">
                             {% else %}
                                 <form action="{{ buyAction|replace({'1':deal.gameid})}}" method="POST" accept-charset="utf-8">
                                     <input type="submit" class="button is-success" value="Buy" style="align-self:flex-start">
                                 </form>
+                            {% endif %}
                             {% endif %}
 
                             <span class="icon star">

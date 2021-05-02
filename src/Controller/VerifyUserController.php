@@ -50,7 +50,9 @@ final class VerifyUserController {
                 'gif_url' => $this->gifRepository->getRandomGif($gif_query),
 
                 // Hrefs de la base
-                'profilePic' => (!isset($_SESSION['profilePic']) ? "" : $_SESSION['profilePic']),
+
+                // Hrefs de la base
+                'profilePic' => (!isset($_SESSION['profilePic']) ? "" : $routeParser->urlFor('home') . $_SESSION['profilePic']),
                 'log_in_href' => $routeParser->urlFor('login'),
                 'log_out_href' => $routeParser->urlFor('logOut'),
                 'sign_up_href' => $routeParser->urlFor('register'),
@@ -58,6 +60,7 @@ final class VerifyUserController {
                 'home_href' => $routeParser->urlFor('home'),
                 'store_href' =>  $routeParser->urlFor('store'),
                 'wallet_href' => $routeParser->urlFor('getWallet'),
+                'myGames_href' => $routeParser->urlFor('myGames'),
             ]
         );
     }

@@ -103,48 +103,48 @@ class API_CheapSharkRepository implements CheapSharkRepository
         );
 
     }
-
-    // Donada una llista de games, retorna l'informacio d'aquets de l'API.
-    public function getGamesByIds(array $game_ids): array
-    {
-        $res = $this->client->request('GET', 'https://www.cheapshark.com/api/1.0/games',
-            [
-                'query' => [
-                    'ids' => implode(",", $game_ids),
-                ]
-            ]);
-
-        # Decodifiquem el body
-        $jsonResponse = json_decode($res->getBody()->getContents(), true);
-
-        $games = [];
-
-        # Guardem els resultats que ens interesen.
-        foreach ($jsonResponse as $gameId => $game) {
-
-            error_log(print_r($game_ids,true));
-
-//            $deals = [];
 //
-//            foreach ($game['deals'] as $deal){
+//    // Donada una llista de games, retorna l'informacio d'aquets de l'API.
+//    public function getGamesByIds(array $game_ids): array
+//    {
+//        $res = $this->client->request('GET', 'https://www.cheapshark.com/api/1.0/games',
+//            [
+//                'query' => [
+//                    'ids' => implode(",", $game_ids),
+//                ]
+//            ]);
 //
-//                array_push($deals,new Deal());
-//            }
-
-            //Processem el thumbnail per aconseguir la versio augmentada.
-            $bigger_thumbnail = $this->tryGetBiggerThumbnail($game['info']['thumb']);
-
-            array_push($games, new DetailedGame($game['info']['title'],
-                $gameId,
-                0.0,
-                $bigger_thumbnail,
-                $game['cheapestPriceEver']['price'],
-                [],
-            ));
-        }
-
-        return $games;
-    }
+//        # Decodifiquem el body
+//        $jsonResponse = json_decode($res->getBody()->getContents(), true);
+//
+//        $games = [];
+//
+//        # Guardem els resultats que ens interesen.
+//        foreach ($jsonResponse as $gameId => $game) {
+//
+//            error_log(print_r($game_ids,true));
+//
+////            $deals = [];
+////
+////            foreach ($game['deals'] as $deal){
+////
+////                array_push($deals,new Deal());
+////            }
+//
+//            //Processem el thumbnail per aconseguir la versio augmentada.
+//            $bigger_thumbnail = $this->tryGetBiggerThumbnail($game['info']['thumb']);
+//
+//            array_push($games, new DetailedGame($game['info']['title'],
+//                $gameId,
+//                0.0,
+//                $bigger_thumbnail,
+//                $game['cheapestPriceEver']['price'],
+//                [],
+//            ));
+//        }
+//
+//        return $games;
+//    }
 
 
     private function tryGetBiggerThumbnail(string $thumb): string

@@ -33,7 +33,7 @@ class StoreController
 
         foreach ($deals as $deal) {
             foreach ($ownedGames as $game) {
-                if (strcmp($deal->getGameId(), $game->getGameId()) !== 0) {
+                if (strcmp($deal->getGameId(), $game->getGameId()) == 0) {
                     $deal->setOwned(true);
                 }
             }
@@ -48,19 +48,21 @@ class StoreController
 
                 'flash_messages' => $messages['buy-error'] ?? [],
 
-                'game_deals' => $this->cheapSharkRepository->getDeals(),
+                'game_deals' => $deals,
                 'is_user_logged' => isset($_SESSION['id']),
 
                 'buyAction' => $routeParser->urlFor('handle-store-buy',['gameId' => 1]),
 
-                'profilePic' => $_SESSION['profilePic'],
+                // Hrefs de la base
+                'profilePic' => (!isset($_SESSION['profilePic']) ? "" : $routeParser->urlFor('home') . $_SESSION['profilePic']),
                 'log_in_href' => $routeParser->urlFor('login'),
                 'log_out_href' => $routeParser->urlFor('logOut'),
                 'sign_up_href' => $routeParser->urlFor('register'),
+                'profile_href' => $routeParser->urlFor('profile'),
                 'home_href' => $routeParser->urlFor('home'),
                 'store_href' =>  $routeParser->urlFor('store'),
-                'profile_href' =>  $routeParser->urlFor('profile'),
                 'wallet_href' => $routeParser->urlFor('getWallet'),
+                'myGames_href' => $routeParser->urlFor('myGames'),
             ]
         );
     }
@@ -77,8 +79,6 @@ class StoreController
 
             if ($resulting_money >= 0) {
                 $this->userRepository->setMoney($_SESSION['id'], $resulting_money);
-                error_log("Resulting money is :");
-                error_log(print_r($game,true));
                 $this->gameRepository->addBoughtGame($game, (int)$_SESSION['id']);
             }else{
                 $this->flash->addMessage('buy-error',"Error: There is not enough money in your wallet to buy that item. You need " . $resulting_money * -1 . " coins");
@@ -96,8 +96,9 @@ class StoreController
     {
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
 
-        $games = $this->gameRepository->getBoughtGames($_SESSION['id']);
+        $games = $this->gameRepository->getOwnedGames($_SESSION['id']);
 
+        error_log(print_r($games,true));
         return $this->twig->render(
             $response,
             'store.twig',
@@ -107,6 +108,7 @@ class StoreController
                 'formSubtitle' => "There are all the games you own. Great choice!",
 
                 'game_deals' => $games,
+                'isMyGames' => true,
                 'is_user_logged' => isset($_SESSION['id']),
 
                 'buyAction' => $routeParser->urlFor('handle-store-buy',['gameId' => 1]),

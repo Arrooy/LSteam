@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace SallePW\SlimApp\Repository;
 
+use DateTime;
 use Exception;
 use PDO;
 use SallePW\SlimApp\Model\Game;
@@ -99,9 +100,9 @@ final class MySQLGameRepository implements GameRepository
     }
 
     public function getOwnedGames(int $userId): array {
-        error_log(print_r($userId, TRUE));
+
         $query = <<<'QUERY'
-        SELECT * FROM ownedGames WHERE userId =:id;
+        SELECT * FROM ownedGames,Game WHERE ownedGames.userId =:id AND Game.gameId = ownedGames.gameId;
         QUERY;
 
         $statement = $this->database->connection()->prepare($query);
@@ -113,8 +114,7 @@ final class MySQLGameRepository implements GameRepository
         while(true) {
             $res = $statement->fetch();
             if (!$res) break;
-            //TODO: posar parametres correctament
-            array_push($games, new Game("", $res['gameId'], -1, "", -1, null, true));
+            array_push($games, new Game($res['titol'], (int)$res['gameId'], (float)$res['price'], $res['thumbnail'],  (int)$res['metacriticStore'], new DateTime($res['releaseDate']), true));
         }
 
         return $games;

@@ -128,13 +128,6 @@ final class MySQLUserRepository implements UserRepository
 
         $statement->execute();
         $res = $statement->fetch();
-
-        error_log(print_r($res, TRUE));
-        if($res){
-            error_log(print_r("RES IS TRUE", TRUE));
-        }else{
-            error_log(print_r("RES IS FAS", TRUE));
-        }
         if (!is_array($res)) return NULL;
 
         return new User(
