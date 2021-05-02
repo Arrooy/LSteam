@@ -1,0 +1,36 @@
+{% extends 'base.twig' %}
+
+{% block title %}Wallet{% endblock %}
+
+{% block content %}
+    <h1 class="title is-1">Welcome to your wallet</h1>
+
+    <form action="/user/wallet" method="POST" accept-charset="utf-8">
+        <input type="text"
+            name="money"
+            class="form-control">
+        </input>
+
+        <button type="submit">Add money</button>
+    </form>
+
+    <!--
+    <form action="{{ formAction }}" method="POST" accept-charset="utf-8">
+        <input type="text"
+                name="searchQuery"
+               value="">
+        <input type="submit" value="Search!">
+    </form>
+    {% if videos %}        
+        <ol>
+        {% for video in videos %}
+             <li><a href="https://www.youtube.com/watch?v={{video.link}}" target="_blank">{{ video.title }}</a></li>
+        {% endfor %}
+        </ol>
+    {% endif %}
+    <form action="{{ formLogOutAction }}" method="POST" accept-charset="utf-8">
+         <input type="submit" value="LogOut">
+    </form>
+    -->
+    
+{% endblock %}

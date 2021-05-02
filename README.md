@@ -4,7 +4,7 @@
 1. Obrir una terminal i buscar la carpeta del projecte
 1. <code>docker-compose up -d</code>
 1. configurar adminer:
-   1. Crear la Base de Dades anomenada "lsteam" amb les dues taules
+   1. Crear la Base de Dades anomenada "lsteam" amb les taules
     ~~~~
     CREATE DATABASE lsteam;
   
@@ -15,7 +15,8 @@
     `password` varchar(255) NOT NULL,
     `birthday` datetime NOT NULL,
     `phone` varchar(20) NOT NULL,
-    `profilePic` varchar(255)
+    `profilePic` varchar(255),
+    `money` int
     );
 
     CREATE TABLE `usersPending` (
@@ -24,7 +25,7 @@
     `email` varchar(255) NOT NULL,
     `password` varchar(255) NOT NULL,
     `birthday` datetime NOT NULL,
-    `phone` varchar(20) NOT NULL,
+    `phone` varchar(20) NOT NULL
     );
    
     CREATE TABLE `ownedGames` (
@@ -33,7 +34,7 @@
     FOREIGN KEY (userId) REFERENCES users(id)
     );
     ~~~~
-4 - sudo chmod 777 uploads/
+4 - sudo chmod 777 public/uploads/
 5 - Ja hauria de funcionar tot. 
 
     Login: http://localhost:8030/login

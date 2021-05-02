@@ -9,6 +9,7 @@ use SallePW\SlimApp\Controller\RegisterController;
 use SallePW\SlimApp\Controller\LogInController;
 use SallePW\SlimApp\Controller\SearchController;
 use SallePW\SlimApp\Controller\LandingController;
+use SallePW\SlimApp\Controller\WalletController;
 
 use SallePW\SlimApp\Controller\StoreController;
 use SallePW\SlimApp\Controller\VerifyUserController;
@@ -81,4 +82,14 @@ $app->post(
     '/profile/changePassword',
     ChangePasswordController::class . ":handleUpdate"
 )->setName('changePasswordUpdate');
+
+$app->get(
+    '/user/wallet',
+    WalletController::class . ":show"
+)->setName('getWallet');
+
+$app->post(
+    '/user/wallet',
+    WalletController::class . ":handleUpdate"
+)->setName('postWallet');
 

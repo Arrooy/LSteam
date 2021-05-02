@@ -20,6 +20,7 @@ use Slim\Views\Twig;
 use SallePW\SlimApp\Controller\LogInController;
 use SallePW\SlimApp\Controller\RegisterController;
 use SallePW\SlimApp\Controller\LandingController;
+use SallePW\SlimApp\Controller\WalletController;
 
 use SallePW\SlimApp\Repository\PDOSingleton;
 use SallePW\SlimApp\Repository\MySQLUserRepository;
@@ -136,5 +137,12 @@ $container->set(
     ChangePasswordController::class,
     function (Container $c) {
         return new ChangePasswordController($c->get("view"), $c->get(UserRepository::class));
+    }
+);
+
+$container->set(
+    WalletController::class,
+    function (Container $c) {
+        return new WalletController($c->get("view"), $c->get(UserRepository::class));
     }
 );
