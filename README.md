@@ -38,9 +38,11 @@
     `phone` varchar(20) NOT NULL
     );
    
-    CREATE TABLE `ownedGames` (
-    `gameId` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `userId` int NOT NULL,
+   DROP TABLE IF EXISTS ownedGames;
+    CREATE TABLE ownedGames (
+    gameId int NOT NULL,
+    userId int NOT NULL,
+    PRIMARY KEY(gameId, userId),
     FOREIGN KEY (userId) REFERENCES users(id)
     );
     ~~~~
