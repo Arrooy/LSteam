@@ -6,6 +6,7 @@ namespace SallePW\SlimApp\Controller;
 use SallePW\SlimApp\Controller\GenericFormController;
 
 use SallePW\SlimApp\Model\GifRepository;
+use Slim\Flash\Messages;
 use Slim\Interfaces\RouteParserInterface;
 use Slim\Routing\RouteContext;
 use Slim\Views\Twig;
@@ -25,9 +26,10 @@ final class RegisterController extends GenericFormController
 {
     public function __construct(private Twig $twig,
         private UserRepository $userRepository,
-        private GifRepository $gifRepository)
+        private GifRepository $gifRepository,
+                                private Messages $flash)
     {
-        parent::__construct($twig, $userRepository, false);
+        parent::__construct($twig, $userRepository, false,$flash);
     }
 
     public function show(Request $request, Response $response): Response

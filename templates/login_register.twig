@@ -10,6 +10,17 @@
                 <p class="is-danger">{{ formErrors.db }}</p>
             {% endif %}
 
+            {% if flash_messages is not empty %}
+
+                {% for notification in flash_messages %}
+                    <div class="notification is-danger">
+                        <button class="delete"></button>
+                        <p>{{ notification }}</p>
+                    </div>
+                {% endfor %}
+
+            {% endif %}
+
             <form action="{{ formAction }}" method="{{ formMethod }}" accept-charset="utf-8">
 
                 <div class="field">

@@ -88,4 +88,16 @@
     </div>
 </footer>
 </body>
+<script>
+    {#    Script per a tancar les alertes de l'usauri#}
+    document.addEventListener('DOMContentLoaded', () => {
+        (document.querySelectorAll('.notification .delete') || []).forEach(($delete) => {
+            const $notification = $delete.parentNode;
+
+            $delete.addEventListener('click', () => {
+                $notification.parentNode.removeChild($notification);
+            });
+        });
+    });
+</script>
 </html>

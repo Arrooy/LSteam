@@ -9,9 +9,12 @@ use SallePW\SlimApp\Controller\LogOutController;
 use SallePW\SlimApp\Controller\ProfileController;
 use SallePW\SlimApp\Controller\StoreController;
 use SallePW\SlimApp\Controller\VerifyUserController;
+use SallePW\SlimApp\Middleware\VerifySessionMiddleware;
+use SallePW\SlimApp\Model\GameRepository;
 use SallePW\SlimApp\Repository\API_CheapSharkRepository;
 use SallePW\SlimApp\Repository\API_GifRepository;
 use SallePW\SlimApp\Repository\CachingCheapSharkRepository;
+use SallePW\SlimApp\Repository\MySQLGameRepository;
 use Slim\Views\Twig;
 
 use SallePW\SlimApp\Controller\LogInController;
@@ -54,28 +57,43 @@ $container->set('game_api', function (Container $c) {
 
 $container->set(
     'flash',
-    function () {
+    function (ContainerInterface $c) {
+        if (session_status() != PHP_SESSION_ACTIVE)
+        session_start();
         return new Messages();
     }
 );
 
 $container->set(
-    UserRepository::class,
-    function (ContainerInterface $container) {
+    'verifySessionMiddleware',
+    function (ContainerInterface $c) {
+        return new VerifySessionMiddleware($c->get('flash'));
+    }
+);
+
+$container->set(
+UserRepository::class,
+function (ContainerInterface $container) {
     return new MySQLUserRepository($container->get('db'));
+});
+
+$container->set(
+GameRepository::class,
+function (ContainerInterface $container) {
+    return new MySQLGameRepository($container->get('db'));
 });
 
 $container->set(
     LogInController::class,
     function (Container $c) {
-        return new LogInController($c->get("view"),$c->get(UserRepository::class));
+        return new LogInController($c->get("view"),$c->get(UserRepository::class), $c->get('flash'));
     }
 );
 
 $container->set(
     RegisterController::class,
     function (Container $c) {
-        return new RegisterController($c->get("view"),$c->get(UserRepository::class), $c->get('gif_api'));
+        return new RegisterController($c->get("view"),$c->get(UserRepository::class), $c->get('gif_api'), $c->get('flash'));
     }
 );
 
@@ -103,7 +121,7 @@ $container->set(
 $container->set(
    StoreController::class,
     function (Container $c) {
-        return new StoreController($c->get('view'),$c->get('game_api'), $c->get('flash'));
+        return new StoreController($c->get('view'), $c->get('game_api'),$c->get(GameRepository::class), $c->get('flash'));
     }
 );
 

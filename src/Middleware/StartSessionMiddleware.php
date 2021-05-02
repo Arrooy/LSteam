@@ -11,6 +11,7 @@ final class StartSessionMiddleware
 {
     public function __invoke(Request $request, RequestHandler $next): Response
     {
+        if (session_status() != PHP_SESSION_ACTIVE)
         session_start();
         return $next->handle($request);
     }

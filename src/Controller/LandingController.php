@@ -6,8 +6,6 @@ namespace SallePW\SlimApp\Controller;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
-use SallePW\SlimApp\Model\UserSaveRepository;
-
 use Slim\Views\Twig;
 use Slim\Routing\RouteContext;
 use GuzzleHttp\Client;
@@ -22,10 +20,13 @@ final class LandingController
     {   
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
 
+
         return $this->twig->render(
             $response,
             'landing.twig',
             [
+
+
                 'is_user_logged' => isset($_SESSION['id']),
                 'log_in_href' => $routeParser->urlFor('login'),
                 'log_out_href' => $routeParser->urlFor('logOut'),

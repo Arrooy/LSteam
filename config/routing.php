@@ -50,12 +50,12 @@ $app->post(
 $app->get(
     '/profile',
     ProfileController::class . ":show"
-)->setName('profile')->add(VerifySessionMiddleware::class);
+)->setName('profile')->add($app->getContainer()->get('verifySessionMiddleware'));
 
 $app->post(
     '/profile',
     ProfileController::class . ":handleUpdate"
-)->setName('profileUpdate')->add(VerifySessionMiddleware::class);
+)->setName('profileUpdate')->add($app->getContainer()->get('verifySessionMiddleware'));
 
 $app->get(
     '/',

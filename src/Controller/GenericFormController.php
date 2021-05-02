@@ -6,6 +6,7 @@ namespace SallePW\SlimApp\Controller;
 use DateInterval;
 use Exception;
 use SallePW\SlimApp\Model\UserRepository;
+use Slim\Flash\Messages;
 use Slim\Routing\RouteContext;
 use Slim\Views\Twig;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -16,18 +17,24 @@ abstract class GenericFormController
 {
     public function __construct(private Twig $twig,
                                 private UserRepository $userRepository,
-                                private bool $is_login){}
+                                private bool $is_login,
+                                private Messages $flash){}
 
     protected function showForm(Request $request, Response $response,
     string $formAction, string $submitValue, string $formTitle, array $errors): Response{
 
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
 
+        $messages = $this->flash->getMessages();
+
         return $this->twig->render(
             $response,
             'login_register.twig',
             [
                 'is_user_logged' => isset($_SESSION['id']),
+
+                // Mostar flash message.
+                'flash_messages' => $messages['session_error'] ?? [],
 
                 'formData' => $request->getParsedBody(),
                 'formErrors' => $errors,

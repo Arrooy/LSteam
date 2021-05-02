@@ -5,6 +5,7 @@ namespace SallePW\SlimApp\Controller;
  
 use SallePW\SlimApp\Controller\GenericFormController;
 
+use Slim\Flash\Messages;
 use Slim\Routing\RouteContext;
 use Slim\Views\Twig;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -18,12 +19,14 @@ use DateTime;
 
 final class LogInController extends GenericFormController
 {
-    public function __construct(private Twig $twig, private UserRepository $userRepository) {
-        parent::__construct($twig,$userRepository,true);
+    public function __construct(private Twig $twig, private UserRepository $userRepository,
+    private Messages $flash) {
+        parent::__construct($twig,$userRepository,true, $flash);
     }
 
     public function show(Request $request, Response $response): Response
     {
+
         return parent::showForm($request,$response,"handle-login","LogIn","Login",[]);
     }
 
