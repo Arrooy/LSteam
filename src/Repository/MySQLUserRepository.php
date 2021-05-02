@@ -29,7 +29,7 @@ final class MySQLUserRepository implements UserRepository
         }
     }
 
-    private function getIdByEmail(string $email, string $password): int{
+    public function getIdByEmail(string $email, string $password): int{
         $query = <<< 'QUERY'
         SELECT * FROM users WHERE email=:email
         QUERY;
@@ -256,7 +256,7 @@ final class MySQLUserRepository implements UserRepository
         $password = $user->password();
         $phone = $user->getPhone();
         $profilePic = $user->getProfilePic();
-        $id = $_SESSION['id'];
+        $id = $user->getId();
 
         $statement->bindParam('username', $username, PDO::PARAM_STR);
         $statement->bindParam('email', $email, PDO::PARAM_STR);
@@ -291,5 +291,54 @@ final class MySQLUserRepository implements UserRepository
         $statement->bindParam('phone', $phone, PDO::PARAM_STR);
 
         $statement->execute();
+    }
+    public function setMoney(int $id, int $money): void {
+
+        $query = <<<'QUERY'
+        UPDATE users
+        SET money=:money
+        WHERE id=:id
+        QUERY;
+
+        $statement = $this->database->connection()->prepare($query);
+        error_log(print_r("Tot be amic!", true));
+        error_log(print_r($id, true));
+        error_log(print_r($money, true));
+        $statement->bindParam('id', $id, PDO::PARAM_STR);
+        $statement->bindParam('money', $money, PDO::PARAM_STR);
+
+        $statement->execute();
+    }
+    public function getMoney(int $id): int{
+        $query = <<< 'QUERY'
+        SELECT users.money FROM users WHERE id=:id
+        QUERY;
+        $statement = $this->database->connection()->prepare($query);
+        $statement->bindParam('id', $id, PDO::PARAM_STR);
+       
+        $statement->execute();
+        $res = $statement->fetch();
+
+        if (!is_array($res)) return -1;
+        error_log(print_r($res, true));
+        return (int) $res['money'];
+    }
+
+    public function getIdByGivenEmail(String $email): int{
+        $query = <<< 'QUERY'
+        SELECT * FROM users WHERE email=:email
+        QUERY;
+        error_log(print_r("Ara es printa el email", true));
+        error_log(print_r($email, true));
+
+        $statement = $this->database->connection()->prepare($query);
+        $statement->bindParam('email', $email, PDO::PARAM_STR);
+
+        $statement->execute();
+        $res = $statement->fetch();
+        error_log(print_r($res, true));
+        if (!is_array($res)) return -1;
+
+        return (int) $res['id'];
     }
 }

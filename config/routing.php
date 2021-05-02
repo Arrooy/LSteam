@@ -91,10 +91,10 @@ $app->get(
 $app->get(
     '/user/wallet',
     WalletController::class . ":show"
-)->setName('getWallet');
+)->setName('getWallet')->add($app->getContainer()->get('verifySessionMiddleware'));
 
 $app->post(
     '/user/wallet',
     WalletController::class . ":handleUpdate"
-)->setName('postWallet');
+)->setName('postWallet')->add($app->getContainer()->get('verifySessionMiddleware'));
 

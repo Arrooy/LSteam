@@ -31,6 +31,8 @@ final class VerifyUserController {
         if ($isSuccess){
             $message = "User confirmation done! Check your inbox to complete the registration and earn 50€!";
             $gif_query = "money";
+            
+            $this->userRepository->setMoney($this->userRepository->getIdByGivenEmail($_SESSION['email']), 50);
             $this->sendEmail($_SESSION['email'],'http://localhost:8030/login');
         }else{
             $message = "Error! Impossible to verify the user. Maybe you are already verified?";
@@ -47,12 +49,14 @@ final class VerifyUserController {
                 'gif_url' => $this->gifRepository->getRandomGif($gif_query),
 
                 // Hrefs de la base
+                'profilePic' => $_SESSION['profilePic'],
                 'log_in_href' => $routeParser->urlFor('login'),
                 'log_out_href' => $routeParser->urlFor('logOut'),
                 'sign_up_href' => $routeParser->urlFor('register'),
                 'profile_href' => $routeParser->urlFor('profile'),
                 'home_href' => $routeParser->urlFor('home'),
                 'store_href' =>  $routeParser->urlFor('store'),
+                'wallet_href' => $routeParser->urlFor('getWallet'),
             ]
         );
     }

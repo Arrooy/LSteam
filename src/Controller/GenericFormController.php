@@ -45,12 +45,14 @@ abstract class GenericFormController
                 'formTitle' => $formTitle,
 
                 // Hrefs de la base
+                'profilePic' => (!isset($_SESSION['profilePic']) ? "" : $_SESSION['profilePic']),
                 'log_in_href' => $routeParser->urlFor('login'),
                 'log_out_href' => $routeParser->urlFor('logOut'),
                 'sign_up_href' => $routeParser->urlFor('register'),
                 'profile_href' => $routeParser->urlFor('profile'),
                 'home_href' => $routeParser->urlFor('home'),
                 'store_href' =>  $routeParser->urlFor('store'),
+                'wallet_href' => $routeParser->urlFor('getWallet'),
             ]
         );
     }

@@ -5,6 +5,8 @@
 {% block content %}
     <h1 class="title is-1">Welcome to your wallet</h1>
 
+    <h2>You have {{ info.money }}€</h2>
+
     <form action="/user/wallet" method="POST" accept-charset="utf-8">
         <input type="text"
             name="money"
@@ -12,6 +14,9 @@
         </input>
 
         <button type="submit">Add money</button>
+        {% if ammount %}
+            <p class="help is-danger">Error in the ammount of money, has to be greater than 0!</p>
+        {% endif %}
     </form>
 
     <!--

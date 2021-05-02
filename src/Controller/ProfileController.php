@@ -16,7 +16,7 @@ use Slim\Routing\RouteContext;
 
 final class ProfileController {
     public const DATE_FORMAT = 'Y-m-d';
-    private const UPLOADS_DIR = 'uploads';
+    public const UPLOADS_DIR = 'uploads';
 
     private const DEFAULT_IMG = 'default.jpg';
 
@@ -66,7 +66,8 @@ final class ProfileController {
             'sign_up_href' => $routeParser->urlFor('register'),
             'profile_href' => $routeParser->urlFor('profile'),
             'store_href' =>  $routeParser->urlFor('store'),
-            'home_href' => $routeParser->urlFor('home')
+            'home_href' => $routeParser->urlFor('home'),
+            'wallet_href' => $routeParser->urlFor('getWallet')
         ]);
     }
 
@@ -101,6 +102,7 @@ final class ProfileController {
                 $profilePic
             ));
 
+            $_SESSION['profilePic'] = ProfileController::UPLOADS_DIR . DIRECTORY_SEPARATOR . $profilePic;
             $errors['success'] = "Profile updated correctly!";
         }
 
