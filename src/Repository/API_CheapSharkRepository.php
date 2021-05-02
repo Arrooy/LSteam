@@ -6,18 +6,18 @@ namespace SallePW\SlimApp\Repository;
 
 use GuzzleHttp\Client;
 use SallePW\SlimApp\Model\Game;
-use SallePW\SlimApp\Model\GameRepository;
+use SallePW\SlimApp\Model\CheapSharkRepository;
 
-class CheapSharkRepository implements GameRepository
+class API_CheapSharkRepository implements CheapSharkRepository
 {
     private Client $client;
-    private static ?CheapSharkRepository $instance = null;
+    private static ?API_CheapSharkRepository $instance = null;
 
     private function __construct(){
         $this->client = new Client();
     }
 
-    public static function getInstance():CheapSharkRepository{
+    public static function getInstance():API_CheapSharkRepository{
         if (self::$instance === null) {
             self::$instance = new self();
         }

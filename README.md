@@ -15,7 +15,7 @@
     `password` varchar(255) NOT NULL,
     `birthday` datetime NOT NULL,
     `phone` varchar(20) NOT NULL,
-    `profilePic` blob NULL
+    `profilePic` varchar(255)
     );
 
     CREATE TABLE `usersPending` (
@@ -25,10 +25,16 @@
     `password` varchar(255) NOT NULL,
     `birthday` datetime NOT NULL,
     `phone` varchar(20) NOT NULL,
-    `profilePic` blob NULL
-    )
+    );
+   
+    CREATE TABLE `ownedGames` (
+    `gameId` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `userId` int NOT NULL,
+    FOREIGN KEY (userId) REFERENCES users(id)
+    );
     ~~~~
-4 - Ja hauria de funcionar tot. 
+4 - sudo chmod 777 uploads/
+5 - Ja hauria de funcionar tot. 
 
     Login: http://localhost:8030/login
     Registre: http://localhost:8030/register

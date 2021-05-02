@@ -7,7 +7,7 @@ namespace SallePW\SlimApp\Controller;
 
 use Psr\Http\Message\ResponseInterface as Response;
 
-use SallePW\SlimApp\Model\GameRepository;
+use SallePW\SlimApp\Model\CheapSharkRepository;
 use Slim\Psr7\Request;
 use Slim\Routing\RouteContext;
 use Slim\Views\Twig;
@@ -16,7 +16,7 @@ use Slim\Flash\Messages;
 class StoreController
 {
     public function __construct(private Twig $twig,
-    private GameRepository $gameRepository,
+    private CheapSharkRepository $gameRepository,
     private Messages $flash){}
 
     public function show(Request $request, Response $response): Response
@@ -58,5 +58,10 @@ class StoreController
         return $response
             ->withHeader('Location', $routeParser->urlFor("store"))
             ->withStatus(302);
+    }
+
+    public function myGames(Request $request, Response $response): Response
+    {
+
     }
 }

@@ -4,7 +4,7 @@
 namespace SallePW\SlimApp\Model;
 
 
-interface GameRepository
+interface CheapSharkRepository
 {
     public function getDeals() : array;
     public function getGame(int $gameId): Game;

@@ -5,11 +5,11 @@ namespace SallePW\SlimApp\Repository;
 
 
 use SallePW\SlimApp\Model\Game;
-use SallePW\SlimApp\Model\GameRepository;
+use SallePW\SlimApp\Model\CheapSharkRepository;
 
-class CachingCheapSharkRepository implements GameRepository
+class CachingCheapSharkRepository implements CheapSharkRepository
 {
-    public function __construct(private GameRepository $repository, private Cache $cache){}
+    public function __construct(private CheapSharkRepository $repository, private Cache $cache){}
 
     public function getDeals(): array
     {

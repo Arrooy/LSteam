@@ -121,7 +121,7 @@ final class ProfileController {
                 return sprintf(self::INVALID_SIZE_ERROR, $format);
 
             try {
-                $uploadedFile->moveTo(self::UPLOADS_DIR . DIRECTORY_SEPARATOR . $name . "." . $format);
+                $uploadedFile->moveTo("./" . self::UPLOADS_DIR . DIRECTORY_SEPARATOR . $name . "." . $format);
                 $sizeInfo = getimagesize(self::UPLOADS_DIR . DIRECTORY_SEPARATOR . $name . "." . $format);
                 if ($sizeInfo[0] != 500 || $sizeInfo[1] != 500) {
                     unlink(self::UPLOADS_DIR . DIRECTORY_SEPARATOR . $name . "." . $format);

@@ -9,9 +9,9 @@ use SallePW\SlimApp\Controller\LogOutController;
 use SallePW\SlimApp\Controller\ProfileController;
 use SallePW\SlimApp\Controller\StoreController;
 use SallePW\SlimApp\Controller\VerifyUserController;
+use SallePW\SlimApp\Repository\API_CheapSharkRepository;
+use SallePW\SlimApp\Repository\API_GifRepository;
 use SallePW\SlimApp\Repository\CachingCheapSharkRepository;
-use SallePW\SlimApp\Repository\CheapSharkRepository;
-use SallePW\SlimApp\Repository\GIF;
 use Slim\Views\Twig;
 
 use SallePW\SlimApp\Controller\LogInController;
@@ -43,12 +43,12 @@ $container->set('db', function () {
     );
 });
 
-$container->set('gif_db', function () {
-    return GIF::getInstance($_ENV['GIPHY_API_KEY']);
+$container->set('gif_api', function () {
+    return API_GifRepository::getInstance($_ENV['GIPHY_API_KEY']);
 });
 
-$container->set('game_db', function (Container $c) {
-    return CheapSharkRepository::getInstance();
+$container->set('game_api', function (Container $c) {
+    return API_CheapSharkRepository::getInstance();
 //    return new CachingCheapSharkRepository($cheapSharkRepo, "['cache.store']);
 });
 
@@ -75,10 +75,9 @@ $container->set(
 $container->set(
     RegisterController::class,
     function (Container $c) {
-        return new RegisterController($c->get("view"),$c->get(UserRepository::class), $c->get('gif_db'));
+        return new RegisterController($c->get("view"),$c->get(UserRepository::class), $c->get('gif_api'));
     }
 );
-
 
 $container->set(
     LandingController::class,
@@ -90,7 +89,7 @@ $container->set(
 $container->set(
     VerifyUserController::class,
     function (Container $c) {
-        return new VerifyUserController($c->get("view"), $c->get(UserRepository::class), $c->get('gif_db'));
+        return new VerifyUserController($c->get("view"), $c->get(UserRepository::class), $c->get('gif_api'));
     }
 );
 
@@ -101,11 +100,10 @@ $container->set(
     }
 );
 
-
 $container->set(
    StoreController::class,
     function (Container $c) {
-        return new StoreController($c->get('view'),$c->get('game_db'), $c->get('flash'));
+        return new StoreController($c->get('view'),$c->get('game_api'), $c->get('flash'));
     }
 );
 

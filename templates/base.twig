@@ -50,14 +50,14 @@
             <div class="navbar-end">
                 <div class="navbar-item">
                     <div class="buttons">
-                        <a class="button is-primary" href="{{ sign_up_href }}">
-                            <strong>Sign up</strong>
-                        </a>
                         {% if is_user_logged %}
                         <form action="{{ log_out_href }}" method="POST" accept-charset="utf-8">
                             <input class="button is-danger" type="submit" name="logout" value="Log out" />
                         </form>
                         {% else %}
+                            <a class="button is-primary" href="{{ sign_up_href }}">
+                                <strong>Sign up</strong>
+                            </a>
                             <a class="button is-light" href="{{ log_in_href }}">
                                 Log in
                             </a>

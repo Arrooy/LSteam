@@ -3,14 +3,12 @@
 {% block title %}{{ formTitle }}{% endblock %}
 {% block content %}
     <section class="section">
-        <div class="hero is-fullheight-with-navbar">
-            <div class="hero-body">
-                <div class="container">
+               <div class="container">
                     <div class="columns is-centered">
                         <div class="column box is-two-thirds">
-                            <div class="is-flex is-flex-direction-row is-flex-wrap-wrap is-justify-content-space-between is-align-content-space-evenly is-align-items-start">
+                            <div class="is-flex is-flex-direction-row is-flex-wrap-wrap is-justify-content-space-between is-align-content-space-evenly is-align-items-center">
                                 <div class="field">
-                                    <h1 class="title ">{{ formTitle }}</h1>
+                                    <h1 class="title is-1">{{ formTitle }}</h1>
 
                                     {% if formErrors.success %}
                                         <p class="has-text-success">{{ formErrors.success }}</p>
@@ -109,7 +107,5 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
     </section>
 {% endblock %}
