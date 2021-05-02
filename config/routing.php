@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
+use SallePW\SlimApp\Controller\ChangePasswordController;
 use SallePW\SlimApp\Controller\LogOutController;
+use SallePW\SlimApp\Controller\ProfileController;
 use SallePW\SlimApp\Controller\RegisterController;
 use SallePW\SlimApp\Controller\LogInController;
 use SallePW\SlimApp\Controller\SearchController;
@@ -35,16 +37,6 @@ $app->post(
     RegisterController::class . ":handleFormSubmission"
 )->setName('handle-register');
 
-//$app->get(
-//    '/search',
-//    SearchController::class . ":show"
-//)->setName('search')->add(VerifySessionMiddleware::class);
-//
-//$app->post(
-//    '/search',
-//    SearchController::class . ":handleSearch"
-//)->setName('handle-search')->add(VerifySessionMiddleware::class);
-
 $app->get(
     '/activate',
     VerifyUserController::class . ":verifyUser"
@@ -54,6 +46,16 @@ $app->post(
     '/logOut',
     LogOutController::class . ":handle_log_out"
 )->setName('logOut');
+
+$app->get(
+    '/profile',
+    ProfileController::class . ":show"
+)->setName('profile')->add(VerifySessionMiddleware::class);
+
+$app->post(
+    '/profile',
+    ProfileController::class . ":handleUpdate"
+)->setName('profileUpdate')->add(VerifySessionMiddleware::class);
 
 $app->get(
     '/',
@@ -69,3 +71,14 @@ $app->post(
     '/store/buy/{gameId}',
     StoreController::class . ":buy"
 )->setName('handle-store-buy');
+
+$app->get(
+    '/profile/changePassword',
+    ChangePasswordController::class . ":show"
+)->setName('changePassword');
+
+$app->post(
+    '/profile/changePassword',
+    ChangePasswordController::class . ":handleUpdate"
+)->setName('changePasswordUpdate');
+

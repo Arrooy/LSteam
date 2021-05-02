@@ -12,7 +12,7 @@ use Exception;
 use DateTime;
 final class MySQLUserRepository implements UserRepository
 {
-    private const DATE_FORMAT = 'Y-m-d H:i:s';
+    public const DATE_FORMAT = 'Y-m-d H:i:s';
 
     private PDOSingleton $database;
 
@@ -165,6 +165,28 @@ final class MySQLUserRepository implements UserRepository
         return $res['token'];
     }
 
+    public function getUser(int $id) : ?User{
+        $query = <<< 'QUERY'
+        SELECT * FROM users WHERE id=:id
+        QUERY;
+        $statement = $this->database->connection()->prepare($query);
+        $statement->bindParam('id', $id, PDO::PARAM_STR);
+
+        $statement->execute();
+        $res = $statement->fetch();
+
+        if (!is_array($res)) return NULL;
+
+        return new User(
+            $res['username'],
+            $res['email'],
+            $res['password'],
+            new DateTime($res['birthday']),
+            $res['phone'] ?? '',
+            $res['profilePic'] ?? 'default.jpg'
+        );
+    }
+
     // Mira si un token existeix en la taula de pending users
     public function deletePendingUser(string $token) : bool{
         $query = <<< 'QUERY'
@@ -218,6 +240,36 @@ final class MySQLUserRepository implements UserRepository
 
         $statement->execute();
     }
+
+    public function updateUser(User $user): void {
+
+        $query = <<<'QUERY'
+        UPDATE users
+        SET username=:username, email=:email, password=:password, birthday=:birthday, phone=:phone, profilePic=:profilePic
+        WHERE id=:id
+        QUERY;
+
+        $statement = $this->database->connection()->prepare($query);
+
+        $username = $user->getUsername();
+        $email = $user->email();
+        $password = $user->password();
+        $birthday = $user->getBirthday()->format(self::DATE_FORMAT);
+        $phone = $user->getPhone();
+        $profilePic = $user->getProfilePic();
+        $id = $_SESSION['id'];
+
+        $statement->bindParam('username', $username, PDO::PARAM_STR);
+        $statement->bindParam('email', $email, PDO::PARAM_STR);
+        $statement->bindParam('password', $password, PDO::PARAM_STR);
+        $statement->bindParam('birthday', $birthday, PDO::PARAM_STR);
+        $statement->bindParam('phone', $phone, PDO::PARAM_STR);
+        $statement->bindParam('profilePic', $profilePic, PDO::PARAM_STR);
+        $statement->bindParam('id', $id, PDO::PARAM_STR);
+
+        $statement->execute();
+    }
+
 
     public function savePendingUser(User $user): void {
 

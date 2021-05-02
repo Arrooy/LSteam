@@ -4,7 +4,9 @@ declare(strict_types=1);
 use DI\Container;
 use Psr\Container\ContainerInterface;
 
+use SallePW\SlimApp\Controller\ChangePasswordController;
 use SallePW\SlimApp\Controller\LogOutController;
+use SallePW\SlimApp\Controller\ProfileController;
 use SallePW\SlimApp\Controller\StoreController;
 use SallePW\SlimApp\Controller\VerifyUserController;
 use SallePW\SlimApp\Repository\CachingCheapSharkRepository;
@@ -104,5 +106,19 @@ $container->set(
    StoreController::class,
     function (Container $c) {
         return new StoreController($c->get('view'),$c->get('game_db'), $c->get('flash'));
+    }
+);
+
+$container->set(
+    ProfileController::class,
+    function (Container $c) {
+        return new ProfileController($c->get("view"), $c->get(UserRepository::class));
+    }
+);
+
+$container->set(
+    ChangePasswordController::class,
+    function (Container $c) {
+        return new ChangePasswordController($c->get("view"), $c->get(UserRepository::class));
     }
 );

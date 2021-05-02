@@ -29,7 +29,6 @@ abstract class GenericFormController
             [
                 'is_user_logged' => isset($_SESSION['id']),
 
-
                 'formData' => $request->getParsedBody(),
                 'formErrors' => $errors,
                 'formAction' => $routeParser->urlFor($formAction),
@@ -42,6 +41,7 @@ abstract class GenericFormController
                 'log_in_href' => $routeParser->urlFor('login'),
                 'log_out_href' => $routeParser->urlFor('logOut'),
                 'sign_up_href' => $routeParser->urlFor('register'),
+                'profile_href' => $routeParser->urlFor('profile'),
                 'home_href' => $routeParser->urlFor('home'),
                 'store_href' =>  $routeParser->urlFor('store'),
             ]

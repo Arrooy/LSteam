@@ -32,7 +32,7 @@ final class RegisterController extends GenericFormController
 
     public function show(Request $request, Response $response): Response
     {
-        return parent::showForm($request,$response,"handle-register","Register","Register",[]);
+        return parent::showForm($request, $response,"handle-register","Register","Register",[]);
     }
 
     public function handleFormSubmission(Request $request, Response $response): Response {
