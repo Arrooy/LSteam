@@ -5,6 +5,7 @@ namespace SallePW\SlimApp\Repository;
 
 use Exception;
 use PDO;
+use SallePW\SlimApp\Model\Game;
 use SallePW\SlimApp\Model\GameRepository;
 
 final class MySQLGameRepository implements GameRepository
@@ -16,7 +17,7 @@ final class MySQLGameRepository implements GameRepository
         $this->database = $database;
     }
 
-    public function addBoughtGame(int $gameId, int $userId): bool
+    public function addBoughtGame(Game $game, int $userId): bool
     {
         try {
 
