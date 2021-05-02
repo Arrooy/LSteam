@@ -33,6 +33,17 @@
     `userId` int NOT NULL,
     FOREIGN KEY (userId) REFERENCES users(id)
     );
+   
+   DROP TABLE IF EXISTS friendRequests;
+   CREATE TABLE friendRequests (
+   id_orig int,
+   id_dest int,
+   state int DEFAULT '0',
+   accept_time timestamp NULL,
+   PRIMARY KEY (id_orig, id_dest),
+   FOREIGN KEY (id_orig) REFERENCES users (id),
+   FOREIGN KEY (id_dest) REFERENCES users (id)
+   );
     ~~~~
 4 - sudo chmod 777 public/uploads/
 5 - Ja hauria de funcionar tot. 

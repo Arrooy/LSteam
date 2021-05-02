@@ -52,6 +52,7 @@ final class RegisterController extends GenericFormController
             $data = $request->getParsedBody();
             
             $user = new User(
+                0,
                 $data['username'],
                 $data['email'],
                 password_hash($data['password'], PASSWORD_DEFAULT),

@@ -8,6 +8,7 @@ use DateTime;
 final class User
 {
     public function __construct(
+        private int $id,
         private string $username,
         private string $email,
         private string $password,
@@ -15,6 +16,14 @@ final class User
         private string $phone,
         private ?string $profilePic = NULL
     ) {}
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
 
     /**
      * @param string $password

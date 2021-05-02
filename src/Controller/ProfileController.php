@@ -93,6 +93,7 @@ final class ProfileController {
                 $profilePic
             ));*/
             $this->userRepository->updateUser(new User(
+                0,
                 $user->getUsername(),
                 $user->email(),
                 $user->password(),

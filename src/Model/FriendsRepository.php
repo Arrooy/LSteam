@@ -1,0 +1,12 @@
+<?php
+
+
+namespace SallePW\SlimApp\Model;
+
+
+interface FriendsRepository {
+    public function getFriends(int $user): array;
+    public function getRequests(int $user): array;
+    public function newRequest(int $orig, int $dest);
+    public function updateRequest(int $orig, int $dest, int $state);
+}

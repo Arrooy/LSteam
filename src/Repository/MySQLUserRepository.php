@@ -138,6 +138,7 @@ final class MySQLUserRepository implements UserRepository
         if (!is_array($res)) return NULL;
 
         return new User(
+            0,
             $res['username'],
             $res['email'],
             $res['password'],
@@ -178,6 +179,7 @@ final class MySQLUserRepository implements UserRepository
         if (!is_array($res)) return NULL;
 
         return new User(
+            $res['id'],
             $res['username'],
             $res['email'],
             $res['password'],
