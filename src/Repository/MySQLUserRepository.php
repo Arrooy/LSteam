@@ -249,7 +249,7 @@ final class MySQLUserRepository implements UserRepository
         $password = $user->password();
         $phone = $user->getPhone();
         $profilePic = $user->getProfilePic();
-        $id = $user->getId();
+        $id = $_SESSION['id'];
 
         $statement->bindParam('username', $username, PDO::PARAM_STR);
         $statement->bindParam('email', $email, PDO::PARAM_STR);
