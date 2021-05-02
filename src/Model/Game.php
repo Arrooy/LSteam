@@ -3,8 +3,7 @@
 
 namespace SallePW\SlimApp\Model;
 
-class Game
-{
+class Game {
     public function __construct(
         private String $title,
         private int $gameid,
@@ -46,4 +45,22 @@ class Game
     {
         return $this->thumbnail;
     }
+
+    /**
+     * @return bool
+     */
+    public function isOwned(): bool
+    {
+        return $this->owned;
+    }
+
+    /**
+     * @param bool $owned
+     */
+    public function setOwned(bool $owned): void
+    {
+        $this->owned = $owned;
+    }
+
+
 }

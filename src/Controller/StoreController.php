@@ -23,11 +23,21 @@ class StoreController
     private GameRepository $gameRepository,
     private Messages $flash){}
 
-    public function show(Request $request, Response $response): Response
-    {
+    public function show(Request $request, Response $response): Response {
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
 
         $messages = $this->flash->getMessages();
+
+        $deals = $this->cheapSharkRepository->getDeals();
+        $ownedGames = $this->gameRepository->getOwnedGames($_SESSION['id']);
+
+        foreach ($deals as $deal) {
+            foreach ($ownedGames as $game) {
+                if (strcmp($deal->getGameId(), $game->getGameId()) !== 0) {
+                    $deal->setOwned(true);
+                }
+            }
+        }
 
         return $this->twig->render(
             $response,

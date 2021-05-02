@@ -47,9 +47,13 @@
                                 <p class="subtitle white">{{ deal.price }}$</p>
                             </div>
 
-                            <form action="{{ buyAction|replace({'1':deal.gameid})}}" method="POST" accept-charset="utf-8">
-                                <input type="submit" class="button is-success" value="Buy" style="align-self:flex-start">
-                            </form>
+                            {% if deal.owned %}
+                                <input type="submit" class="button is-grey-light" value="Owned" style="align-self:flex-start">
+                            {% else %}
+                                <form action="{{ buyAction|replace({'1':deal.gameid})}}" method="POST" accept-charset="utf-8">
+                                    <input type="submit" class="button is-success" value="Buy" style="align-self:flex-start">
+                                </form>
+                            {% endif %}
 
                             <span class="icon star">
                                   <i class="fas fa-star"></i>

@@ -49,7 +49,8 @@ class API_CheapSharkRepository implements CheapSharkRepository
             array_push($games, new Game($game['title'],
                 $game['gameID'],
                 $game['normalPrice'],
-                $bigger_thumbnail));
+                $bigger_thumbnail,
+                false)); //TODO: agafar els jocs owned i posar a true quan sigui
         }
 
         return $games;

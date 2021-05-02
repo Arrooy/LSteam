@@ -5,6 +5,7 @@ namespace SallePW\SlimApp\Repository;
 
 use Exception;
 use PDO;
+use SallePW\SlimApp\Model\Game;
 use SallePW\SlimApp\Model\GameRepository;
 
 final class MySQLGameRepository implements GameRepository
@@ -66,5 +67,27 @@ final class MySQLGameRepository implements GameRepository
 
             return [];
         }
+    }
+
+    public function getOwnedGames(int $userId): array {
+        error_log(print_r($userId, TRUE));
+        $query = <<<'QUERY'
+        SELECT * FROM ownedGames WHERE userId =:id;
+        QUERY;
+
+        $statement = $this->database->connection()->prepare($query);
+        $statement->bindParam('id', $userId, PDO::PARAM_STR);
+
+        $statement->execute();
+
+        $games = [];
+        while(true) {
+            $res = $statement->fetch();
+            if (!$res) break;
+            //TODO: posar parametres correctament
+            array_push($games, new Game("", $res['gameId'], -1, "", -1, null, true));
+        }
+
+        return $games;
     }
 }
