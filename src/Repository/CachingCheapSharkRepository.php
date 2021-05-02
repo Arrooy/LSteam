@@ -4,6 +4,7 @@
 namespace SallePW\SlimApp\Repository;
 
 
+use SallePW\SlimApp\Model\Game;
 use SallePW\SlimApp\Model\GameRepository;
 
 class CachingCheapSharkRepository implements GameRepository
@@ -17,5 +18,10 @@ class CachingCheapSharkRepository implements GameRepository
             // If cache has expired, grab the games out of the API
             return $this->repository->getDeals();
         });
+    }
+
+    public function getGame(int $gameId): Game
+    {
+        // TODO: Implement getGame() method.
     }
 }
