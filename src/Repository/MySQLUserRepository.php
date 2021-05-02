@@ -183,7 +183,7 @@ final class MySQLUserRepository implements UserRepository
             $res['password'],
             new DateTime($res['birthday']),
             $res['phone'] ?? '',
-            $res['profilePic'] ?? 'default.jpg'
+            $res['profilePic'] ?? 'default.jpg',
         );
     }
 

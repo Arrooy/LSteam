@@ -10,7 +10,9 @@ class Game
         private int $gameid,
         private float $price,
         private String $thumbnail,
-
+        private int $metacriticScore,
+        private DateTime $releaseDate,
+        private bool $owned,
     ) {}
 
     /**

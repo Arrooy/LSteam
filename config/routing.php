@@ -64,7 +64,7 @@ $app->get(
 )->setName('home');
 
 $app->get(
-    '/store',
+    '/store/',
     StoreController::class . ":show"
 )->setName('store');
 
@@ -82,6 +82,11 @@ $app->post(
     '/profile/changePassword',
     ChangePasswordController::class . ":handleUpdate"
 )->setName('changePasswordUpdate');
+
+$app->get(
+    '/user/myGames',
+    StoreController::class . ":myGames"
+)->setName('myGames');
 
 $app->get(
     '/user/wallet',

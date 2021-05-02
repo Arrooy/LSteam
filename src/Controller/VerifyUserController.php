@@ -16,7 +16,6 @@ use SallePW\SlimApp\Model\UserRepository;
 use Slim\Views\Twig;
 use Slim\Routing\RouteContext;
 
-
 final class VerifyUserController {
 
     public function __construct(private Twig $twig, private UserRepository $userRepository,

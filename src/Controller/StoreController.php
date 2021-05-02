@@ -74,6 +74,30 @@ class StoreController
 
     public function myGames(Request $request, Response $response): Response
     {
+        $routeParser = RouteContext::fromRequest($request)->getRouteParser();
 
+        $games = $this->gameRepository->getBoughtGames($_SESSION['id']);
+
+        return $this->twig->render(
+            $response,
+            'store.twig',
+            [
+
+                'formTitle' => "All my games",
+                'formSubtitle' => "There are all the games you own. Great choice!",
+
+                'game_deals' => $games,
+                'is_user_logged' => isset($_SESSION['id']),
+
+                'buyAction' => $routeParser->urlFor('handle-store-buy',['gameId' => 1]),
+
+                'log_in_href' => $routeParser->urlFor('login'),
+                'log_out_href' => $routeParser->urlFor('logOut'),
+                'sign_up_href' => $routeParser->urlFor('register'),
+                'home_href' => $routeParser->urlFor('home'),
+                'store_href' =>  $routeParser->urlFor('store'),
+                'profile_href' =>  $routeParser->urlFor('profile'),
+            ]
+        );
     }
 }
