@@ -4,14 +4,8 @@
 {% block content %}
     <section class="section">
 
-        <h1 class="title is-1">LSteam Store</h1>
-        <h2 class="subtitle ">Wellcome to store! These are the 60 best deals:</h2>
-
-        {# <p>{{ deal.gameid }}</p> #}
-        {# <p>{{ deal.price }}</p> #}
-        {# <p>{{ deal.thumbnail }}</p> #}
-
-
+        <h1 class="title is-1">{{ formTitle }}</h1>
+        <h2 class="subtitle ">{{ formSubtitle }}</h2>
 
         {% if flash_messages is not empty %}
 
@@ -67,11 +61,7 @@
                 {% set i = i + 1 %}
             {% endfor %}
             </div>
-            {% if not (i is divisible by(numberOfCols)) %}
-
-            {% endif %}
         {% endif %}
-
 
 {#        <div class="tabs is-fullwidth">#}
 {#            <ul>#}
@@ -90,31 +80,5 @@
 {#                </li>#}
 {#            </ul>#}
 {#        </div>#}
-
     </section>
 {% endblock %}
-
-
-{# Tiles diferents que no molen #}
-{# <div class="tile is-parent"> #}
-{# <article class="tile is-child box"> #}
-{# <img class="image is-3by4" src="{{ deal.thumbnail }}" alt="Game image" > #}
-
-{# <h4 class="title">{{ deal.title }}</h4> #}
-{# <p class="subtitle">{{ deal.price }}</p> #}
-{# </article> #}
-{# </div> #}
-
-{# <div class="tile is-parent"> #}
-{# <article class="tile is-child box")"> #}
-{# <img class="image" src="{{ deal.thumbnail }}"> #}
-{# <div class=""> #}
-{# <h3 class="title is-5">{{ deal.title|title }}</h3> #}
-{# <p class="subtitle is-6">{{ deal.price }}$</p> #}
-{# </div> #}
-{# <form> #}
-
-{# </form> #}
-
-{# </article> #}
-{# </div>   #}

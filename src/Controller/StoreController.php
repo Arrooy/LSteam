@@ -31,6 +31,9 @@ class StoreController
             $response,
             'store.twig',
             [
+                'formTitle' => "LSteam Store",
+                'formSubtitle' => "Wellcome to store! These are the 60 best deals:",
+
                 'flash_messages' => $messages['buy-error'] ?? [],
 
                 'game_deals' => $this->cheapSharkRepository->getDeals(),

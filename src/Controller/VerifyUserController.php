@@ -12,7 +12,6 @@ use Psr\Http\Message\ResponseInterface as Response;
 use SallePW\SlimApp\Model\GifRepository;
 use SallePW\SlimApp\Model\User;
 use SallePW\SlimApp\Model\UserRepository;
-use SallePW\SlimApp\Model\UserSaveRepository;
 
 use Slim\Views\Twig;
 use Slim\Routing\RouteContext;
@@ -75,7 +74,7 @@ final class VerifyUserController {
             $mail->addAddress($email);
             //Content
             $mail->isHTML(true);                                  //Set email format to HTML
-            $mail->Subject = 'Open this link to start in LSteam';
+            $mail->Subject = 'We added 50$ into your account! Open this link to start in LSteam';
 
             //Generate the link to send in the email to activate
             $mail->Body    = 'Click this link to start the xperience! <a href="' . $base . '"> Link</a>';
