@@ -51,9 +51,9 @@
                 <div class="navbar-item">
                     <div class="buttons">
                         {% if is_user_logged %}
-                        <form action="{{ log_out_href }}" method="POST" accept-charset="utf-8">
-                            <input class="button is-danger" type="submit" name="logout" value="Log out" />
-                        </form>
+                            <form action="{{ log_out_href }}" method="POST" accept-charset="utf-8">
+                                <input class="button is-danger" type="submit" name="logout" value="Log out" />
+                            </form>
                         {% else %}
                             <a class="button is-primary" href="{{ sign_up_href }}">
                                 <strong>Sign up</strong>
@@ -64,6 +64,13 @@
                         {% endif %}
                     </div>
                 </div>
+                {% if is_user_logged %}
+                    <a href="{{ profile_href }}">
+                        <figure class="image is-48x48 m-2">
+                            <img class="is-rounded" src="{{ profilePic }}">
+                        </figure>
+                    </a>
+                {% endif %}
             </div>
         </div>
     </nav>

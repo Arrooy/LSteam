@@ -26,7 +26,7 @@ final class LandingController
             'landing.twig',
             [
 
-
+                'profilePic' => (!isset($_SESSION['profilePic']) ? "" : $_SESSION['profilePic']),
                 'is_user_logged' => isset($_SESSION['id']),
                 'log_in_href' => $routeParser->urlFor('login'),
                 'log_out_href' => $routeParser->urlFor('logOut'),

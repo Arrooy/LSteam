@@ -89,6 +89,7 @@ final class RegisterController extends GenericFormController
                 'gif_url' => $this->gifRepository->getRandomGif("success"),
                 'formTitle' => "Register",
 
+                'profilePic' => $_SESSION['profilePic'],
                 'log_in_href' => $routeParser->urlFor('login'),
                 'log_out_href' => $routeParser->urlFor('logOut'),
                 'sign_up_href' => $routeParser->urlFor('register'),
