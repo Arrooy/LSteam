@@ -9,6 +9,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 use SallePW\SlimApp\Model\CheapSharkRepository;
 use SallePW\SlimApp\Model\GameRepository;
+use SallePW\SlimApp\Model\UserRepository;
 use Slim\Psr7\Request;
 use Slim\Routing\RouteContext;
 use Slim\Views\Twig;
@@ -17,6 +18,7 @@ use Slim\Flash\Messages;
 class StoreController
 {
     public function __construct(private Twig $twig,
+    private UserRepository $userRepository,
     private CheapSharkRepository $cheapSharkRepository,
     private GameRepository $gameRepository,
     private Messages $flash){}
@@ -58,12 +60,15 @@ class StoreController
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
 
         if(isset($_SESSION['id'])){
-            $have_money = true;
-            if ( $have_money ) {
-                $gameId = basename($request->getUri());
-                $this->gameRepository->addBoughtGame((int)$gameId,(int)$_SESSION['id']);
+            $gameId = basename($request->getUri());
+            $game = $this->cheapSharkRepository->getGame($gameId);
+            $resulting_money = $this->userRepository->getMoney($_SESSION['id']) - $game->getPrice();
+
+            if ($resulting_money >= 0) {
+                $this->userRepository->setMoney($_SESSION['id'], $resulting_money);
+                $this->gameRepository->addBoughtGame($game, (int)$_SESSION['id']);
             }else{
-                $this->flash->addMessage('buy-error',"Error: There is not enough money in your wallet to buy that item");
+                $this->flash->addMessage('buy-error',"Error: There is not enough money in your wallet to buy that item. You need " . $resulting_money * -1 . " coins");
             }
         }else{
             $this->flash->addMessage('buy-error',"Error: You are not logged in. Please login!");
