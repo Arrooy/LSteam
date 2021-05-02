@@ -74,4 +74,9 @@ class Game
     {
         return $this->owned;
     }
+
+    public function getMetacritireleaseDatecStore()
+    {
+        return $this->metacriticScore;
+    }
 }
