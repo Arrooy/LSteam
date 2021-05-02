@@ -32,6 +32,8 @@ final class VerifyUserController {
         if ($isSuccess){
             $message = "User confirmation done! Check your inbox to complete the registration and earn 50€!";
             $gif_query = "money";
+            
+            $this->userRepository->setMoney($this->userRepository->getIdByGivenEmail($_SESSION['email']), 50);
             $this->sendEmail($_SESSION['email'],'http://localhost:8030/login');
         }else{
             $message = "Error! Impossible to verify the user. Maybe you are already verified?";

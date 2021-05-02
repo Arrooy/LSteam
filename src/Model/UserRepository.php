@@ -16,4 +16,11 @@ interface UserRepository
     public function updateUser(User $user): void;
 
     public function getId(string $emailOrUsername, string $password): int;
+
+    public function setMoney(int $id, int $money): void;
+
+    public function getMoney(int $id): int;
+
+    public function getIdByGivenEmail(String $email): int;
+
 }

@@ -26,7 +26,7 @@ final class LogInController extends GenericFormController
 
     public function show(Request $request, Response $response): Response
     {
-
+        
         return parent::showForm($request,$response,"handle-login","LogIn","Login",[]);
     }
 
