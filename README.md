@@ -7,7 +7,17 @@
    1. Crear la Base de Dades anomenada "lsteam" amb les taules
     ~~~~
     CREATE DATABASE lsteam;
-  
+
+    CREATE TABLE `Game`(
+        `id` Serial,
+        `gameId` int,
+        `titol` varchar(1000),
+        `price` float,
+        `thumbnail` varchar(1000),
+        `metacriticStore` int,
+        `releaseDate` DateTime
+    );
+
     CREATE TABLE `users` (
     `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `username` varchar(255) NOT NULL,
