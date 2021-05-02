@@ -3,39 +3,41 @@
 {% block title %}Wallet{% endblock %}
 
 {% block content %}
+    <section class="section">
+        <div class="container">
+            <div class="columns is-centered">
+                <div class="column box is-two-thirds">
     <h1 class="title is-1">Welcome to your wallet</h1>
 
-    <h2>You have {{ info.money }}€</h2>
+    <h2 class="subtitle is-4">Your current balance is {{ money }} coins</h2>
 
     <form action="/user/wallet" method="POST" accept-charset="utf-8">
-        <input type="text"
-            name="money"
-            class="form-control">
-        </input>
+        <div class="field">
+            <label class="label">Add money to wallet</label>
+            <p class="control has-icons-left">
+                <input class="input {% if errors.positiveVal %}{{ "is-danger" }}{% endif %}" type="number" name="money" placeholder="Amount of money" autocomplete="off"
+                       value="">
 
-        <button type="submit">Add money</button>
-        {% if ammount %}
+                <span class="icon is-small is-left">
+                                            <i class="fas fa-wallet"></i>
+                                        </span>
+            </p>
+        </div>
+
+
+        <div class="field">
+            <p class="control">
+                <input type="submit" class="button is-success " value="Add money" >
+            </p>
+        </div>
+        {% if errors.positiveVal %}
             <p class="help is-danger">Error in the ammount of money, has to be greater than 0!</p>
         {% endif %}
     </form>
 
-    <!--
-    <form action="{{ formAction }}" method="POST" accept-charset="utf-8">
-        <input type="text"
-                name="searchQuery"
-               value="">
-        <input type="submit" value="Search!">
-    </form>
-    {% if videos %}        
-        <ol>
-        {% for video in videos %}
-             <li><a href="https://www.youtube.com/watch?v={{video.link}}" target="_blank">{{ video.title }}</a></li>
-        {% endfor %}
-        </ol>
-    {% endif %}
-    <form action="{{ formLogOutAction }}" method="POST" accept-charset="utf-8">
-         <input type="submit" value="LogOut">
-    </form>
-    -->
-    
+    </div>
+    </div>
+    </div>
+    </section>
+
 {% endblock %}

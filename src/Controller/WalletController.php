@@ -22,16 +22,18 @@ final class WalletController
     {   
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
 
-        $data['money'] = $this->userRepository->getMoney($_SESSION['id']);
+        $errors = [];
+
+        $money = $this->userRepository->getMoney($_SESSION['id']);
 
         return $this->twig->render(
             $response,
             'wallet.twig',
             [
-                'info' => $data,
+                'money' => number_format($money,2,',','.'),
 
                 'is_user_logged' => isset($_SESSION['id']),
-
+                'errors' => $errors,
                 // Hrefs de la base
                 'profilePic' => (!isset($_SESSION['profilePic']) ? "" : $routeParser->urlFor('home') . $_SESSION['profilePic']),
                 'log_in_href' => $routeParser->urlFor('login'),
@@ -52,29 +54,37 @@ final class WalletController
 
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
 
-        
-        $error = ($data['money'] <= 0);
+        $errors = [];
 
-        if(!$error){
-            $money = $this->userRepository->getMoney($_SESSION['id']);
-            $data['money'] += $money;
-            $this->userRepository->setMoney($_SESSION['id'], $data['money']);
+
+        $curr_money = $this->userRepository->getMoney($_SESSION['id']);
+        $add_value = $data['money'];
+
+        if ($add_value != "" && !is_numeric($add_value)){
+            $errors['isNumeric'] = true;
+            // Mai pasara. no fa falta implemetar la ui.
         }else{
-            $data['money'] = $this->userRepository->getMoney($_SESSION['id']);
+
+            $errors['positiveVal'] = ($add_value <= 0);
+
+            if(!$errors['positiveVal']){
+                $curr_money += $add_value;
+                $this->userRepository->setMoney($_SESSION['id'], $curr_money);
+            }
+
         }
-        
         return $this->twig->render(
             $response,
             'wallet.twig',
             [
-                'info' => $data,
+                'money' => number_format($curr_money,2,',','.'),
                 
-                'ammount' => $error,
+                'errors' => $errors,
 
                 'is_user_logged' => isset($_SESSION['id']),
-                'profilePic' => (!isset($_SESSION['profilePic']) ? "" : $_SESSION['profilePic']),
+                'profilePic' => (!isset($_SESSION['profilePic']) ? "" : $routeParser->urlFor('home') . $_SESSION['profilePic']),
 
-                //href base
+                // Hrefs de la base
                 'log_in_href' => $routeParser->urlFor('login'),
                 'log_out_href' => $routeParser->urlFor('logOut'),
                 'sign_up_href' => $routeParser->urlFor('register'),
@@ -82,6 +92,7 @@ final class WalletController
                 'home_href' => $routeParser->urlFor('home'),
                 'store_href' =>  $routeParser->urlFor('store'),
                 'wallet_href' => $routeParser->urlFor('getWallet'),
+                'myGames_href' => $routeParser->urlFor('myGames'),
             ]
         );
     }
