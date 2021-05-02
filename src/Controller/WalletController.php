@@ -56,12 +56,17 @@ final class WalletController
 
         $errors = [];
 
-
         $curr_money = $this->userRepository->getMoney($_SESSION['id']);
         $add_value = $data['money'];
 
+        if($add_value > PHP_INT_MAX){
+
+            $errors['tooBig'] = true;
+        }else{
+
         if ($add_value != "" && !is_numeric($add_value)){
             $errors['isNumeric'] = true;
+
             // Mai pasara. no fa falta implemetar la ui.
         }else{
 
@@ -69,10 +74,13 @@ final class WalletController
 
             if(!$errors['positiveVal']){
                 $curr_money += $add_value;
-                $this->userRepository->setMoney($_SESSION['id'], $curr_money);
+                $this->userRepository->setMoney($_SESSION['id'], (int)$curr_money);
             }
 
         }
+
+        }
+
         return $this->twig->render(
             $response,
             'wallet.twig',

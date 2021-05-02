@@ -15,7 +15,7 @@
         <div class="field">
             <label class="label">Add money to wallet</label>
             <p class="control has-icons-left">
-                <input class="input {% if errors.positiveVal %}{{ "is-danger" }}{% endif %}" type="number" name="money" placeholder="Amount of money" autocomplete="off"
+                <input class="input {% if errors.positiveVal or errors.tooBig %}{{ "is-danger" }}{% endif %}" type="number" name="money" placeholder="Amount of money" autocomplete="off"
                        value="">
 
                 <span class="icon is-small is-left">
@@ -31,8 +31,12 @@
             </p>
         </div>
         {% if errors.positiveVal %}
-            <p class="help is-danger">Error in the ammount of money, has to be greater than 0!</p>
+            <p class="help is-danger">Error! The money amount has to be greater than 0!</p>
         {% endif %}
+        {% if errors.tooBig %}
+            <p class="help is-danger">Error! The money amount has to be smaller than 2 Billion!</p>  <p class="help is-danger"></p>
+        {% endif %}
+
     </form>
 
     </div>
