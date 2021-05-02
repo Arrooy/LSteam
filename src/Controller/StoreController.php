@@ -77,6 +77,8 @@ class StoreController
 
             if ($resulting_money >= 0) {
                 $this->userRepository->setMoney($_SESSION['id'], $resulting_money);
+                error_log("Resulting money is :");
+                error_log(print_r($game,true));
                 $this->gameRepository->addBoughtGame($game, (int)$_SESSION['id']);
             }else{
                 $this->flash->addMessage('buy-error',"Error: There is not enough money in your wallet to buy that item. You need " . $resulting_money * -1 . " coins");

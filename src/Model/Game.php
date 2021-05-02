@@ -92,4 +92,9 @@ class Game
     }
 
 
+
+    public function getMetacritireleaseDatecStore()
+    {
+        return $this->metacriticScore;
+    }
 }
