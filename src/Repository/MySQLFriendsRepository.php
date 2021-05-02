@@ -22,15 +22,16 @@ final class MySQLFriendsRepository implements FriendsRepository {
         $this->database = $database;
     }
 
-    public function getFriends(int $user): array {
+    public function getFriends(int $user, int $state): array {
         $query = <<<'QUERY'
-        SELECT * FROM friendRequests
-        WHERE (id_orig=:id or id_dest=:id) and state=:state;
+        SELECT id, username, email, birthday, phone
+        FROM users as u
+        INNER JOIN friendRequests fr ON (u.id = fr.id_orig or u.id = fr.id_dest)
+        WHERE u.id != :id and fr.state = :state;
         QUERY;
 
         $statement = $this->database->connection()->prepare($query);
 
-        $state = $this->REQUEST_ACCEPTED;
         $statement->bindParam('id', $user, PDO::PARAM_STR);
         $statement->bindParam('state', $state, PDO::PARAM_STR);
 
@@ -41,16 +42,16 @@ final class MySQLFriendsRepository implements FriendsRepository {
             $res = $statement->fetch();
             if (!$res) break;
 
-            //TODO: Canviar la query a un join
             array_push($friends, new User(
-                $res['']
+                $res['id'],
+                $res['username'],
+                $res['email'],
+                "",
+                $res['birthday'],
+                $res['phone']
             ));
         }
 
-        return [];
-    }
-
-    public function getRequests(int $user): array {
         return [];
     }
 
