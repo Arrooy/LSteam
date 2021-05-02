@@ -115,13 +115,15 @@ class StoreController
 
                 'buyAction' => $routeParser->urlFor('handle-store-buy',['gameId' => 1]),
 
+                'profilePic' => (!isset($_SESSION['profilePic']) ? "" : $routeParser->urlFor('home') . $_SESSION['profilePic']),
                 'log_in_href' => $routeParser->urlFor('login'),
                 'log_out_href' => $routeParser->urlFor('logOut'),
                 'sign_up_href' => $routeParser->urlFor('register'),
+                'profile_href' => $routeParser->urlFor('profile'),
                 'home_href' => $routeParser->urlFor('home'),
                 'store_href' =>  $routeParser->urlFor('store'),
-                'profile_href' =>  $routeParser->urlFor('profile'),
-            ]
+                'wallet_href' => $routeParser->urlFor('getWallet'),
+                'myGames_href' => $routeParser->urlFor('myGames'),            ]
         );
     }
 }
