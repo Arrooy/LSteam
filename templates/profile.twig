@@ -23,35 +23,39 @@
 
                             <form action="{{ formAction }}" enctype="multipart/form-data" method="{{ formMethod }}" accept-charset="utf-8">
 
-                                <div class="field">
-                                    <label class="label">Username</label>
-                                    <p class="control has-icons-left">
-                                        <input class="input {% if formErrors.username %}{{ "is-danger" }}{% endif %}" type="text" name="username" placeholder="Username"
-                                               value="{{ username }}">
-                                        <span class="icon is-small is-left">
-                                            <i class="fas fa-user"></i>
-                                        </span>
-                                    </p>
-                                    {% if formErrors.username %}
-                                        <p class="help is-danger">{{ formErrors.username }}</p>
-                                    {% endif %}
-                                </div>
+                                <fieldset disabled>
+                                    <div class="field mt-2">
+                                        <label class="label">Username</label>
+                                        <p class="control has-icons-left">
+                                            <input class="input {% if formErrors.username %}{{ "is-danger" }}{% endif %}" type="text" name="username" placeholder="Username"
+                                                   value="{{ username }}">
+                                            <span class="icon is-small is-left">
+                                                <i class="fas fa-user"></i>
+                                            </span>
+                                        </p>
+                                        {% if formErrors.username %}
+                                            <p class="help is-danger">{{ formErrors.username }}</p>
+                                        {% endif %}
+                                    </div>
+                                </fieldset>
 
-                                <div class="field">
-                                    <label class="label">Email</label>
-                                    <p class="control has-icons-left">
-                                        <input class="input {% if formErrors.email %}{{ "is-danger" }}{% endif %}" type="text" name="email" placeholder="Email"
-                                               value="{{ email }}">
-                                        <span class="icon is-small is-left">
-                                            <i class="fas fa-envelope"></i>
-                                        </span>
-                                    </p>
-                                    {% if formErrors.email %}
-                                        <p class="help is-danger">{{ formErrors.email }}</p>
-                                    {% endif %}
-                                </div>
+                                <fieldset disabled>
+                                    <div class="field mt-2">
+                                        <label class="label">Email</label>
+                                        <p class="control has-icons-left">
+                                            <input class="input {% if formErrors.email %}{{ "is-danger" }}{% endif %}" type="text" name="email" placeholder="Email"
+                                                   value="{{ email }}">
+                                            <span class="icon is-small is-left">
+                                                <i class="fas fa-envelope"></i>
+                                            </span>
+                                        </p>
+                                        {% if formErrors.email %}
+                                            <p class="help is-danger">{{ formErrors.email }}</p>
+                                        {% endif %}
+                                    </div>
+                                </fieldset>
 
-                                <div class="field">
+                                <div class="field mt-2">
                                     <label class="label">Phone</label>
                                         <div class="field">
                                             <div class="field has-addons">
@@ -72,16 +76,18 @@
 
 
                                 <div class="is-flex is-flex-direction-row is-flex-wrap-wrap	is-justify-content-space-evenly	is-align-content-space-evenly is-align-items-start mb-3">
-                                    <div class="field">
-                                        <label class="label">Birthday</label>
-                                        <p class="control">
-                                            <input type="date" name="birthday" id="birthday"
-                                                   value="{{ birthday }}">
-                                        </p>
-                                        {% if formErrors.birthday %}
-                                            <p class="help is-danger">{{ formErrors.birthday }}</p>
-                                        {% endif %}
-                                    </div>
+                                    <fieldset disabled>
+                                        <div class="field">
+                                            <label class="label">Birthday</label>
+                                            <p class="control">
+                                                <input type="date" name="birthday" id="birthday"
+                                                       value="{{ birthday }}">
+                                            </p>
+                                            {% if formErrors.birthday %}
+                                                <p class="help is-danger">{{ formErrors.birthday }}</p>
+                                            {% endif %}
+                                        </div>
+                                    </fieldset>
 
                                     <div class="field">
                                         <label class="label">Profile picture</label>

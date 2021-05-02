@@ -84,14 +84,23 @@ final class ProfileController {
 
         if (empty($errors)) {
             $data = $request->getParsedBody();
-            $this->userRepository->updateUser(new User(
+            /*$this->userRepository->updateUser(new User(
                 empty($data['username']) ? $user->getUsername() : $data['username'],
                 empty($data['email']) ? $user->email() : $data['email'],
                 $user->password(),
                 new DateTime($data['birthday']),
                 empty($data['phone']) ? $user->getPhone() : $data['phone'],
                 $profilePic
+            ));*/
+            $this->userRepository->updateUser(new User(
+                $user->getUsername(),
+                $user->email(),
+                $user->password(),
+                new DateTime(),
+                empty($data['phone']) ? $user->getPhone() : $data['phone'],
+                $profilePic
             ));
+
             $errors['success'] = "Profile updated correctly!";
         }
 
@@ -123,7 +132,7 @@ final class ProfileController {
             try {
                 $uploadedFile->moveTo("./" . self::UPLOADS_DIR . DIRECTORY_SEPARATOR . $name . "." . $format);
                 $sizeInfo = getimagesize(self::UPLOADS_DIR . DIRECTORY_SEPARATOR . $name . "." . $format);
-                if ($sizeInfo[0] != 500 || $sizeInfo[1] != 500) {
+                if ($sizeInfo[0] > 500 || $sizeInfo[1] > 500) {
                     unlink(self::UPLOADS_DIR . DIRECTORY_SEPARATOR . $name . "." . $format);
                     return sprintf(self::INVALID_DIMENSIONS_ERROR, $format);
                 }
@@ -142,7 +151,7 @@ final class ProfileController {
         $data = $request->getParsedBody();
         $errors = [];
 
-        if (empty($data['email']) || !filter_var($data['email'], FILTER_VALIDATE_EMAIL))
+        /*if (empty($data['email']) || !filter_var($data['email'], FILTER_VALIDATE_EMAIL))
             $errors['email'] = 'The email address is not valid';
         elseif(!(str_ends_with($data['email'], '@salle.url.edu') || str_ends_with($data['email'], '@students.salle.url.edu')))
             $errors['email'] = 'The email domain not accepted. Try using a @salle.url.edu or students.salle.url.edu domain';
@@ -153,17 +162,17 @@ final class ProfileController {
             $errors['username'] = 'The username is not valid';
         elseif((strcmp($user->getUsername(), $data['username']) != 0) && ($this->userRepository->usernameExists($data['username'])))
             $errors['username'] = 'The username already exists';
-
+*/
         if(!empty($data['phone'] && (mb_strlen($data['phone'], "utf8") != 9 || ($data['phone'][0] != 6 && $data['phone'][0] != 7) || ($data['phone'][0] == 7 && $data['phone'][1] == 0))))
             $errors['phone'] = "The phone number is not valid.";
 
         // Es crea objecte de dateTime
-        $bday = new DateTime($data['birthday']);
+  //      $bday = new DateTime($data['birthday']);
         // Afegim 18 anys
-        $bday->add(new DateInterval("P18Y"));
+    //    $bday->add(new DateInterval("P18Y"));
 
         // Mirem si la data supera l'actual per saber si és major d'edat
-        if($bday >= new DateTime()) $errors['birthday'] = "You must be over 18 to register";
+      //  if($bday >= new DateTime()) $errors['birthday'] = "You must be over 18 to register";
 
         return $errors;
     }
