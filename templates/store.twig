@@ -50,10 +50,16 @@
                     <div class="gameSpecs">
                         <div class="gameSpecsInside">
 
+
                             <div>
                                 <h3 class="title white">{{ deal.title }}</h3>
                                 <p class="subtitle white">{{ deal.price }}$</p>
+                                {% if isMyGames %}
+                                    <p class="subtitle white">Metacritic Score: {{ deal.metacriticScore }}</p>
+                                    <p class="subtitle white">Release year {{ deal.releaseDate|date('d - M - Y') }}</p>
+                                {% endif %}
                             </div>
+
                             {% if not isMyGames %}
                             {% if deal.owned %}
                                 <input type="submit" class="button" disabled value="Owned" style="align-self:flex-start">
