@@ -4,6 +4,7 @@
 namespace SallePW\SlimApp\Repository;
 
 
+use DateTime;
 use GuzzleHttp\Client;
 use SallePW\SlimApp\Model\Deal;
 use SallePW\SlimApp\Model\DetailedGame;
@@ -45,20 +46,62 @@ class API_CheapSharkRepository implements CheapSharkRepository
 
             //Processem el thumbnail per aconseguir la versio augmentada.
             $bigger_thumbnail = $this->tryGetBiggerThumbnail($game['thumb']);
-
+            $release_date = $game['releaseDate'];
             array_push($games, new Game($game['title'],
                 $game['gameID'],
                 $game['normalPrice'],
                 $bigger_thumbnail,
-                false)); //TODO: agafar els jocs owned i posar a true quan sigui
+                $game['metacriticScore'],
+                new DateTime("@$release_date"),
+                false,
+            ));
         }
 
         return $games;
     }
 
+
+    // Donat un game id. Genera un Game.
     public function getGame(int $gameId): Game
     {
-        // TODO: Implement getGame() method.
+        $res = $this->client->request('GET', 'https://www.cheapshark.com/api/1.0/games',
+            [
+                'query' => [
+                    'id' => $gameId,
+                ]
+            ]);
+
+        # Decodifiquem el body
+        $game = json_decode($res->getBody()->getContents(), true);
+
+        //Processem el thumbnail per aconseguir la versio augmentada.
+        $bigger_thumbnail = $this->tryGetBiggerThumbnail($game['info']['thumb']);
+
+        $deal_id = $game['deals'][0]['dealID'];
+
+        //TODO:Mirar perque  no va be la quiery.
+        $res = $this->client->request('GET', 'https://www.cheapshark.com/api/1.0/deals'.'?id='.$deal_id,
+            [
+//                'query' => [
+//                    'id' => $deal_id,
+//                ]
+            ]);
+
+        # Decodifiquem el body
+        $deal = json_decode($res->getBody()->getContents(), true);
+
+        $release_date = $deal['gameInfo']['releaseDate'];
+
+        return new Game($deal['gameInfo']['name'],
+            $gameId,
+            $deal['gameInfo']['retailPrice'],
+            $bigger_thumbnail,
+            $deal['gameInfo']['metacriticScore'],
+            new DateTime('@' . $release_date),
+//          $deal['cheapestPrice']['price'],
+            false,
+        );
+
     }
 
     // Donada una llista de games, retorna l'informacio d'aquets de l'API.

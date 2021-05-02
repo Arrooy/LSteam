@@ -72,6 +72,7 @@ class StoreController
         if(isset($_SESSION['id'])){
             $gameId = basename($request->getUri());
             $game = $this->cheapSharkRepository->getGame($gameId);
+
             $resulting_money = $this->userRepository->getMoney($_SESSION['id']) - $game->getPrice();
 
             if ($resulting_money >= 0) {

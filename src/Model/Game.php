@@ -3,7 +3,10 @@
 
 namespace SallePW\SlimApp\Model;
 
-class Game {
+use DateTime;
+
+class Game
+{
     public function __construct(
         private String $title,
         private int $gameid,
@@ -11,6 +14,8 @@ class Game {
         private String $thumbnail,
         private int $metacriticScore,
         private DateTime $releaseDate,
+// TODO: AFEGIR
+//        private float $cheapestPriceEver
         private bool $owned,
     ) {}
 
@@ -44,6 +49,30 @@ class Game {
     public function getThumbnail(): string
     {
         return $this->thumbnail;
+    }
+
+     /**
+     * @return int
+     */
+    public function getMetacriticScore(): int
+    {
+        return $this->metacriticScore;
+    }
+
+     /**
+     * @return DateTime
+     */
+    public function getReleaseDate(): DateTime
+    {
+        return $this->releaseDate;
+    }
+
+     /**
+     * @return bool
+     */
+    public function getOwned(): bool
+    {
+        return $this->owned;
     }
 
     /**
