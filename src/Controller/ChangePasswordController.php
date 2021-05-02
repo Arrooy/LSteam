@@ -15,18 +15,6 @@ use Slim\Views\Twig;
 use Slim\Routing\RouteContext;
 
 final class ChangePasswordController {
-    public const DATE_FORMAT = 'Y-m-d';
-    private const UPLOADS_DIR = '../uploads';
-
-    private const DEFAULT_IMG = 'default.jpg';
-
-    private const UNEXPECTED_ERROR = "An unexpected error occurred uploading the file '%s'...";
-    private const INVALID_EXTENSION_ERROR = "The received file extension '%s' is not valid";
-    private const INVALID_SIZE_ERROR = "The file must be under 1MB";
-    private const INVALID_DIMENSIONS_ERROR = "The file must be 500x500 pixels";
-    private const TOO_MANY_FILES_ERROR = "Only one file can be uploaded!";
-
-    private const ALLOWED_EXTENSIONS = ['jpg', 'png'];
 
     public function __construct(private Twig $twig, private UserRepository $userRepository) {}
 
@@ -40,7 +28,6 @@ final class ChangePasswordController {
         return $this->twig->render($response, 'changePassword.twig', [
             'formErrors' => $errors,
 
-            'formData' => $request->getParsedBody(),
             'formAction' => $routeParser->urlFor("changePassword"),
             'formMethod' => "POST",
             'is_user_logged' => isset($_SESSION['id']),
@@ -60,23 +47,24 @@ final class ChangePasswordController {
         $user = $this->userRepository->getUser($_SESSION['id']);
         $data = $request->getParsedBody();
 
-        $errors = $this->checkPassword($data);
+        $errors = $this->checkPassword($data, $user);
 
         if (empty($errors)) {
             $user->setPassword(password_hash($data['password'], PASSWORD_DEFAULT));
             $this->userRepository->updateUser($user);
 
-            //TODO: Posar algo que informi de si ha anat be el canvi de pswd
-
-            $routeParser = RouteContext::fromRequest($request)->getRouteParser();
-            return $response->withHeader("Location", $routeParser->urlFor('profile'))->withStatus(302);
+            $errors['success'] = "Password updated successfully!";
+            return $this->show($request, $response, $errors);
         }
 
         return $this->show($request, $response, $errors);
     }
 
-    private function checkPassword(array $data) : array{
+    private function checkPassword(array $data, User $user) : array{
         $errors = [];
+
+        if(!(password_verify($data['old_password'], $user->password())))
+            $errors['old_password'] = 'Incorrect password.';
 
         if (empty($data['password']) || strlen($data['password']) <= 6)
             $errors['password'] = 'The password must contain at least 7 characters.';

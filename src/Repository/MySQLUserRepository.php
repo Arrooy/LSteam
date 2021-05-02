@@ -245,7 +245,7 @@ final class MySQLUserRepository implements UserRepository
 
         $query = <<<'QUERY'
         UPDATE users
-        SET username=:username, email=:email, password=:password, birthday=:birthday, phone=:phone, profilePic=:profilePic
+        SET username=:username, email=:email, password=:password, phone=:phone, profilePic=:profilePic
         WHERE id=:id
         QUERY;
 
@@ -254,7 +254,6 @@ final class MySQLUserRepository implements UserRepository
         $username = $user->getUsername();
         $email = $user->email();
         $password = $user->password();
-        $birthday = $user->getBirthday()->format(self::DATE_FORMAT);
         $phone = $user->getPhone();
         $profilePic = $user->getProfilePic();
         $id = $_SESSION['id'];
@@ -262,7 +261,6 @@ final class MySQLUserRepository implements UserRepository
         $statement->bindParam('username', $username, PDO::PARAM_STR);
         $statement->bindParam('email', $email, PDO::PARAM_STR);
         $statement->bindParam('password', $password, PDO::PARAM_STR);
-        $statement->bindParam('birthday', $birthday, PDO::PARAM_STR);
         $statement->bindParam('phone', $phone, PDO::PARAM_STR);
         $statement->bindParam('profilePic', $profilePic, PDO::PARAM_STR);
         $statement->bindParam('id', $id, PDO::PARAM_STR);
