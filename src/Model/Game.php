@@ -3,6 +3,8 @@
 
 namespace SallePW\SlimApp\Model;
 
+use DateTime;
+
 class Game
 {
     public function __construct(
@@ -12,6 +14,8 @@ class Game
         private String $thumbnail,
         private int $metacriticScore,
         private DateTime $releaseDate,
+// TODO: AFEGIR
+//        private float $cheapestPriceEver
         private bool $owned,
     ) {}
 
