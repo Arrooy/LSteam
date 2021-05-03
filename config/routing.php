@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use SallePW\SlimApp\Controller\ChangePasswordController;
+use SallePW\SlimApp\Controller\FriendsConroller;
 use SallePW\SlimApp\Controller\LogOutController;
 use SallePW\SlimApp\Controller\ProfileController;
 use SallePW\SlimApp\Controller\RegisterController;
@@ -98,3 +99,7 @@ $app->post(
     WalletController::class . ":handleUpdate"
 )->setName('postWallet')->add($app->getContainer()->get('verifySessionMiddleware'));
 
+$app->get(
+    '/user/friends',
+    FriendsConroller::class . ":show"
+)->setName('friends')->add($app->getContainer()->get('verifySessionMiddleware'));
