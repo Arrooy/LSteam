@@ -4,7 +4,10 @@
 namespace SallePW\SlimApp\Repository;
 
 
+use DateTime;
 use GuzzleHttp\Client;
+use SallePW\SlimApp\Model\Deal;
+use SallePW\SlimApp\Model\DetailedGame;
 use SallePW\SlimApp\Model\Game;
 use SallePW\SlimApp\Model\CheapSharkRepository;
 
@@ -23,16 +26,6 @@ class API_CheapSharkRepository implements CheapSharkRepository
         }
         return self::$instance;
     }
-//
-//    public function getGameById(int $gameId): Game
-//    {
-//
-//    }
-//
-//    public function getGamesById(array $ids): array
-//    {
-//
-//    }
 
     public function getDeals() : array{
 
@@ -53,15 +46,106 @@ class API_CheapSharkRepository implements CheapSharkRepository
 
             //Processem el thumbnail per aconseguir la versio augmentada.
             $bigger_thumbnail = $this->tryGetBiggerThumbnail($game['thumb']);
-
+            $release_date = $game['releaseDate'];
             array_push($games, new Game($game['title'],
                 $game['gameID'],
                 $game['normalPrice'],
-                $bigger_thumbnail));
+                $bigger_thumbnail,
+                $game['metacriticScore'],
+                new DateTime("@$release_date"),
+                false,
+            ));
         }
 
         return $games;
     }
+
+
+    // Donat un game id. Genera un Game.
+    public function getGame(int $gameId): Game
+    {
+        $res = $this->client->request('GET', 'https://www.cheapshark.com/api/1.0/games',
+            [
+                'query' => [
+                    'id' => $gameId,
+                ]
+            ]);
+
+        # Decodifiquem el body
+        $game = json_decode($res->getBody()->getContents(), true);
+
+        //Processem el thumbnail per aconseguir la versio augmentada.
+        $bigger_thumbnail = $this->tryGetBiggerThumbnail($game['info']['thumb']);
+
+        $deal_id = $game['deals'][0]['dealID'];
+
+        //TODO:Mirar perque  no va be la quiery.
+        $res = $this->client->request('GET', 'https://www.cheapshark.com/api/1.0/deals'.'?id='.$deal_id,
+            [
+//                'query' => [
+//                    'id' => $deal_id,
+//                ]
+            ]);
+
+        # Decodifiquem el body
+        $deal = json_decode($res->getBody()->getContents(), true);
+
+        $release_date = $deal['gameInfo']['releaseDate'];
+
+        return new Game($deal['gameInfo']['name'],
+            $gameId,
+            $deal['gameInfo']['retailPrice'],
+            $bigger_thumbnail,
+            $deal['gameInfo']['metacriticScore'],
+            new DateTime('@' . $release_date),
+//          $deal['cheapestPrice']['price'],
+            false,
+        );
+
+    }
+//
+//    // Donada una llista de games, retorna l'informacio d'aquets de l'API.
+//    public function getGamesByIds(array $game_ids): array
+//    {
+//        $res = $this->client->request('GET', 'https://www.cheapshark.com/api/1.0/games',
+//            [
+//                'query' => [
+//                    'ids' => implode(",", $game_ids),
+//                ]
+//            ]);
+//
+//        # Decodifiquem el body
+//        $jsonResponse = json_decode($res->getBody()->getContents(), true);
+//
+//        $games = [];
+//
+//        # Guardem els resultats que ens interesen.
+//        foreach ($jsonResponse as $gameId => $game) {
+//
+//            error_log(print_r($game_ids,true));
+//
+////            $deals = [];
+////
+////            foreach ($game['deals'] as $deal){
+////
+////                array_push($deals,new Deal());
+////            }
+//
+//            //Processem el thumbnail per aconseguir la versio augmentada.
+//            $bigger_thumbnail = $this->tryGetBiggerThumbnail($game['info']['thumb']);
+//
+//            array_push($games, new DetailedGame($game['info']['title'],
+//                $gameId,
+//                0.0,
+//                $bigger_thumbnail,
+//                $game['cheapestPriceEver']['price'],
+//                [],
+//            ));
+//        }
+//
+//        return $games;
+//    }
+
 
     private function tryGetBiggerThumbnail(string $thumb): string
     {
@@ -98,8 +182,4 @@ class API_CheapSharkRepository implements CheapSharkRepository
         return "$scheme$user$pass$host$port$path$query$fragment";
     }
 
-    public function getGame(int $gameId): Game
-    {
-        // TODO: Implement getGame() method.
-    }
 }

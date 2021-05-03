@@ -25,15 +25,18 @@ final class LandingController
             $response,
             'landing.twig',
             [
-
-                'profilePic' => (!isset($_SESSION['profilePic']) ? "" : $_SESSION['profilePic']),
                 'is_user_logged' => isset($_SESSION['id']),
+
+                // Hrefs de la base
+                'profilePic' => (!isset($_SESSION['profilePic']) ? "" : $routeParser->urlFor('home') . $_SESSION['profilePic']),
                 'log_in_href' => $routeParser->urlFor('login'),
                 'log_out_href' => $routeParser->urlFor('logOut'),
                 'sign_up_href' => $routeParser->urlFor('register'),
-                'store_href' =>  $routeParser->urlFor('store'),
                 'profile_href' => $routeParser->urlFor('profile'),
-                'home_href' => $routeParser->urlFor('home')
+                'home_href' => $routeParser->urlFor('home'),
+                'store_href' =>  $routeParser->urlFor('store'),
+                'wallet_href' => $routeParser->urlFor('getWallet'),
+                'myGames_href' => $routeParser->urlFor('myGames'),
             ]
         );
     }

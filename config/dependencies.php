@@ -122,7 +122,7 @@ $container->set(
 $container->set(
    StoreController::class,
     function (Container $c) {
-        return new StoreController($c->get('view'), $c->get('game_api'),$c->get(GameRepository::class), $c->get('flash'));
+        return new StoreController($c->get('view'), $c->get(UserRepository::class), $c->get('game_api'),$c->get(GameRepository::class), $c->get('flash'));
     }
 );
 

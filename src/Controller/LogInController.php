@@ -24,7 +24,9 @@ final class LogInController extends GenericFormController
         parent::__construct($twig,$userRepository,true, $flash);
     }
 
-    public function show(Request $request, Response $response): Response {
+    public function show(Request $request, Response $response): Response
+    {
+        
         return parent::showForm($request,$response,"handle-login","LogIn","Login",[]);
     }
 

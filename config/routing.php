@@ -76,20 +76,25 @@ $app->post(
 $app->get(
     '/profile/changePassword',
     ChangePasswordController::class . ":show"
-)->setName('changePassword');
+)->setName('changePassword')->add($app->getContainer()->get('verifySessionMiddleware'));;
 
 $app->post(
     '/profile/changePassword',
     ChangePasswordController::class . ":handleUpdate"
-)->setName('changePasswordUpdate');
+)->setName('changePasswordUpdate')->add($app->getContainer()->get('verifySessionMiddleware'));;
+
+$app->get(
+    '/user/myGames',
+    StoreController::class . ":myGames"
+)->setName('myGames');
 
 $app->get(
     '/user/wallet',
     WalletController::class . ":show"
-)->setName('getWallet');
+)->setName('getWallet')->add($app->getContainer()->get('verifySessionMiddleware'));
 
 $app->post(
     '/user/wallet',
     WalletController::class . ":handleUpdate"
-)->setName('postWallet');
+)->setName('postWallet')->add($app->getContainer()->get('verifySessionMiddleware'));
 

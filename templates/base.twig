@@ -33,6 +33,7 @@
                 <a class="navbar-item" href="{{ store_href }}">
                     Store
                 </a>
+                {% if is_user_logged %}
 
                 <a class="navbar-item" href="{{ home_href }}">
                     Wishlist
@@ -45,6 +46,14 @@
                 <a class="navbar-item" href="{{ home_href }}">
                     Friends
                 </a>
+                <a class="navbar-item" href="{{ wallet_href }}">
+                    Wallet
+                </a>
+
+                <a class="navbar-item" href="{{ myGames_href }}">
+                    My Games
+                </a>
+                {% endif %}
             </div>
 
             <div class="navbar-end">
