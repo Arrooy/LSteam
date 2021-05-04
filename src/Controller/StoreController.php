@@ -133,7 +133,6 @@ class StoreController
 
         $games = $this->gameRepository->getOwnedGames($_SESSION['id']);
 
-        error_log(print_r($games,true));
         return $this->twig->render(
             $response,
             'generic_game_display.twig',

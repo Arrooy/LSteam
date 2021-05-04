@@ -154,11 +154,13 @@ class API_CheapSharkRepository implements CheapSharkRepository
 
             // Es busca el deal perque ens falta $metacriticScore, $releaseDate
             foreach ($deals as $deal_game){
-                if(strcmp($deal_game->getDealID(),$game_result['deals'][0]['dealID']) == 0){
-                    error_log("Bingo");
-                    $deal_game->setWished(true);
-                    array_push($games, $deal_game);
-                    break;
+                foreach ($game_result['deals'] as $game_result_deal) {
+                    if(strcmp($deal_game->getDealID(),$game_result_deal['dealID']) == 0){
+                        error_log("Bingo");
+                        $deal_game->setWished(true);
+                        array_push($games, $deal_game);
+                        break;
+                    }
                 }
             }
         }

@@ -65,20 +65,20 @@ final class WalletController
             $errors['tooBig'] = true;
         }else{
 
-        if ($add_value != "" && !is_numeric($add_value)){
-            $errors['isNumeric'] = true;
+            if ($add_value != "" && !is_numeric($add_value)){
+                $errors['isNumeric'] = true;
 
-            // Mai pasara. no fa falta implemetar la ui.
-        }else{
+                // Mai pasara. no fa falta implemetar la ui.
+            }else{
 
-            $errors['positiveVal'] = ($add_value <= 0);
+                $errors['positiveVal'] = ($add_value <= 0);
 
-            if(!$errors['positiveVal']){
-                $curr_money += $add_value;
-                $this->userRepository->setMoney($_SESSION['id'], (int)$curr_money);
+                if(!$errors['positiveVal']){
+                    $curr_money += $add_value;
+                    $this->userRepository->setMoney($_SESSION['id'], (int)$curr_money);
+                }
+
             }
-
-        }
 
         }
 

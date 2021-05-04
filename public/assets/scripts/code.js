@@ -46,6 +46,27 @@ const DEBUG = true;
 var server = new Code("");
 
 var buy_buttons = document.getElementsByName('BUY_BUTTON');
+
+// # Permet eliminar un element de la generic game display
+function fadeAwayFromChildItem(item) {
+
+    pr = item.parentElement.parentElement.parentElement;
+
+
+    if( document.querySelectorAll(".gameContainer").length - document.querySelectorAll(".gameContainer.ksk").length === 1)
+    {
+        window.location.reload(false);
+    }else{
+        pr.classList.add("kska");
+        pr.addEventListener("animationend",function (){
+            pr.classList.add("ksk");
+            pr.classList.remove("kska");
+        })
+    }
+
+
+}
+
 if (buy_buttons !== undefined) {
     buy_buttons.forEach(function (button, i, a){
         button.addEventListener("click", function () {
@@ -64,6 +85,12 @@ if (buy_buttons !== undefined) {
 
                     // Borrem el boto de fav.
                     button.parentElement.removeChild( button.parentElement.querySelector(".icon"));
+                    console.log("PATH NAM EIS " + window.location.pathname)
+
+                    // Si estem a l'apartat de wishlist. Fem fade away.
+                    if(window.location.pathname === "/user/wishlist") {
+                        fadeAwayFromChildItem(button);
+                    }
 
                 }else{
                     // ha pasat algo, actualitzem la apgina amb la resposta.
@@ -78,9 +105,6 @@ if (buy_buttons !== undefined) {
         }, false)
     });
 }
-
-
-// TODO: FALTA FER REFRESH SI NO HI HAN ELEMENTS HEM ELIMINAT LULTIM FAV.
 
 var wish_buttons = document.getElementsByName('WISH_BUTTON');
 if (wish_buttons !== undefined) {
@@ -109,6 +133,11 @@ if (wish_buttons !== undefined) {
 
                     }else{
                         button.classList.remove('negated')
+
+                        // Si estem a l'apartat de wishlist. Fem fade away.
+                        if(window.location.pathname === "/user/wishlist") {
+                            fadeAwayFromChildItem(button);
+                        }
                     }
                 }else{
                     // ha pasat algo, actualitzem la apgina amb la resposta.
