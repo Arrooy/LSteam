@@ -151,6 +151,6 @@ $container->set(
 $container->set(
     WishListController::class,
     function (Container $c) {
-        return new WishListController($c->get("view"), $c->get(GameRepository::class));
+        return new WishListController($c->get("view"), $c->get(GameRepository::class), $c->get('game_api'));
     }
 );

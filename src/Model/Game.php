@@ -17,7 +17,16 @@ class Game
         private float $cheapestPriceEver,
         private bool $wished,
         private bool $owned,
+        private string $dealID=""
     ) {}
+
+    /**
+     * @return string
+     */
+    public function getDealID(): string
+    {
+        return $this->dealID;
+    }
 
     /**
      * @return String
@@ -97,6 +106,13 @@ class Game
     public function isWished(): bool
     {
         return $this->wished;
+    }
+    /**
+     * @param bool $wished
+     */
+    public function setWished(bool $wished): void
+    {
+        $this->wished = $wished;
     }
 
     /**

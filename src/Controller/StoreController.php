@@ -3,8 +3,6 @@
 
 namespace SallePW\SlimApp\Controller;
 
-
-
 use Psr\Http\Message\ResponseInterface as Response;
 
 use SallePW\SlimApp\Model\CheapSharkRepository;
@@ -29,13 +27,28 @@ class StoreController
         $messages = $this->flash->getMessages();
 
         $deals = $this->cheapSharkRepository->getDeals();
+
+        // Si user ha fet login
         if (isset($_SESSION['id'])){
+
+            //TODO: PENSAMENT A PENSAR -> SI TREBALLEM AMB GAMEID COM A IDENTIFICADOR UNIC,
+            //SI LA STORE PRESENTA DOS DEALS DEL MATEIX GAME, QUE PASA?
+
             $ownedGames = $this->gameRepository->getOwnedGames($_SESSION['id']);
+            $wishedGame_ids = $this->gameRepository->getWishedGamesIds($_SESSION['id']);
 
             foreach ($deals as $deal) {
+                foreach ($wishedGame_ids as $game_dealID) {
+                    if (strcmp($deal->getGameId(), $game_dealID) == 0) {
+                        $deal->setWished(true);
+                        $deal->setOwned(false);
+                    }
+                }
+
                 foreach ($ownedGames as $game) {
                     if (strcmp($deal->getGameId(), $game->getGameId()) == 0) {
                         $deal->setOwned(true);
+                        $deal->setWished(false);
                     }
                 }
             }
@@ -76,23 +89,42 @@ class StoreController
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
 
         if(isset($_SESSION['id'])){
+
             $gameId = basename($request->getUri());
             $game = $this->cheapSharkRepository->getGame($gameId);
             $resulting_money = $this->userRepository->getMoney($_SESSION['id']) - $game->getPrice();
 
             if ($resulting_money >= 0) {
                 $this->userRepository->setMoney($_SESSION['id'], $resulting_money);
+
+                // Eliminem el joc de wishlist si estava
+                $wishedGame_ids = $this->gameRepository->getWishedGamesIds($_SESSION['id']);
+
+                foreach ($wishedGame_ids as $game_id) {
+                    if (strcmp($game->getGameId(), $game_id) == 0) {
+                        $this->gameRepository->removeWishedGame($gameId,$_SESSION['id']);
+                        break;
+                    }
+                }
+
+                // Comprem el joc.
                 $this->gameRepository->addBoughtGame($game, (int)$_SESSION['id']);
+
+                return $response->withStatus(200);
             }else{
                 $this->flash->addMessage('buy-error',"Error: There is not enough money in your wallet to buy that item. You need " . $resulting_money * -1 . " coins");
+
+                return $response
+                    ->withStatus(403);
+//                    ->withHeader('Location', $routeParser->urlFor("store"));
+
             }
         }else{
             $this->flash->addMessage('buy-error',"Error: You are not logged in. Please login!");
+            return $response
+//                ->withHeader('Location', $routeParser->urlFor("store"))
+                ->withStatus(403);
         }
-
-        return $response
-            ->withHeader('Location', $routeParser->urlFor("store"))
-            ->withStatus(302);
     }
 
     public function myGames(Request $request, Response $response): Response

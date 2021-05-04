@@ -12,6 +12,8 @@ use SallePW\SlimApp\Model\GameRepository;
 final class MySQLGameRepository implements GameRepository
 {
 
+    // TODO: Fer be les comprovacions de la DB. Si la query falla que pasa?
+
     public const DATE_FORMAT = 'Y-m-d H:i:s';
 
 
@@ -106,7 +108,7 @@ final class MySQLGameRepository implements GameRepository
         }
     }
 
-    public function getBoughtGames(int $userId): array{
+    public function getBoughtGamesIds(int $userId): array{
         try {
 
             $query = <<< 'QUERY'
@@ -136,7 +138,7 @@ final class MySQLGameRepository implements GameRepository
     }
 
     public function getOwnedGames(int $userId): array {
-        //TODO: AFEGIR LA VARIABLE WISHED AMB LA TAULA SQL CORRECTE.
+
         $query = <<<'QUERY'
         SELECT * 
         FROM ownedGames, Game 
@@ -155,7 +157,7 @@ final class MySQLGameRepository implements GameRepository
 
             array_push($games, new Game($res['titol'], (int)$res['gameId'], (float)$res['price'], $res['thumbnail'],
 
-                (int)$res['metacriticStore'], new DateTime($res['releaseDate']),(float) $res['cheapestPrice'], true,true));
+                (int)$res['metacriticStore'], new DateTime($res['releaseDate']),(float) $res['cheapestPrice'], false,true));
         }
 
         return $games;
@@ -163,13 +165,67 @@ final class MySQLGameRepository implements GameRepository
 
     public function addWishedGame(int $gameId, int $userId): bool
     {
-        // TODO: Implement addWishedGame() method.
-        return false;
+        try{
+            $query = <<<'QUERY'
+            INSERT INTO wishedGames(gameId, userId)
+            VALUES(:gameId, :userId)
+            QUERY;
+
+            $statement = $this->database->connection()->prepare($query);
+
+            $statement->bindParam('gameId', $gameId, PDO::PARAM_STR);
+            $statement->bindParam('userId', $userId , PDO::PARAM_STR);
+
+            $statement->execute();
+            return true;
+        }catch (Exception $e) {
+            error_log(print_r($e->getMessage(),true));
+            return false;
+        }
     }
 
-    public function getWishedGames(int $userId): array
+
+    public function removeWishedGame(int $gameId, int $userId): bool
     {
-        // TODO: Implement getWishedGames() method.
-        return [];
+        try{
+            $query = <<<'QUERY'
+            DELETE FROM wishedGames as wg
+            WHERE wg.gameId=:gameId and wg.userId=:userId
+            QUERY;
+
+            $statement = $this->database->connection()->prepare($query);
+
+            $statement->bindParam('gameId', $gameId, PDO::PARAM_STR);
+            $statement->bindParam('userId', $userId , PDO::PARAM_STR);
+
+            $statement->execute();
+
+            return true;
+        }catch (Exception $e) {
+            error_log(print_r($e->getMessage(),true));
+            return false;
+        }
+    }
+
+    public function getWishedGamesIds(int $userId): array
+    {
+        $query = <<<'QUERY'
+        SELECT gameId 
+        FROM wishedGames as wg
+        WHERE wg.userId=:userId
+        QUERY;
+
+        $statement = $this->database->connection()->prepare($query);
+        $statement->bindParam('userId', $userId, PDO::PARAM_STR);
+
+        $statement->execute();
+        $res = $statement->fetchAll();
+        error_log(print_r($res,true));
+
+        $game_ids = [];
+        foreach ($res as $gid) {
+            array_push($game_ids,$gid['gameId']);
+        }
+        return $game_ids;
     }
 }

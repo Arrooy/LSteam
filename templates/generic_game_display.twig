@@ -62,7 +62,7 @@
 
 
                             <div>
-                                <h3 class="title white">{{ deal.title }}</h3>
+                                <h3 class="title white pr-4">{{ deal.title }}</h3>
                                 <p class="subtitle white">{{ deal.price }}$</p>
                                 {% if isMyGames %}
                                     <p class="subtitle white">Cheapest price ever {{ deal.cheapestPriceEver }}$</p>
@@ -73,16 +73,26 @@
 
                             {% if not isMyGames %}
                             {% if deal.owned %}
-                                <input type="submit" class="button" disabled value="Owned" style="align-self:flex-start">
+{#                            Button Perque no esta suportat el loading de bulma amb inputs.#}
+{#                                <input type="submit" class="button" disabled value="Owned" style="align-self:flex-start">#}
+                                <button type="submit" class="button" disabled style="align-self:flex-start">Owned</button>
                             {% else %}
-                                <form action="{{ buyAction|replace({'1':deal.gameid})}}" method="POST" accept-charset="utf-8">
-                                    <input type="submit" class="button is-success" value="Buy" style="align-self:flex-start">
-                                </form>
+
+                                {% if is_user_logged %}
+                                    {#                            Button Perque no esta suportat el loading de bulma amb inputs.#}
+                                    <button type="submit" name="BUY_BUTTON" data-gameid="{{ deal.gameid }}" class="button is-success" style="align-self:flex-start">Buy</button>
+{#                                <form action="{{ buyAction|replace({'1':deal.gameid})}}" method="POST" accept-charset="utf-8">#}
+{#                                    <button type="submit" id="{{ deal.gameid }}" class="button is-success" value="Buy" style="align-self:flex-start">#}
+{#                                </form>#}
+                                {% endif %}
                             {% endif %}
                             {% endif %}
-                            <span class="icon {% if deal.wished %} negated {% endif%} star">
+
+                            {% if not isMyGames and not deal.owned and is_user_logged%}
+                            <a class="icon{% if deal.wished %} negated{% endif%} star"  data-gameid="{{ deal.gameid }}" name="WISH_BUTTON">
                                   <i class="fas fa-star"></i>
-                            </span>
+                            </a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
