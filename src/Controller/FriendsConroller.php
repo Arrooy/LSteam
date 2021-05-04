@@ -12,6 +12,7 @@ use Ramsey\Uuid\Uuid;
 use SallePW\SlimApp\Model\FriendsRepository;
 use SallePW\SlimApp\Model\User;
 use SallePW\SlimApp\Model\UserRepository;
+use SallePW\SlimApp\Repository\MySQLFriendsRepository;
 use Slim\Views\Twig;
 use Slim\Routing\RouteContext;
 
@@ -26,7 +27,10 @@ final class FriendsConroller {
     public function show(Request $request, Response $response, array $errors): Response {
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
 
+        $friends = $this->friendsRepository->getFriends($_SESSION['id'], MySQLFriendsRepository::REQUEST_ACCEPTED);
+
         return $this->twig->render($response, 'friends.twig', [
+            'friendList' => $friends,
 
             // Hrefs de la base
             'is_user_logged' => isset($_SESSION['id']),

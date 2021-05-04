@@ -2,16 +2,48 @@
 
 {% block title %}{{ formTitle }}{% endblock %}
 {% block content %}
-    <section class="section">
-        <div class="container">
-            <div class="columns is-centered">
-                <div class="column is-2">
-                    <button class="button has-text-centered is-info is-large">FRIENDS LIST</button>
+
+    <style>
+        .image-rounded {
+            border-radius: 8px;
+        }
+        .circle-separator {
+            width: 7px;
+            height: 7px;
+            border-radius: 100%;
+            background: gray;
+        }
+    </style>
+
+    <section class="content">
+        <div class="mb-3 is-flex is-flex-direction-row is-flex-wrap-nowrap is-justify-content-space-between is-align-items-center">
+            <h1 class="is-size-1">Friend list</h1>
+            <div class="buttons">
+                <button class="button is-primary is-light is-medium">Friend Requests</button>
+                <button class="button is-link is-light is-medium">Send Request</button>
+            </div>
+        </div>
+
+        {% for friend in friendList %}
+        <div class="box p-2">
+            <div class="is-flex is-flex-direction-row is-flex-wrap-nowrap is-justify-content-space-between is-align-items-center">
+                <div class="is-flex is-flex-direction-row is-flex-wrap-nowrap is-justify-content-flex-start is-align-items-center">
+                    <div class="ml-3 mr-2">
+                        <figure class="image is-48x48 m-0">
+                            <img class="image-rounded" src="../uploads/{{ friend.profilePic }}">
+                        </figure>
+                    </div>
+                    <div class="circle-separator mx-1 p-1"></div>
+                    <div class="mx-1 is-medium">
+                        <p>{{ friend.username }}</p>
+                    </div>
                 </div>
-                <div class="column is-2">
-                    <button class="button has-text-centered is-info is-large">FRIEND REQUESTS</button>
+                <div class="mr-3">
+                    <p>{{ friend.acceptDate }}</p>
                 </div>
             </div>
         </div>
+        {% endfor %}
     </section>
+
 {% endblock %}

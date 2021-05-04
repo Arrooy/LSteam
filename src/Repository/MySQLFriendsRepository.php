@@ -13,9 +13,9 @@ use Exception;
 use DateTime;
 final class MySQLFriendsRepository implements FriendsRepository {
 
-    public int $REQUEST_PENDING = 0;
-    public int $REQUEST_ACCEPTED = 1;
-    public int $REQUEST_DECLINED = 2;
+    public const REQUEST_PENDING = 0;
+    public const REQUEST_ACCEPTED = 1;
+    public const REQUEST_DECLINED = 2;
 
     private PDOSingleton $database;
     public function __construct(PDOSingleton $database) {
@@ -24,9 +24,9 @@ final class MySQLFriendsRepository implements FriendsRepository {
 
     public function getFriends(int $user, int $state): array {
         $query = <<<'QUERY'
-        SELECT id, username, email, birthday, phone
+        SELECT u.id, u.username, u.email, u.birthday, u.phone, u.profilePic, fr.accept_time 
         FROM users as u
-        INNER JOIN friendRequests fr ON (u.id = fr.id_orig or u.id = fr.id_dest)
+        INNER JOIN friendRequests fr ON (u.id = fr.id_orig or (fr.state = 1 and u.id = fr.id_dest))
         WHERE u.id != :id and fr.state = :state;
         QUERY;
 
@@ -42,17 +42,21 @@ final class MySQLFriendsRepository implements FriendsRepository {
             $res = $statement->fetch();
             if (!$res) break;
 
-            array_push($friends, new User(
-                $res['id'],
+            $friend = new User(
+                (int) $res['id'],
                 $res['username'],
                 $res['email'],
                 "",
-                $res['birthday'],
-                $res['phone']
-            ));
+                new DateTime($res['birthday']),
+                $res['phone'],
+                $res['profilePic'] ?? 'default.jpg'
+            );
+            $friend->setAcceptDate(new DateTime($res['accept_time']));
+
+            array_push($friends, $friend);
         }
 
-        return [];
+        return $friends;
     }
 
     public function newRequest(int $orig, int $dest) {
