@@ -53,16 +53,16 @@ $container->set('gif_api', function () {
     return API_GifRepository::getInstance($_ENV['GIPHY_API_KEY']);
 });
 
-
 $container->set('cache',
     function (ContainerInterface $c) {
         return new Cache();
 
-});
-
+    });
 
 $container->set('game_api', function (Container $c) {
-
+    // Sense cache
+    //return API_CheapSharkRepository::getInstance();
+    // Amb cache
     return new CachingCheapSharkRepository(API_CheapSharkRepository::getInstance(), $c->get('cache'));
 });
 
@@ -70,7 +70,7 @@ $container->set(
     'flash',
     function (ContainerInterface $c) {
         if (session_status() != PHP_SESSION_ACTIVE)
-        session_start();
+            session_start();
         return new Messages();
     }
 );
@@ -83,28 +83,28 @@ $container->set(
 );
 
 $container->set(
-UserRepository::class,
-function (ContainerInterface $container) {
-    return new MySQLUserRepository($container->get('db'));
-});
+    UserRepository::class,
+    function (ContainerInterface $container) {
+        return new MySQLUserRepository($container->get('db'));
+    });
 
 $container->set(
-GameRepository::class,
-function (ContainerInterface $container) {
-    return new MySQLGameRepository($container->get('db'));
-});
+    GameRepository::class,
+    function (ContainerInterface $container) {
+        return new MySQLGameRepository($container->get('db'));
+    });
 
 $container->set(
     LogInController::class,
     function (Container $c) {
-        return new LogInController($c->get("view"),$c->get(UserRepository::class), $c->get('flash'));
+        return new LogInController($c->get("view"), $c->get(UserRepository::class), $c->get('flash'));
     }
 );
 
 $container->set(
     RegisterController::class,
     function (Container $c) {
-        return new RegisterController($c->get("view"),$c->get(UserRepository::class), $c->get('gif_api'), $c->get('flash'));
+        return new RegisterController($c->get("view"), $c->get(UserRepository::class), $c->get('gif_api'), $c->get('flash'));
     }
 );
 
@@ -130,9 +130,9 @@ $container->set(
 );
 
 $container->set(
-   StoreController::class,
+    StoreController::class,
     function (Container $c) {
-        return new StoreController($c->get('view'), $c->get(UserRepository::class), $c->get('game_api'),$c->get(GameRepository::class), $c->get('flash'));
+        return new StoreController($c->get('view'), $c->get(UserRepository::class), $c->get('game_api'), $c->get(GameRepository::class), $c->get('flash'));
     }
 );
 

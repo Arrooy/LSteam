@@ -35,7 +35,6 @@ class StoreController
             //SI LA STORE PRESENTA DOS DEALS DEL MATEIX GAME, QUE PASA?
 
             $ownedGames = $this->gameRepository->getOwnedGames($_SESSION['id']);
-
             $wishedGame_ids = $this->gameRepository->getWishedGamesIds($_SESSION['id']);
 
             foreach ($deals as $deal) {
@@ -92,6 +91,7 @@ class StoreController
         if(isset($_SESSION['id'])){
 
             $gameId = basename($request->getUri());
+
             $game = $this->cheapSharkRepository->getGame($gameId);
             $resulting_money = $this->userRepository->getMoney($_SESSION['id']) - $game->getPrice();
 
@@ -110,7 +110,6 @@ class StoreController
 
                 // Comprem el joc.
                 $this->gameRepository->addBoughtGame($game, (int)$_SESSION['id']);
-
                 return $response->withStatus(200);
             }else{
                 $this->flash->addMessage('buy-error',"Error: There is not enough money in your wallet to buy that item. You need " . $resulting_money * -1 . " coins");

@@ -10,7 +10,9 @@ use SallePW\SlimApp\Model\CheapSharkRepository;
 
 class CachingCheapSharkRepository implements CheapSharkRepository
 {
-    const CACHE_TIMEOUT_SECONDS = 60;
+
+    // Actualitzem la cache cada hora aprox.
+    const CACHE_TIMEOUT_SECONDS = 60 * 60;
 
     public function __construct(private CheapSharkRepository $repository, private Cache $cache){}
 
@@ -25,10 +27,10 @@ class CachingCheapSharkRepository implements CheapSharkRepository
 
     public function getGame(int $gameId): Game
     {
-        // Pull the games out of cache, if it exists...
+        // Pull the game out of cache, if it exists...
         return $this->cache->remember('game.'.$gameId, $this::CACHE_TIMEOUT_SECONDS, function() use ($gameId) {
-            // If cache has expired, grab the games out of the API
-            return $this->repository->getGame($gameId);
+            // If cache has expired, grab the game out of the API
+            return [$this->repository->getGame($gameId)];
         })[0];
     }
 

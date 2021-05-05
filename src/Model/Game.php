@@ -6,9 +6,11 @@ namespace SallePW\SlimApp\Model;
 use DateTime;
 use Exception;
 use JsonSerializable;
+use ReflectionClass;
 
 class Game implements JsonSerializable
 {
+
     // Tots els camps son opcionals per a poder crear games buits.
     public function __construct(
         private String $title="",
@@ -42,9 +44,17 @@ class Game implements JsonSerializable
 
     public function jsonSerialize()
     {
-        return [
+
+        //$reflection = new ReflectionClass($this);
+        //error_log("Properties are ");
+        //error_log(print_r($reflection->getProperties(),true));
+        //return $reflection->getProperties();
+        //return get_class_vars ( __CLASS__ );
+
+       //TODO: POC ESCALABLE.
+        return  [
             'title' => $this->title,
-            'gameId' => $this->gameid,
+            'gameid' => $this->gameid,
             'price' => $this->price,
             'thumbnail'=>$this->thumbnail,
             'metacriticScore'=>$this->metacriticScore,
@@ -55,6 +65,8 @@ class Game implements JsonSerializable
             'dealID'=>$this->dealID,
         ];
     }
+
+
 
     /**
      * @return string

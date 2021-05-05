@@ -138,6 +138,7 @@ final class MySQLGameRepository implements GameRepository
     }
 
     public function getOwnedGames(int $userId): array {
+        try {
 
         $query = <<<'QUERY'
         SELECT * 
@@ -151,16 +152,19 @@ final class MySQLGameRepository implements GameRepository
         $statement->execute();
 
         $games = [];
+
         while(true) {
             $res = $statement->fetch();
             if (!$res) break;
-
             array_push($games, new Game($res['titol'], (int)$res['gameId'], (float)$res['price'], $res['thumbnail'],
-
                 (int)$res['metacriticStore'], new DateTime($res['releaseDate']),(float) $res['cheapestPrice'], false,true));
         }
 
-        return $games;
+            return $games;
+        }catch (Exception $e){
+            error_log(print_r($e->getMessage(),true));
+            return [];
+        }
     }
 
     public function addWishedGame(int $gameId, int $userId): bool

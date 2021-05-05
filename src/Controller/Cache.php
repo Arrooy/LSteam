@@ -11,13 +11,9 @@ use SallePW\SlimApp\Model\Game;
 
 class Cache
 {
-    // Invalida una cache. Segurament s'han modificat els continguts de les dades.
-    // Potser en un futur seria millor invalidar la data. D'aquesta forma no es perd temps creant fitxers...
-    public function invalidate(string $data_id){
-        unlink("./cachedData/" . $data_id);
-    }
 
     // Timeout es en segons
+    // Callback sempre ha de retornar un array!
     public function remember(string $data_id, int $timeout, $callback): array{
 
         $file_name = "./cachedData/" . $data_id;
@@ -36,22 +32,18 @@ class Cache
 
                 if ($lastTime >= $now ){
                     // Dades correctes. Retornem les daddes de la cache
-                    // error_log("Cache hit of " . $file_name);
+                    error_log("Cache hit of " . $file_name);
 
                     $results = [];
-
                     foreach($cached_data['data'] as $serialized_game){
                         array_push($results, Game::fromJSON($serialized_game));
                     }
-
                     return $results;
-                }else{
-                    error_log("TIMEOUT");
                 }
             }
 
             // Ha caducat la cache o no l'hem trobat!
-            //error_log("Renovant la cache del fitxer " . $file_name);
+            error_log("Renovant la cache del fitxer " . $file_name);
 
             //Renovem dades.
             $new_data = $callback();
@@ -62,7 +54,9 @@ class Cache
                 'data' => $new_data,
             ];
 
+
             file_put_contents($file_name, json_encode($new_cache,JSON_PRETTY_PRINT | JSON_FORCE_OBJECT));
+
             return $new_data;
 
         }catch (Exception $e){
