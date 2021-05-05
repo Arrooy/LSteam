@@ -160,6 +160,6 @@ $container->set(
 $container->set(
     FriendsConroller::class,
     function (Container $c) {
-        return new FriendsConroller($c->get("view"), $c->get(FriendsRepository::class));
+        return new FriendsConroller($c->get("view"), $c->get(UserRepository::class), $c->get(FriendsRepository::class));
     }
 );

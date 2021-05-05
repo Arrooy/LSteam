@@ -108,3 +108,13 @@ $app->get(
     '/user/friendRequests',
     FriendsConroller::class . ":showRequests"
 )->setName('friendRequests')->add($app->getContainer()->get('verifySessionMiddleware'));
+
+$app->get(
+    '/user/friendRequests/send',
+    FriendsConroller::class . ":showRequestCreation"
+)->setName('sendRequest')->add($app->getContainer()->get('verifySessionMiddleware'));
+
+$app->post(
+    '/user/friendRequests/send',
+    FriendsConroller::class . ":handleSendRequest"
+)->add($app->getContainer()->get('verifySessionMiddleware'));

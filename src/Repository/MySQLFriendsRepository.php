@@ -108,4 +108,28 @@ final class MySQLFriendsRepository implements FriendsRepository {
 
         $statement->execute();
     }
+
+    public function friendCheck(int $orig, int $dest) : int {
+        $query = <<<'QUERY'
+        SELECT 1 as aux 
+        FROM friendRequests
+        WHERE ((id_orig = :id_orig and id_dest = :id_dest) or (id_orig = :id_dest and id_dest = :id_orig)) and state = 1 
+        UNION
+        SELECT 0 as aux 
+        FROM friendRequests
+        WHERE (id_orig = :id_orig and id_dest = :id_dest) and (state = 0 or state = 2) 
+        QUERY;
+
+        $statement = $this->database->connection()->prepare($query);
+
+        $statement->bindParam('id_orig', $orig, PDO::PARAM_STR);
+        $statement->bindParam('id_dest', $dest, PDO::PARAM_STR);
+
+        $statement->execute();
+        $res = $statement->fetch();
+
+        if (!isset($res['aux'])) return -1;
+
+        return (int) $res['aux'];
+    }
 }

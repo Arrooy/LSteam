@@ -1,6 +1,6 @@
 {% extends 'base.twig' %}
 
-{% block title %}{{ formTitle }}{% endblock %}
+{% block title %}Friends{% endblock %}
 {% block content %}
 
     <style>
@@ -23,7 +23,7 @@
                     <a class="button is-primary is-light is-medium" href="{{ requests_href }}">
                         Friend Requests
                     </a>
-                    <a class="button is-link is-light is-medium">
+                    <a class="button is-link is-light is-medium" href="{{ sendRequest_href }}">
                         Send Request
                     </a>
                 </div>

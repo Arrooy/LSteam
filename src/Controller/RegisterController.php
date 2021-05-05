@@ -58,6 +58,7 @@ final class RegisterController extends GenericFormController
                 password_hash($data['password'], PASSWORD_DEFAULT),
                 new DateTime($data['birthday']),
                 $data['phone'],
+                'default.jpg'
             );
 
             $this->userRepository->savePendingUser($user);

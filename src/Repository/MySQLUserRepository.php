@@ -10,8 +10,7 @@ use SallePW\SlimApp\Model\UserRepository;
 use Exception;
 
 use DateTime;
-final class MySQLUserRepository implements UserRepository
-{
+final class MySQLUserRepository implements UserRepository {
     public const DATE_FORMAT = 'Y-m-d H:i:s';
 
     private PDOSingleton $database;
@@ -25,11 +24,11 @@ final class MySQLUserRepository implements UserRepository
         try{
             return $this->getIdByEmail($emailOrUsername,$password);
         }catch (Exception $exception){
-            return $this->getIdByUsername($emailOrUsername,$password);
+            return $this->getIdByUsernameAndPswd($emailOrUsername,$password);
         }
     }
 
-    public function getIdByEmail(string $email, string $password): int{
+    public function getIdByEmail(string $email, string $password): int {
         $query = <<< 'QUERY'
         SELECT * FROM users WHERE email=:email
         QUERY;
@@ -47,7 +46,7 @@ final class MySQLUserRepository implements UserRepository
         return (int)$res['id'];
     }
 
-    private function getIdByUsername(string $username, string $password): int{
+    private function getIdByUsernameAndPswd(string $username, string $password): int {
         $query = <<< 'QUERY'
         SELECT * FROM users WHERE username=:username
         QUERY;
@@ -63,6 +62,22 @@ final class MySQLUserRepository implements UserRepository
         }
 
         return (int)$res['id'];
+    }
+
+    public function getIdByUsername(string $username): int {
+        $query = <<< 'QUERY'
+        SELECT * FROM users WHERE username=:username
+        QUERY;
+
+        $statement = $this->database->connection()->prepare($query);
+        $statement->bindParam('username', $username, PDO::PARAM_STR);
+
+        $statement->execute();
+        $res = $statement->fetch();
+
+        if (!is_array($res)) throw new Exception('Credentials dont match any user');
+
+        return (int) $res['id'];
     }
 
     // Mira si un usuari existeix a la taula d'usuraris
@@ -136,7 +151,8 @@ final class MySQLUserRepository implements UserRepository
             $res['email'],
             $res['password'],
             new DateTime($res['birthday']),
-            $res['phone'] ?? ''
+            $res['phone'] ?? '',
+            $res['profilePic'] ?? 'default.jpg'
         );
     }
 
@@ -215,8 +231,8 @@ final class MySQLUserRepository implements UserRepository
     public function saveUser(User $user): void {
 
         $query = <<<'QUERY'
-        INSERT INTO users(username, email, password, birthday, phone)
-        VALUES(:username, :email, :password, :birthday, :phone)
+        INSERT INTO users(username, email, password, birthday, phone, money)
+        VALUES(:username, :email, :password, :birthday, :phone, 0)
         QUERY;
         
         $statement = $this->database->connection()->prepare($query);
