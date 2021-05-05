@@ -23,12 +23,29 @@ final class MySQLFriendsRepository implements FriendsRepository {
     }
 
     public function getFriends(int $user, int $state): array {
-        $query = <<<'QUERY'
-        SELECT u.id, u.username, u.email, u.birthday, u.phone, u.profilePic, fr.accept_time 
-        FROM users as u
-        INNER JOIN friendRequests fr ON (u.id = fr.id_orig or (fr.state = 1 and u.id = fr.id_dest))
-        WHERE u.id != :id and fr.state = :state;
-        QUERY;
+        switch ($state) {
+            case self::REQUEST_ACCEPTED:
+                $query = <<<'QUERY'
+                SELECT u.id, u.username, u.email, u.birthday, u.phone, u.profilePic, fr.accept_time 
+                FROM users as u
+                INNER JOIN friendRequests fr ON u.id = fr.id_orig
+                WHERE u.id != :id and fr.id_dest = :id and fr.state = :state
+                UNION
+                SELECT u.id, u.username, u.email, u.birthday, u.phone, u.profilePic, fr.accept_time 
+                FROM users as u
+                INNER JOIN friendRequests fr ON u.id = fr.id_dest
+                WHERE u.id != :id and fr.id_orig = :id and fr.state = :state;
+                QUERY;
+                break;
+            case self::REQUEST_PENDING:
+                $query = <<<'QUERY'
+                SELECT u.id, u.username, u.email, u.birthday, u.phone, u.profilePic, fr.accept_time 
+                FROM users as u
+                INNER JOIN friendRequests fr ON u.id = fr.id_orig
+                WHERE fr.id_dest = :id and fr.state = :state;
+                QUERY;
+                break;
+        }
 
         $statement = $this->database->connection()->prepare($query);
 
@@ -51,7 +68,10 @@ final class MySQLFriendsRepository implements FriendsRepository {
                 $res['phone'],
                 $res['profilePic'] ?? 'default.jpg'
             );
-            $friend->setAcceptDate(new DateTime($res['accept_time']));
+            if ($state == self::REQUEST_ACCEPTED) $friend->setAcceptDate(new DateTime($res['accept_time']));
+
+            error_log(print_r($friend->getUsername(), true));
+            error_log(print_r($state, true));
 
             array_push($friends, $friend);
         }

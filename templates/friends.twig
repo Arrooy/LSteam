@@ -17,11 +17,17 @@
 
     <section class="content">
         <div class="mb-3 is-flex is-flex-direction-row is-flex-wrap-nowrap is-justify-content-space-between is-align-items-center">
-            <h1 class="is-size-1">Friend list</h1>
-            <div class="buttons">
-                <button class="button is-primary is-light is-medium">Friend Requests</button>
-                <button class="button is-link is-light is-medium">Send Request</button>
-            </div>
+            <h1 class="is-size-1">{{ listTitle }}</h1>
+            {% if not isRequests %}
+                <div class="buttons">
+                    <a class="button is-primary is-light is-medium" href="{{ requests_href }}">
+                        Friend Requests
+                    </a>
+                    <a class="button is-link is-light is-medium">
+                        Send Request
+                    </a>
+                </div>
+            {% endif %}
         </div>
 
         {% for friend in friendList %}
@@ -38,12 +44,22 @@
                         <p>{{ friend.username }}</p>
                     </div>
                 </div>
-                <div class="mr-3">
-                    <p>{{ friend.acceptDate }}</p>
-                </div>
+                {% if not isRequests %}
+                    <div class="mr-3">
+                        <p>{{ friend.acceptDate }}</p>
+                    </div>
+                {% else %}
+                    <div class="buttons mr-3">
+                        <button class="button is-success is-light">Accept</button>
+                        <button class="button is-danger is-light">Decline</button>
+                    </div>
+                {% endif %}
             </div>
         </div>
         {% endfor %}
+        {% if friendList|length == 0 %}
+            <p>{{ emptyMessage }}</p>
+        {% endif %}
     </section>
 
 {% endblock %}

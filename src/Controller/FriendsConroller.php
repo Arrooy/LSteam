@@ -24,13 +24,18 @@ final class FriendsConroller {
         error_log(print_r($msg, TRUE));
     }
 
-    public function show(Request $request, Response $response, array $errors): Response {
+    public function show(Request $request, Response $response): Response {
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
 
         $friends = $this->friendsRepository->getFriends($_SESSION['id'], MySQLFriendsRepository::REQUEST_ACCEPTED);
 
         return $this->twig->render($response, 'friends.twig', [
             'friendList' => $friends,
+            'listTitle' => 'Friend list',
+            'isRequests' => false,
+            'emptyMessage' => "You don't have any friend yet!",
+
+            'requests_href' => $routeParser->urlFor('friendRequests'),
 
             // Hrefs de la base
             'is_user_logged' => isset($_SESSION['id']),
@@ -47,5 +52,29 @@ final class FriendsConroller {
         ]);
     }
 
+    public function showRequests(Request $request, Response $response): Response {
+        $routeParser = RouteContext::fromRequest($request)->getRouteParser();
 
+        $friends = $this->friendsRepository->getFriends($_SESSION['id'], MySQLFriendsRepository::REQUEST_PENDING);
+
+        return $this->twig->render($response, 'friends.twig', [
+            'friendList' => $friends,
+            'listTitle' => 'Friend requests',
+            'isRequests' => true,
+            'emptyMessage' => "It seems that you don't have any friend request to handle",
+
+            // Hrefs de la base
+            'is_user_logged' => isset($_SESSION['id']),
+            'profilePic' => (!isset($_SESSION['profilePic']) ? "" : $routeParser->urlFor('home') . $_SESSION['profilePic']),
+            'log_in_href' => $routeParser->urlFor('login'),
+            'log_out_href' => $routeParser->urlFor('logOut'),
+            'sign_up_href' => $routeParser->urlFor('register'),
+            'profile_href' => $routeParser->urlFor('profile'),
+            'home_href' => $routeParser->urlFor('home'),
+            'store_href' =>  $routeParser->urlFor('store'),
+            'friends_href' =>  $routeParser->urlFor('friends'),
+            'wallet_href' => $routeParser->urlFor('getWallet'),
+            'myGames_href' => $routeParser->urlFor('myGames'),
+        ]);
+    }
 }
