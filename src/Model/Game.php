@@ -4,21 +4,57 @@
 namespace SallePW\SlimApp\Model;
 
 use DateTime;
+use Exception;
+use JsonSerializable;
 
-class Game
+class Game implements JsonSerializable
 {
+    // Tots els camps son opcionals per a poder crear games buits.
     public function __construct(
-        private String $title,
-        private int $gameid,
-        private float $price,
-        private String $thumbnail,
-        private int $metacriticScore,
-        private DateTime $releaseDate,
-        private float $cheapestPriceEver,
-        private bool $wished,
-        private bool $owned,
+        private String $title="",
+        private int $gameid=0,
+        private float $price=0,
+        private String $thumbnail="",
+        private int $metacriticScore=0,
+        private ?DateTime $releaseDate=null,
+        private float $cheapestPriceEver=0.0,
+        private bool $wished=false,
+        private bool $owned=false,
         private string $dealID=""
     ) {}
+
+    // sg == Serialized Game
+    public static function fromJSON($sg): Game{
+        $ng = new Game();
+        foreach ($sg AS $key => $value) {
+            if ($key == "releaseDate"){
+                try{
+                    $ng->{$key} = new DateTime('@' . $value);
+                }catch (Exception $e){
+                    $ng->{$key} = null;
+                }
+            }else{
+                $ng->{$key} = $value;
+            }
+        }
+        return $ng;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'title' => $this->title,
+            'gameId' => $this->gameid,
+            'price' => $this->price,
+            'thumbnail'=>$this->thumbnail,
+            'metacriticScore'=>$this->metacriticScore,
+            'releaseDate' => $this->releaseDate->getTimestamp(),
+            'cheapestPriceEver'=>$this->cheapestPriceEver,
+            'wished'=>$this->wished,
+            'owned'=>$this->owned,
+            'dealID'=>$this->dealID,
+        ];
+    }
 
     /**
      * @return string
@@ -122,7 +158,5 @@ class Game
     {
         return $this->cheapestPriceEver;
     }
-
-
 
 }

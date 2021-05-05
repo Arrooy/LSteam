@@ -112,7 +112,7 @@ class API_CheapSharkRepository implements CheapSharkRepository
 
 
     // Empra el endopoint getMultiplegames
-    public function getGamesFromIds(array  $wishedGame_ids): array
+    public function getGamesFromIds(array  $game_ids): array
     {
 
         $res = $this->client->request('GET', 'https://www.cheapshark.com/api/1.0/games',
@@ -120,10 +120,10 @@ class API_CheapSharkRepository implements CheapSharkRepository
                 'verify' => false,
                 'query' => [
                     // La magia del implode :)
-                    'ids' => implode(',',$wishedGame_ids),
+                    'ids' => implode(',',$game_ids),
                 ]
             ]);
-        error_log("REQUEST DONE");
+
         # Decodifiquem el body
         $jsonResponse = json_decode($res->getBody()->getContents(), true);
 
@@ -156,7 +156,6 @@ class API_CheapSharkRepository implements CheapSharkRepository
             foreach ($deals as $deal_game){
                 foreach ($game_result['deals'] as $game_result_deal) {
                     if(strcmp($deal_game->getDealID(),$game_result_deal['dealID']) == 0){
-                        error_log("Bingo");
                         $deal_game->setWished(true);
                         array_push($games, $deal_game);
                         break;

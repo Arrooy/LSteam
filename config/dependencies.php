@@ -4,6 +4,7 @@ declare(strict_types=1);
 use DI\Container;
 use Psr\Container\ContainerInterface;
 
+use SallePW\SlimApp\Controller\Cache;
 use SallePW\SlimApp\Controller\ChangePasswordController;
 use SallePW\SlimApp\Controller\LogOutController;
 use SallePW\SlimApp\Controller\ProfileController;
@@ -52,9 +53,17 @@ $container->set('gif_api', function () {
     return API_GifRepository::getInstance($_ENV['GIPHY_API_KEY']);
 });
 
+
+$container->set('cache',
+    function (ContainerInterface $c) {
+        return new Cache();
+
+});
+
+
 $container->set('game_api', function (Container $c) {
-    return API_CheapSharkRepository::getInstance();
-//    return new CachingCheapSharkRepository($cheapSharkRepo, "['cache.store']);
+
+    return new CachingCheapSharkRepository(API_CheapSharkRepository::getInstance(), $c->get('cache'));
 });
 
 $container->set(

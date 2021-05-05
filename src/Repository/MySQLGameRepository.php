@@ -220,7 +220,7 @@ final class MySQLGameRepository implements GameRepository
 
         $statement->execute();
         $res = $statement->fetchAll();
-        error_log(print_r($res,true));
+//        error_log(print_r($res,true));
 
         $game_ids = [];
         foreach ($res as $gid) {

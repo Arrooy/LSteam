@@ -21,8 +21,9 @@ class WishListController
 
         $wishedGame_ids = $this->gameRepository->getWishedGamesIds($_SESSION['id']);
 
-        $wishes = $this->cheapSharkRepository->getGamesFromIds($wishedGame_ids);
-
+        if(!empty($wishedGame_ids)){
+            $wishes = $this->cheapSharkRepository->getGamesFromIds($wishedGame_ids);
+        }
 
         return $this->twig->render(
             $response,
