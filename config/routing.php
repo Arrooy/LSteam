@@ -72,12 +72,12 @@ $app->get(
 $app->post(
     '/store/buy/{gameId}',
     StoreController::class . ":buy"
-)->setName('handle-store-buy');
+)->setName('handle-store-buy')->add($app->getContainer()->get('verifySessionMiddleware'));;
 
 $app->get(
     '/profile/changePassword',
     ChangePasswordController::class . ":show"
-)->setName('changePassword')->add($app->getContainer()->get('verifySessionMiddleware'));;
+)->setName('changePassword')->add($app->getContainer()->get('verifySessionMiddleware'));
 
 $app->post(
     '/profile/changePassword',
@@ -87,7 +87,7 @@ $app->post(
 $app->get(
     '/user/myGames',
     StoreController::class . ":myGames"
-)->setName('myGames');
+)->setName('myGames')->add($app->getContainer()->get('verifySessionMiddleware'));;
 
 $app->get(
     '/user/wallet',
@@ -114,9 +114,9 @@ $app->get(
 $app->post(
     '/user/wishlist/{gameId}',
     WishListController::class . ":addWish"
-)->setName('handle-wishlist-add-wish');
+)->setName('handle-wishlist-add-wish')->add($app->getContainer()->get('verifySessionMiddleware'));;
 
 $app->delete(
     '/user/wishlist/{gameId}',
     WishListController::class . ":deleteWish"
-)->setName('handle-wishlist-delete-wish');
+)->setName('handle-wishlist-delete-wish')->add($app->getContainer()->get('verifySessionMiddleware'));;
