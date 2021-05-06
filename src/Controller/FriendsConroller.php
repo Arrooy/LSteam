@@ -65,6 +65,9 @@ final class FriendsConroller {
             'isRequests' => true,
             'emptyMessage' => "It seems that you don't have any friend request to handle",
 
+            'accept_href' => $routeParser->urlFor('acceptFriendRequest', ['requestId' => 0]),
+            'decline_href' => $routeParser->urlFor('declineFriendRequest', ['requestId' => 0]),
+
             // Hrefs de la base
             'is_user_logged' => isset($_SESSION['id']),
             'profilePic' => (!isset($_SESSION['profilePic']) ? "" : $routeParser->urlFor('home') . $_SESSION['profilePic']),
@@ -135,5 +138,24 @@ final class FriendsConroller {
             $error['requestError'] =  "Error! There isn't any user with this username";
         }
         return $error;
+    }
+
+    public function acceptRequest(Request $request, Response $response): Response {
+        $routeParser = RouteContext::fromRequest($request)->getRouteParser();
+
+        //TODO: en cas de que hi hagi error cal mostrar algo
+        $this->friendsRepository->updateRequest((int) $request->getAttribute('requestId'), $_SESSION['id'], MySQLFriendsRepository::REQUEST_ACCEPTED);
+        return $response
+            ->withHeader('Location', $routeParser->urlFor("friendRequests"))
+            ->withStatus(301);
+    }
+
+    public function declineRequest(Request $request, Response $response): Response {
+        $routeParser = RouteContext::fromRequest($request)->getRouteParser();
+
+        $this->friendsRepository->updateRequest((int) $request->getAttribute('requestId'), $_SESSION['id'], MySQLFriendsRepository::REQUEST_DECLINED);
+        return $response
+            ->withHeader('Location', $routeParser->urlFor("friendRequests"))
+            ->withStatus(301);
     }
 }

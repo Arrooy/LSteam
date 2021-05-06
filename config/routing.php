@@ -118,3 +118,13 @@ $app->post(
     '/user/friendRequests/send',
     FriendsConroller::class . ":handleSendRequest"
 )->add($app->getContainer()->get('verifySessionMiddleware'));
+
+$app->get(
+    '/user/friendRequests/accept/{requestId}',
+    FriendsConroller::class . ":acceptRequest"
+)->setName('acceptFriendRequest')->add($app->getContainer()->get('verifySessionMiddleware'));
+
+$app->get(
+    '/user/friendRequests/decline/{requestId}',
+    FriendsConroller::class . ":declineRequest"
+)->setName('declineFriendRequest')->add($app->getContainer()->get('verifySessionMiddleware'));

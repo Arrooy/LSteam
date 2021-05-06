@@ -50,8 +50,12 @@
                     </div>
                 {% else %}
                     <div class="buttons mr-3">
-                        <button class="button is-success is-light">Accept</button>
-                        <button class="button is-danger is-light">Decline</button>
+                        <form action="{{ accept_href|replace({'0':friend.id})}}" method="GET" accept-charset="utf-8">
+                            <input type="submit" class="button is-success is-light mr-2" value="Accept">
+                        </form>
+                        <form action="{{ decline_href|replace({'0':friend.id})}}" method="GET" accept-charset="utf-8">
+                            <input type="submit" class="button is-danger is-light ml-2" value="Decline">
+                        </form>
                     </div>
                 {% endif %}
             </div>
