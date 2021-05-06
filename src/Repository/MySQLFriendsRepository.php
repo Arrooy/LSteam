@@ -97,7 +97,7 @@ final class MySQLFriendsRepository implements FriendsRepository {
         $query = <<<'QUERY'
         UPDATE friendRequests
         SET state=:state, accept_time=CURRENT_TIMESTAMP
-        WHERE id_orig=:orig and id_dest=:dest
+        WHERE id_orig=:orig and id_dest=:dest and state=0
         QUERY;
 
         $statement = $this->database->connection()->prepare($query);
@@ -117,7 +117,7 @@ final class MySQLFriendsRepository implements FriendsRepository {
         UNION
         SELECT 0 as aux 
         FROM friendRequests
-        WHERE (id_orig = :id_orig and id_dest = :id_dest) and (state = 0 or state = 2) 
+        WHERE (id_orig = :id_orig and id_dest = :id_dest or id_orig = :id_dest and id_dest = :id_orig) and (state = 0 or state = 2) 
         QUERY;
 
         $statement = $this->database->connection()->prepare($query);
