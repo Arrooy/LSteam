@@ -47,14 +47,7 @@ final class ProfileController
 
         if (empty($errors)) {
             $data = $request->getParsedBody();
-            /*$this->userRepository->updateUser(new User(
-                empty($data['username']) ? $user->getUsername() : $data['username'],
-                empty($data['email']) ? $user->email() : $data['email'],
-                $user->password(),
-                new DateTime($data['birthday']),
-                empty($data['phone']) ? $user->getPhone() : $data['phone'],
-                $profilePic
-            ));*/
+
             $this->userRepository->updateUser(new User(
                 0,
                 $user->getUsername(),
@@ -77,28 +70,8 @@ final class ProfileController
         $data = $request->getParsedBody();
         $errors = [];
 
-        /*if (empty($data['email']) || !filter_var($data['email'], FILTER_VALIDATE_EMAIL))
-            $errors['email'] = 'The email address is not valid';
-        elseif(!(str_ends_with($data['email'], '@salle.url.edu') || str_ends_with($data['email'], '@students.salle.url.edu')))
-            $errors['email'] = 'The email domain not accepted. Try using a @salle.url.edu or students.salle.url.edu domain';
-        elseif((strcmp($user->email(), $data['email']) != 0) && ($this->userRepository->emailExists($data['email'])))
-            $errors['email'] = 'The email address is already used';
-
-        if(!ctype_alnum($data['username']))
-            $errors['username'] = 'The username is not valid';
-        elseif((strcmp($user->getUsername(), $data['username']) != 0) && ($this->userRepository->usernameExists($data['username'])))
-            $errors['username'] = 'The username already exists';
-*/
         if (!empty($data['phone'] && (mb_strlen($data['phone'], "utf8") != 9 || ($data['phone'][0] != 6 && $data['phone'][0] != 7) || ($data['phone'][0] == 7 && $data['phone'][1] == 0))))
             $errors['phone'] = "The phone number is not valid.";
-
-        // Es crea objecte de dateTime
-        //      $bday = new DateTime($data['birthday']);
-        // Afegim 18 anys
-        //    $bday->add(new DateInterval("P18Y"));
-
-        // Mirem si la data supera l'actual per saber si és major d'edat
-        //  if($bday >= new DateTime()) $errors['birthday'] = "You must be over 18 to register";
 
         return $errors;
     }
@@ -170,18 +143,6 @@ final class ProfileController
             'profilePic' => (!isset($_SESSION['profilePic']) ? "" : $routeParser->urlFor('home') . $_SESSION['profilePic']),
 
             'change_password_href' => $routeParser->urlFor('changePassword'),
-
-            // Hrefs de la base
-            'log_in_href' => $routeParser->urlFor('login'),
-            'log_out_href' => $routeParser->urlFor('logOut'),
-            'sign_up_href' => $routeParser->urlFor('register'),
-            'profile_href' => $routeParser->urlFor('profile'),
-            'home_href' => $routeParser->urlFor('home'),
-            'store_href' => $routeParser->urlFor('store'),
-            'friends_href' => $routeParser->urlFor('friends'),
-            'wallet_href' => $routeParser->urlFor('getWallet'),
-            'myGames_href' => $routeParser->urlFor('myGames'),
-            'wishlist_href' => $routeParser->urlFor('wishlist'),
         ]);
     }
 

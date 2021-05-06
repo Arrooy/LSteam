@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use SallePW\SlimApp\Controller\ChangePasswordController;
-use SallePW\SlimApp\Controller\FriendsConroller;
+use SallePW\SlimApp\Controller\FriendsController;
 use SallePW\SlimApp\Controller\LogOutController;
 use SallePW\SlimApp\Controller\ProfileController;
 use SallePW\SlimApp\Controller\RegisterController;
@@ -101,32 +101,32 @@ $app->post(
 
 $app->get(
     '/user/friends',
-    FriendsConroller::class . ":show"
+    FriendsController::class . ":show"
 )->setName('friends')->add($app->getContainer()->get('verifySessionMiddleware'));
 
 $app->get(
     '/user/friendRequests',
-    FriendsConroller::class . ":showRequests"
+    FriendsController::class . ":showRequests"
 )->setName('friendRequests')->add($app->getContainer()->get('verifySessionMiddleware'));
 
 $app->get(
     '/user/friendRequests/send',
-    FriendsConroller::class . ":showRequestCreation"
+    FriendsController::class . ":showRequestCreation"
 )->setName('sendRequest')->add($app->getContainer()->get('verifySessionMiddleware'));
 
 $app->post(
     '/user/friendRequests/send',
-    FriendsConroller::class . ":handleSendRequest"
+    FriendsController::class . ":handleSendRequest"
 )->add($app->getContainer()->get('verifySessionMiddleware'));
 
 $app->get(
     '/user/friendRequests/accept/{requestId}',
-    FriendsConroller::class . ":acceptRequest"
+    FriendsController::class . ":acceptRequest"
 )->setName('acceptFriendRequest')->add($app->getContainer()->get('verifySessionMiddleware'));
 
 $app->get(
     '/user/friendRequests/decline/{requestId}',
-    FriendsConroller::class . ":declineRequest"
+    FriendsController::class . ":declineRequest"
 )->setName('declineFriendRequest')->add($app->getContainer()->get('verifySessionMiddleware'));
 
 

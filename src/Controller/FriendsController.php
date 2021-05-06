@@ -12,7 +12,7 @@ use SallePW\SlimApp\Repository\MySQLFriendsRepository;
 use Slim\Routing\RouteContext;
 use Slim\Views\Twig;
 
-final class FriendsConroller
+final class FriendsController
 {
 
     public function __construct(private Twig $twig, private UserRepository $userRepository, private FriendsRepository $friendsRepository)

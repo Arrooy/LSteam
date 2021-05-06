@@ -33,18 +33,7 @@ final class WalletController
 
                 'is_user_logged' => isset($_SESSION['id']),
                 'errors' => $errors,
-                // Hrefs de la base
                 'profilePic' => (!isset($_SESSION['profilePic']) ? "" : $routeParser->urlFor('home') . $_SESSION['profilePic']),
-                'log_in_href' => $routeParser->urlFor('login'),
-                'log_out_href' => $routeParser->urlFor('logOut'),
-                'sign_up_href' => $routeParser->urlFor('register'),
-                'profile_href' => $routeParser->urlFor('profile'),
-                'home_href' => $routeParser->urlFor('home'),
-                'store_href' => $routeParser->urlFor('store'),
-                'friends_href' => $routeParser->urlFor('friends'),
-                'wallet_href' => $routeParser->urlFor('getWallet'),
-                'myGames_href' => $routeParser->urlFor('myGames'),
-                'wishlist_href' => $routeParser->urlFor('wishlist'),
             ]
         );
     }
@@ -92,17 +81,6 @@ final class WalletController
 
                 'is_user_logged' => isset($_SESSION['id']),
                 'profilePic' => (!isset($_SESSION['profilePic']) ? "" : $routeParser->urlFor('home') . $_SESSION['profilePic']),
-
-                // Hrefs de la base
-                'log_in_href' => $routeParser->urlFor('login'),
-                'log_out_href' => $routeParser->urlFor('logOut'),
-                'sign_up_href' => $routeParser->urlFor('register'),
-                'profile_href' => $routeParser->urlFor('profile'),
-                'home_href' => $routeParser->urlFor('home'),
-                'store_href' => $routeParser->urlFor('store'),
-                'wallet_href' => $routeParser->urlFor('getWallet'),
-                'myGames_href' => $routeParser->urlFor('myGames'),
-                'wishlist_href' => $routeParser->urlFor('wishlist'),
             ]
         );
     }
