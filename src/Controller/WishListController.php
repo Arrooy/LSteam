@@ -46,16 +46,7 @@ class WishListController
                 // Nota: El game id s'ignora aqui. Twig fa repace per al valor correcte.
                 'buyAction' => $routeParser->urlFor('handle-store-buy', ['gameId' => 1]),
 
-                // Hrefs de la base
                 'profilePic' => (!isset($_SESSION['profilePic']) ? "" : $routeParser->urlFor('home') . $_SESSION['profilePic']),
-                'log_in_href' => $routeParser->urlFor('login'),
-                'log_out_href' => $routeParser->urlFor('logOut'),
-                'sign_up_href' => $routeParser->urlFor('register'),
-                'profile_href' => $routeParser->urlFor('profile'),
-                'home_href' => $routeParser->urlFor('home'),
-                'store_href' => $routeParser->urlFor('store'),
-                'wallet_href' => $routeParser->urlFor('getWallet'),
-                'myGames_href' => $routeParser->urlFor('myGames'),
                 'wishlist_href' => $routeParser->urlFor('wishlist'),
             ]
         );
@@ -80,17 +71,7 @@ class WishListController
 
                     'is_user_logged' => isset($_SESSION['id']),
 
-                    // Hrefs de la base
                     'profilePic' => (!isset($_SESSION['profilePic']) ? "" : $routeParser->urlFor('home') . $_SESSION['profilePic']),
-                    'log_in_href' => $routeParser->urlFor('login'),
-                    'log_out_href' => $routeParser->urlFor('logOut'),
-                    'sign_up_href' => $routeParser->urlFor('register'),
-                    'profile_href' => $routeParser->urlFor('profile'),
-                    'home_href' => $routeParser->urlFor('home'),
-                    'store_href' => $routeParser->urlFor('store'),
-                    'wallet_href' => $routeParser->urlFor('getWallet'),
-                    'myGames_href' => $routeParser->urlFor('myGames'),
-                    'wishlist_href' => $routeParser->urlFor('wishlist'),
                 ]
             );
         } else {
@@ -105,7 +86,6 @@ class WishListController
                     'profilePic' => (!isset($_SESSION['profilePic']) ? "" : $routeParser->urlFor('home') . $_SESSION['profilePic']),
 
                     'gif_url' => $this->gifRepository->getRandomGif("error web"),
-                    'wishlist_href' => $routeParser->urlFor('wishlist'),
                 ]);
         }
     }

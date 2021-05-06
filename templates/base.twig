@@ -19,38 +19,38 @@
 <header>
     <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
-            <a class="navbar-item" href="{{ home_href }}">
+            <a class="navbar-item" href="{{ full_url_for('home') }}">
                 <img src="{{ full_url_for('home') }}/../assets/img/logo_small.png">
             </a>
         </div>
 
         <div id="navbarBasicExample" class="navbar-menu">
             <div class="navbar-start">
-                <a class="navbar-item" href="{{ home_href }}">
+                <a class="navbar-item" href="{{ full_url_for('home') }}">
                     Home
                 </a>
 
-                <a class="navbar-item" href="{{ store_href }}">
+                <a class="navbar-item" href="{{ full_url_for('store') }}">
                     Store
                 </a>
                 {% if is_user_logged %}
 
-                <a class="navbar-item" href="{{ wishlist_href }}">
+                <a class="navbar-item" href="{{ full_url_for('wishlist') }}">
                     Wishlist
                 </a>
 
-                <a class="navbar-item" href="{{ profile_href }}">
+                <a class="navbar-item" href="{{ full_url_for('profile') }}">
                     Profile
                 </a>
 
-                <a class="navbar-item" href="{{ friends_href }}">
+                <a class="navbar-item" href="{{ full_url_for('friends') }}">
                     Friends
                 </a>
-                <a class="navbar-item" href="{{ wallet_href }}">
+                <a class="navbar-item" href="{{ full_url_for('getWallet') }}">
                     Wallet
                 </a>
 
-                <a class="navbar-item" href="{{ myGames_href }}">
+                <a class="navbar-item" href="{{ full_url_for('myGames') }}">
                     My Games
                 </a>
                 {% endif %}
@@ -60,21 +60,21 @@
                 <div class="navbar-item">
                     <div class="buttons">
                         {% if is_user_logged %}
-                            <form action="{{ log_out_href }}" method="POST" accept-charset="utf-8">
+                            <form action="{{ full_url_for('logOut') }}" method="POST" accept-charset="utf-8">
                                 <input class="button is-danger" type="submit" name="logout" value="Log out" />
                             </form>
                         {% else %}
-                            <a class="button is-primary" href="{{ sign_up_href }}">
+                            <a class="button is-primary" href="{{ full_url_for('register') }}">
                                 <strong>Sign up</strong>
                             </a>
-                            <a class="button is-light" href="{{ log_in_href }}">
+                            <a class="button is-light" href="{{ full_url_for('login') }}">
                                 Log in
                             </a>
                         {% endif %}
                     </div>
                 </div>
                 {% if is_user_logged %}
-                    <a href="{{ profile_href }}">
+                    <a href="{{ full_url_for('profile') }}">
                         <figure class="image is-48x48 m-2">
                             <img class="is-rounded" src="{{ profilePic }}">
                         </figure>

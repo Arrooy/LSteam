@@ -6,7 +6,7 @@ use Psr\Container\ContainerInterface;
 
 use SallePW\SlimApp\Controller\Cache;
 use SallePW\SlimApp\Controller\ChangePasswordController;
-use SallePW\SlimApp\Controller\FriendsConroller;
+use SallePW\SlimApp\Controller\FriendsController;
 use SallePW\SlimApp\Controller\LogOutController;
 use SallePW\SlimApp\Controller\ProfileController;
 use SallePW\SlimApp\Controller\StoreController;
@@ -175,8 +175,8 @@ $container->set(
 );
 
 $container->set(
-    FriendsConroller::class,
+    FriendsController::class,
     function (Container $c) {
-        return new FriendsConroller($c->get("view"), $c->get(UserRepository::class), $c->get(FriendsRepository::class));
+        return new FriendsController($c->get("view"), $c->get(UserRepository::class), $c->get(FriendsRepository::class));
     }
 );
