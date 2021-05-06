@@ -13,7 +13,7 @@
                 <h1 class="title is-1">No games saved yet :(</h1>
 
             {% endif %}
-            <a href="{{ store_href }}">Click here to go to the store</a>
+            <a href="{{ full_url_for('store') }}">Click here to go to the store</a>
         {% else %}
             <h1 class="title is-1">{{ formTitle }}</h1>
             <h2 class="subtitle ">{{ formSubtitle }}</h2>
@@ -107,7 +107,7 @@
                                 {% endif %}
 
                                 {% if isWishlist %}
-                                    <a class="icon" href="{{ wishlist_href }}/{{ deal.gameid }}">
+                                    <a class="icon" href="{{ full_url_for('wishlist') }}/{{ deal.gameid }}">
                                         <i class="fas fa-info-circle"></i>
                                     </a>
                                 {% endif %}

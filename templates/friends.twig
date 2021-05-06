@@ -20,10 +20,10 @@
             <h1 class="is-size-1">{{ listTitle }}</h1>
             {% if not isRequests %}
                 <div class="buttons">
-                    <a class="button is-primary is-light is-medium" href="{{ requests_href }}">
+                    <a class="button is-primary is-light is-medium" href="{{ full_url_for('friendRequests') }}">
                         Friend Requests
                     </a>
-                    <a class="button is-link is-light is-medium" href="{{ sendRequest_href }}">
+                    <a class="button is-link is-light is-medium" href="{{ full_url_for('sendRequest') }}">
                         Send Request
                     </a>
                 </div>
