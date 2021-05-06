@@ -3,18 +3,18 @@ declare(strict_types=1);
 
 namespace SallePW\SlimApp\Controller;
 
-use DateInterval;
 use DateTime;
 use Error;
-use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Ramsey\Uuid\Uuid;
 use SallePW\SlimApp\Model\User;
 use SallePW\SlimApp\Model\UserRepository;
-use Slim\Views\Twig;
 use Slim\Routing\RouteContext;
+use Slim\Views\Twig;
 
-final class ProfileController {
+final class ProfileController
+{
     public const DATE_FORMAT = 'Y-m-d';
     public const UPLOADS_DIR = 'uploads';
 
@@ -28,53 +28,12 @@ final class ProfileController {
 
     private const ALLOWED_EXTENSIONS = ['jpg', 'png'];
 
-    public function __construct(private Twig $twig, private UserRepository $userRepository) {}
-
-    private function print(string $msg) {
-        error_log(print_r($msg, TRUE));
+    public function __construct(private Twig $twig, private UserRepository $userRepository)
+    {
     }
 
-    public function show(Request $request, Response $response, array $errors): Response {
-        $routeParser = RouteContext::fromRequest($request)->getRouteParser();
-
-        $user = $this->userRepository->getUser($_SESSION['id']);
-
-        $profilePic = $user->getProfilePic();
-        $profilePic = self::UPLOADS_DIR . DIRECTORY_SEPARATOR ."$profilePic";
-
-        return $this->twig->render($response, 'profile.twig', [
-            'formErrors' => $errors,
-
-            'formData' => $request->getParsedBody(),
-            'formAction' => $routeParser->urlFor("profile"),
-            'formMethod' => "POST",
-            'is_user_logged' => isset($_SESSION['id']),
-            'submitValue' => "Update profile",
-            'formTitle' => "Profile",
-
-            'username' => $user->getUsername(),
-            'email' => $user->email(),
-            'phone' => $user->getPhone(),
-            'birthday' => $user->getBirthday()->format(self::DATE_FORMAT),
-            'profilePic' => (!isset($_SESSION['profilePic']) ? "" : $routeParser->urlFor('home') . $_SESSION['profilePic']),
-
-            'change_password_href' => $routeParser->urlFor('changePassword'),
-
-            // Hrefs de la base
-            'log_in_href' => $routeParser->urlFor('login'),
-            'log_out_href' => $routeParser->urlFor('logOut'),
-            'sign_up_href' => $routeParser->urlFor('register'),
-            'profile_href' => $routeParser->urlFor('profile'),
-            'home_href' => $routeParser->urlFor('home'),
-            'store_href' =>  $routeParser->urlFor('store'),
-            'friends_href' =>  $routeParser->urlFor('friends'),
-            'wallet_href' => $routeParser->urlFor('getWallet'),
-            'myGames_href' => $routeParser->urlFor('myGames'),
-            'wishlist_href' => $routeParser->urlFor('wishlist'),
-        ]);
-    }
-
-    public function handleUpdate(Request $request, Response $response): Response {
+    public function handleUpdate(Request $request, Response $response): Response
+    {
         $uploadedFiles = $request->getUploadedFiles()['files'];
         $user = $this->userRepository->getUser($_SESSION['id']);
 
@@ -113,7 +72,39 @@ final class ProfileController {
         return $this->show($request, $response, $errors);
     }
 
-    protected function checkImage($uploadedFile, &$profilePic) : ?string {
+    protected function checkForm(Request $request, User $user): array
+    {
+        $data = $request->getParsedBody();
+        $errors = [];
+
+        /*if (empty($data['email']) || !filter_var($data['email'], FILTER_VALIDATE_EMAIL))
+            $errors['email'] = 'The email address is not valid';
+        elseif(!(str_ends_with($data['email'], '@salle.url.edu') || str_ends_with($data['email'], '@students.salle.url.edu')))
+            $errors['email'] = 'The email domain not accepted. Try using a @salle.url.edu or students.salle.url.edu domain';
+        elseif((strcmp($user->email(), $data['email']) != 0) && ($this->userRepository->emailExists($data['email'])))
+            $errors['email'] = 'The email address is already used';
+
+        if(!ctype_alnum($data['username']))
+            $errors['username'] = 'The username is not valid';
+        elseif((strcmp($user->getUsername(), $data['username']) != 0) && ($this->userRepository->usernameExists($data['username'])))
+            $errors['username'] = 'The username already exists';
+*/
+        if (!empty($data['phone'] && (mb_strlen($data['phone'], "utf8") != 9 || ($data['phone'][0] != 6 && $data['phone'][0] != 7) || ($data['phone'][0] == 7 && $data['phone'][1] == 0))))
+            $errors['phone'] = "The phone number is not valid.";
+
+        // Es crea objecte de dateTime
+        //      $bday = new DateTime($data['birthday']);
+        // Afegim 18 anys
+        //    $bday->add(new DateInterval("P18Y"));
+
+        // Mirem si la data supera l'actual per saber si és major d'edat
+        //  if($bday >= new DateTime()) $errors['birthday'] = "You must be over 18 to register";
+
+        return $errors;
+    }
+
+    protected function checkImage($uploadedFile, &$profilePic): ?string
+    {
         $original_name = $uploadedFile->getClientFilename();
         $error = NULL;
 
@@ -153,33 +144,49 @@ final class ProfileController {
         return NULL;
     }
 
-    protected function checkForm(Request $request, User $user): array{
-        $data = $request->getParsedBody();
-        $errors = [];
+    public function show(Request $request, Response $response, array $errors): Response
+    {
+        $routeParser = RouteContext::fromRequest($request)->getRouteParser();
 
-        /*if (empty($data['email']) || !filter_var($data['email'], FILTER_VALIDATE_EMAIL))
-            $errors['email'] = 'The email address is not valid';
-        elseif(!(str_ends_with($data['email'], '@salle.url.edu') || str_ends_with($data['email'], '@students.salle.url.edu')))
-            $errors['email'] = 'The email domain not accepted. Try using a @salle.url.edu or students.salle.url.edu domain';
-        elseif((strcmp($user->email(), $data['email']) != 0) && ($this->userRepository->emailExists($data['email'])))
-            $errors['email'] = 'The email address is already used';
+        $user = $this->userRepository->getUser($_SESSION['id']);
 
-        if(!ctype_alnum($data['username']))
-            $errors['username'] = 'The username is not valid';
-        elseif((strcmp($user->getUsername(), $data['username']) != 0) && ($this->userRepository->usernameExists($data['username'])))
-            $errors['username'] = 'The username already exists';
-*/
-        if(!empty($data['phone'] && (mb_strlen($data['phone'], "utf8") != 9 || ($data['phone'][0] != 6 && $data['phone'][0] != 7) || ($data['phone'][0] == 7 && $data['phone'][1] == 0))))
-            $errors['phone'] = "The phone number is not valid.";
+        $profilePic = $user->getProfilePic();
+        $profilePic = self::UPLOADS_DIR . DIRECTORY_SEPARATOR . "$profilePic";
 
-        // Es crea objecte de dateTime
-  //      $bday = new DateTime($data['birthday']);
-        // Afegim 18 anys
-    //    $bday->add(new DateInterval("P18Y"));
+        return $this->twig->render($response, 'profile.twig', [
+            'formErrors' => $errors,
 
-        // Mirem si la data supera l'actual per saber si és major d'edat
-      //  if($bday >= new DateTime()) $errors['birthday'] = "You must be over 18 to register";
+            'formData' => $request->getParsedBody(),
+            'formAction' => $routeParser->urlFor("profile"),
+            'formMethod' => "POST",
+            'is_user_logged' => isset($_SESSION['id']),
+            'submitValue' => "Update profile",
+            'formTitle' => "Profile",
 
-        return $errors;
+            'username' => $user->getUsername(),
+            'email' => $user->email(),
+            'phone' => $user->getPhone(),
+            'birthday' => $user->getBirthday()->format(self::DATE_FORMAT),
+            'profilePic' => (!isset($_SESSION['profilePic']) ? "" : $routeParser->urlFor('home') . $_SESSION['profilePic']),
+
+            'change_password_href' => $routeParser->urlFor('changePassword'),
+
+            // Hrefs de la base
+            'log_in_href' => $routeParser->urlFor('login'),
+            'log_out_href' => $routeParser->urlFor('logOut'),
+            'sign_up_href' => $routeParser->urlFor('register'),
+            'profile_href' => $routeParser->urlFor('profile'),
+            'home_href' => $routeParser->urlFor('home'),
+            'store_href' => $routeParser->urlFor('store'),
+            'friends_href' => $routeParser->urlFor('friends'),
+            'wallet_href' => $routeParser->urlFor('getWallet'),
+            'myGames_href' => $routeParser->urlFor('myGames'),
+            'wishlist_href' => $routeParser->urlFor('wishlist'),
+        ]);
+    }
+
+    private function print(string $msg)
+    {
+        error_log(print_r($msg, TRUE));
     }
 }

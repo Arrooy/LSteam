@@ -3,23 +3,22 @@ declare(strict_types=1);
 
 namespace SallePW\SlimApp\Controller;
 
-use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-
+use Psr\Http\Message\ServerRequestInterface as Request;
 use SallePW\SlimApp\Model\UserRepository;
-
-use Slim\Views\Twig;
 use Slim\Routing\RouteContext;
-use GuzzleHttp\Client;
+use Slim\Views\Twig;
 
 
 final class WalletController
 {
 
-    public function __construct(private Twig $twig, private UserRepository $userRepository){}
+    public function __construct(private Twig $twig, private UserRepository $userRepository)
+    {
+    }
 
     public function show(Request $request, Response $response): Response
-    {   
+    {
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
 
         $errors = [];
@@ -30,7 +29,7 @@ final class WalletController
             $response,
             'wallet.twig',
             [
-                'money' => number_format($money,2,',','.'),
+                'money' => number_format($money, 2, ',', '.'),
 
                 'is_user_logged' => isset($_SESSION['id']),
                 'errors' => $errors,
@@ -41,8 +40,8 @@ final class WalletController
                 'sign_up_href' => $routeParser->urlFor('register'),
                 'profile_href' => $routeParser->urlFor('profile'),
                 'home_href' => $routeParser->urlFor('home'),
-                'store_href' =>  $routeParser->urlFor('store'),
-                'friends_href' =>  $routeParser->urlFor('friends'),
+                'store_href' => $routeParser->urlFor('store'),
+                'friends_href' => $routeParser->urlFor('friends'),
                 'wallet_href' => $routeParser->urlFor('getWallet'),
                 'myGames_href' => $routeParser->urlFor('myGames'),
                 'wishlist_href' => $routeParser->urlFor('wishlist'),
@@ -51,7 +50,7 @@ final class WalletController
     }
 
     public function handleUpdate(Request $request, Response $response): Response
-    {   
+    {
         $data = $request->getParsedBody();
 
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
@@ -61,20 +60,20 @@ final class WalletController
         $curr_money = $this->userRepository->getMoney($_SESSION['id']);
         $add_value = $data['money'];
 
-        if($add_value > PHP_INT_MAX){
+        if ($add_value > PHP_INT_MAX) {
 
             $errors['tooBig'] = true;
-        }else{
+        } else {
 
-            if ($add_value != "" && !is_numeric($add_value)){
+            if ($add_value != "" && !is_numeric($add_value)) {
                 $errors['isNumeric'] = true;
 
                 // Mai pasara. no fa falta implemetar la ui.
-            }else{
+            } else {
 
                 $errors['positiveVal'] = ($add_value <= 0);
 
-                if(!$errors['positiveVal']){
+                if (!$errors['positiveVal']) {
                     $curr_money += $add_value;
                     $this->userRepository->setMoney($_SESSION['id'], (int)$curr_money);
                 }
@@ -87,8 +86,8 @@ final class WalletController
             $response,
             'wallet.twig',
             [
-                'money' => number_format($curr_money,2,',','.'),
-                
+                'money' => number_format($curr_money, 2, ',', '.'),
+
                 'errors' => $errors,
 
                 'is_user_logged' => isset($_SESSION['id']),
@@ -100,7 +99,7 @@ final class WalletController
                 'sign_up_href' => $routeParser->urlFor('register'),
                 'profile_href' => $routeParser->urlFor('profile'),
                 'home_href' => $routeParser->urlFor('home'),
-                'store_href' =>  $routeParser->urlFor('store'),
+                'store_href' => $routeParser->urlFor('store'),
                 'wallet_href' => $routeParser->urlFor('getWallet'),
                 'myGames_href' => $routeParser->urlFor('myGames'),
                 'wishlist_href' => $routeParser->urlFor('wishlist'),

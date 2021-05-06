@@ -6,18 +6,20 @@ namespace SallePW\SlimApp\Repository;
 use GuzzleHttp\Client;
 use SallePW\SlimApp\Model\GifRepository;
 
-class API_GifRepository implements GifRepository
+class GiphyRepository implements GifRepository
 {
+    private static ?GiphyRepository $instance = null;
     private Client $client;
-    private static ?API_GifRepository $instance = null;
 
     private function __construct(
-        private String $api_key
-    ){
+        private string $api_key
+    )
+    {
         $this->client = new Client();
     }
 
-    public static function getInstance(String $api_key):API_GifRepository{
+    public static function getInstance(string $api_key): GiphyRepository
+    {
         if (self::$instance === null) {
             self::$instance = new self($api_key);
         }

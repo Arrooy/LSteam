@@ -13,28 +13,29 @@ class Cache
 
     // Timeout es en segons
     // Callback sempre ha de retornar un array!
-    public function remember(string $data_id, int $timeout, $callback): array{
+    public function remember(string $data_id, int $timeout, $callback): array
+    {
 
         $file_name = "./cachedData/" . $data_id;
         $file_exists = file_exists($file_name);
 
-        try{
+        try {
             $now = new DateTime('NOW');
 
-            if($file_exists){
-                $cached_data = json_decode(file_get_contents($file_name),true);
+            if ($file_exists) {
+                $cached_data = json_decode(file_get_contents($file_name), true);
 
                 $lastTime = new DateTime('@' . $cached_data['lastTime']);
                 $lastTimeout = $cached_data['lastTimeout'];
 
                 $lastTime->add(new DateInterval('PT' . $lastTimeout . 'S'));
 
-                if ($lastTime >= $now ){
+                if ($lastTime >= $now) {
                     // Dades correctes. Retornem les daddes de la cache
                     error_log("Cache hit of " . $file_name);
 
                     $results = [];
-                    foreach($cached_data['data'] as $serialized_game){
+                    foreach ($cached_data['data'] as $serialized_game) {
                         array_push($results, Game::fromJSON($serialized_game));
                     }
                     return $results;
@@ -54,12 +55,12 @@ class Cache
             ];
 
 
-            file_put_contents($file_name, json_encode($new_cache,JSON_PRETTY_PRINT | JSON_FORCE_OBJECT));
+            file_put_contents($file_name, json_encode($new_cache, JSON_PRETTY_PRINT | JSON_FORCE_OBJECT));
 
             return $new_data;
 
-        }catch (Exception $e){
-            error_log(print_r($e->getMessage(),true));
+        } catch (Exception $e) {
+            error_log(print_r($e->getMessage(), true));
             return [];
         }
     }

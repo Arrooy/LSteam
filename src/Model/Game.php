@@ -6,36 +6,38 @@ namespace SallePW\SlimApp\Model;
 use DateTime;
 use Exception;
 use JsonSerializable;
-use ReflectionClass;
 
 class Game implements JsonSerializable
 {
 
     // Tots els camps son opcionals per a poder crear games buits.
     public function __construct(
-        private String $title="",
-        private int $gameid=0,
-        private float $price=0,
-        private String $thumbnail="",
-        private int $metacriticScore=0,
-        private ?DateTime $releaseDate=null,
-        private float $cheapestPriceEver=0.0,
-        private bool $wished=false,
-        private bool $owned=false,
-        private string $dealID=""
-    ) {}
+        private string $title = "",
+        private int $gameid = 0,
+        private float $price = 0,
+        private string $thumbnail = "",
+        private int $metacriticScore = 0,
+        private ?DateTime $releaseDate = null,
+        private float $cheapestPriceEver = 0.0,
+        private bool $wished = false,
+        private bool $owned = false,
+        private string $dealID = ""
+    )
+    {
+    }
 
     // sg == Serialized Game
-    public static function fromJSON($sg): Game{
+    public static function fromJSON($sg): Game
+    {
         $ng = new Game();
-        foreach ($sg AS $key => $value) {
-            if ($key == "releaseDate"){
-                try{
+        foreach ($sg as $key => $value) {
+            if ($key == "releaseDate") {
+                try {
                     $ng->{$key} = new DateTime('@' . $value);
-                }catch (Exception $e){
+                } catch (Exception $e) {
                     $ng->{$key} = null;
                 }
-            }else{
+            } else {
                 $ng->{$key} = $value;
             }
         }
@@ -51,21 +53,20 @@ class Game implements JsonSerializable
         //return $reflection->getProperties();
         //return get_class_vars ( __CLASS__ );
 
-       //TODO: POC ESCALABLE.
-        return  [
+        //TODO: POC ESCALABLE.
+        return [
             'title' => $this->title,
             'gameid' => $this->gameid,
             'price' => $this->price,
-            'thumbnail'=>$this->thumbnail,
-            'metacriticScore'=>$this->metacriticScore,
+            'thumbnail' => $this->thumbnail,
+            'metacriticScore' => $this->metacriticScore,
             'releaseDate' => $this->releaseDate->getTimestamp(),
-            'cheapestPriceEver'=>$this->cheapestPriceEver,
-            'wished'=>$this->wished,
-            'owned'=>$this->owned,
-            'dealID'=>$this->dealID,
+            'cheapestPriceEver' => $this->cheapestPriceEver,
+            'wished' => $this->wished,
+            'owned' => $this->owned,
+            'dealID' => $this->dealID,
         ];
     }
-
 
 
     /**
@@ -108,7 +109,7 @@ class Game implements JsonSerializable
         return $this->thumbnail;
     }
 
-     /**
+    /**
      * @return int
      */
     public function getMetacriticScore(): int
@@ -116,7 +117,7 @@ class Game implements JsonSerializable
         return $this->metacriticScore;
     }
 
-     /**
+    /**
      * @return DateTime
      */
     public function getReleaseDate(): DateTime
@@ -124,7 +125,7 @@ class Game implements JsonSerializable
         return $this->releaseDate;
     }
 
-     /**
+    /**
      * @return bool
      */
     public function getOwned(): bool
@@ -155,6 +156,7 @@ class Game implements JsonSerializable
     {
         return $this->wished;
     }
+
     /**
      * @param bool $wished
      */

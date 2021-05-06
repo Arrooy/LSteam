@@ -3,21 +3,21 @@ declare(strict_types=1);
 
 namespace SallePW\SlimApp\Controller;
 
-use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-
-use Slim\Views\Twig;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Routing\RouteContext;
-use GuzzleHttp\Client;
+use Slim\Views\Twig;
 
 
 final class LandingController
 {
 
-    public function __construct(private Twig $twig){}
+    public function __construct(private Twig $twig)
+    {
+    }
 
     public function show(Request $request, Response $response): Response
-    {   
+    {
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
 
 
@@ -34,8 +34,8 @@ final class LandingController
                 'sign_up_href' => $routeParser->urlFor('register'),
                 'profile_href' => $routeParser->urlFor('profile'),
                 'home_href' => $routeParser->urlFor('home'),
-                'store_href' =>  $routeParser->urlFor('store'),
-                'friends_href' =>  $routeParser->urlFor('friends'),
+                'store_href' => $routeParser->urlFor('store'),
+                'friends_href' => $routeParser->urlFor('friends'),
                 'wallet_href' => $routeParser->urlFor('getWallet'),
                 'myGames_href' => $routeParser->urlFor('myGames'),
                 'wishlist_href' => $routeParser->urlFor('wishlist'),

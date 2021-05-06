@@ -3,26 +3,27 @@ declare(strict_types=1);
 
 namespace SallePW\SlimApp\Repository;
 
+use DateTime;
 use PDO;
 use SallePW\SlimApp\Model\FriendsRepository;
 use SallePW\SlimApp\Model\User;
-use SallePW\SlimApp\Model\UserRepository;
 
-use Exception;
-
-use DateTime;
-final class MySQLFriendsRepository implements FriendsRepository {
+final class MySQLFriendsRepository implements FriendsRepository
+{
 
     public const REQUEST_PENDING = 0;
     public const REQUEST_ACCEPTED = 1;
     public const REQUEST_DECLINED = 2;
 
     private PDOSingleton $database;
-    public function __construct(PDOSingleton $database) {
+
+    public function __construct(PDOSingleton $database)
+    {
         $this->database = $database;
     }
 
-    public function getFriends(int $user, int $state): array {
+    public function getFriends(int $user, int $state): array
+    {
         switch ($state) {
             case self::REQUEST_ACCEPTED:
                 $query = <<<'QUERY'
@@ -60,7 +61,7 @@ final class MySQLFriendsRepository implements FriendsRepository {
             if (!$res) break;
 
             $friend = new User(
-                (int) $res['id'],
+                (int)$res['id'],
                 $res['username'],
                 $res['email'],
                 "",
@@ -79,7 +80,8 @@ final class MySQLFriendsRepository implements FriendsRepository {
         return $friends;
     }
 
-    public function newRequest(int $orig, int $dest) {
+    public function newRequest(int $orig, int $dest)
+    {
         $query = <<<'QUERY'
         INSERT INTO friendRequests(id_orig, id_dest)
         VALUES(:id_orig, :id_dest)
@@ -93,7 +95,8 @@ final class MySQLFriendsRepository implements FriendsRepository {
         $statement->execute();
     }
 
-    public function updateRequest(int $orig, int $dest, int $state) {
+    public function updateRequest(int $orig, int $dest, int $state)
+    {
         $query = <<<'QUERY'
         UPDATE friendRequests
         SET state=:state, accept_time=CURRENT_TIMESTAMP
@@ -109,7 +112,8 @@ final class MySQLFriendsRepository implements FriendsRepository {
         $statement->execute();
     }
 
-    public function friendCheck(int $orig, int $dest) : int {
+    public function friendCheck(int $orig, int $dest): int
+    {
         $query = <<<'QUERY'
         SELECT 1 as aux 
         FROM friendRequests
@@ -130,6 +134,6 @@ final class MySQLFriendsRepository implements FriendsRepository {
 
         if (!isset($res['aux'])) return -1;
 
-        return (int) $res['aux'];
+        return (int)$res['aux'];
     }
 }

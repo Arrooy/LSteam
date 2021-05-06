@@ -3,14 +3,14 @@ declare(strict_types=1);
 
 namespace SallePW\SlimApp\Repository;
 
+use DateTime;
+use Exception;
 use PDO;
 use SallePW\SlimApp\Model\User;
 use SallePW\SlimApp\Model\UserRepository;
 
-use Exception;
-
-use DateTime;
-final class MySQLUserRepository implements UserRepository {
+final class MySQLUserRepository implements UserRepository
+{
     public const DATE_FORMAT = 'Y-m-d H:i:s';
 
     private PDOSingleton $database;
@@ -20,15 +20,17 @@ final class MySQLUserRepository implements UserRepository {
         $this->database = $database;
     }
 
-    public function getId(string $emailOrUsername, string $password): int{
-        try{
-            return $this->getIdByEmail($emailOrUsername,$password);
-        }catch (Exception $exception){
-            return $this->getIdByUsernameAndPswd($emailOrUsername,$password);
+    public function getId(string $emailOrUsername, string $password): int
+    {
+        try {
+            return $this->getIdByEmail($emailOrUsername, $password);
+        } catch (Exception $exception) {
+            return $this->getIdByUsernameAndPswd($emailOrUsername, $password);
         }
     }
 
-    public function getIdByEmail(string $email, string $password): int {
+    public function getIdByEmail(string $email, string $password): int
+    {
         $query = <<< 'QUERY'
         SELECT * FROM users WHERE email=:email
         QUERY;
@@ -39,14 +41,15 @@ final class MySQLUserRepository implements UserRepository {
         $statement->execute();
         $res = $statement->fetch();
 
-        if(!(is_array($res) && password_verify($password,$res['password']))){
+        if (!(is_array($res) && password_verify($password, $res['password']))) {
             throw new Exception('Credentials dont match any user');
         }
 
         return (int)$res['id'];
     }
 
-    private function getIdByUsernameAndPswd(string $username, string $password): int {
+    private function getIdByUsernameAndPswd(string $username, string $password): int
+    {
         $query = <<< 'QUERY'
         SELECT * FROM users WHERE username=:username
         QUERY;
@@ -57,14 +60,15 @@ final class MySQLUserRepository implements UserRepository {
         $statement->execute();
         $res = $statement->fetch();
 
-        if(!(is_array($res) && password_verify($password,$res['password']))){
+        if (!(is_array($res) && password_verify($password, $res['password']))) {
             throw new Exception('Credentials dont match any user');
         }
 
         return (int)$res['id'];
     }
 
-    public function getIdByUsername(string $username): int {
+    public function getIdByUsername(string $username): int
+    {
         $query = <<< 'QUERY'
         SELECT * FROM users WHERE username=:username
         QUERY;
@@ -77,12 +81,13 @@ final class MySQLUserRepository implements UserRepository {
 
         if (!is_array($res)) throw new Exception('Credentials dont match any user');
 
-        return (int) $res['id'];
+        return (int)$res['id'];
     }
 
     // Mira si un usuari existeix a la taula d'usuraris
     // verificats basant-se en el email.
-    public function emailExists(String $email) : bool{
+    public function emailExists(string $email): bool
+    {
         $query = <<< 'QUERY'
         SELECT * FROM users WHERE email=:email
         QUERY;
@@ -109,7 +114,8 @@ final class MySQLUserRepository implements UserRepository {
 
     // Mira si un usuari existeix a la taula d'usuraris
     // verificats basant-se en el username.
-    public function usernameExists(String $username) : bool{
+    public function usernameExists(string $username): bool
+    {
         $query = <<< 'QUERY'
         SELECT * FROM users WHERE username=:username
         QUERY;
@@ -134,7 +140,73 @@ final class MySQLUserRepository implements UserRepository {
     }
 
     // Mira si un token existeix en la taula de pending users
-    public function getPendingUser(string $token) : ?User{
+
+    public function getUserToken(User $user): ?string
+    {
+        $query = <<< 'QUERY'
+        SELECT token FROM usersPending WHERE username=:username
+        QUERY;
+
+        $username = $user->getUsername();
+
+        $statement = $this->database->connection()->prepare($query);
+        $statement->bindParam('username', $username, PDO::PARAM_STR);
+
+        $statement->execute();
+        $res = $statement->fetch();
+
+        if (count($res) == 0) return NULL;
+
+        return $res['token'];
+    }
+
+    // Mira si un token existeix en la taula de pending users
+
+    public function getUser(int $id): ?User
+    {
+        $query = <<< 'QUERY'
+        SELECT * FROM users WHERE id=:id
+        QUERY;
+        $statement = $this->database->connection()->prepare($query);
+        $statement->bindParam('id', $id, PDO::PARAM_STR);
+
+        $statement->execute();
+        $res = $statement->fetch();
+
+        if (!is_array($res)) return NULL;
+
+        return new User(
+            (int)$res['id'],
+            $res['username'],
+            $res['email'],
+            $res['password'],
+            new DateTime($res['birthday']),
+            $res['phone'] ?? '',
+            $res['profilePic'] ?? 'default.jpg',
+        );
+    }
+
+    public function verifyUser(string $token): bool
+    {
+
+        error_log(print_r($token, TRUE));
+        $user = $this->getPendingUser($token);
+
+        error_log(print_r("ABOUT TO VERIFY", TRUE));
+        error_log(print_r($user, TRUE));
+        if ($user != NULL) {
+            $this->deletePendingUser($token);
+            $this->saveUser($user);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // Mira si un token existeix en la taula de pending users
+
+    public function getPendingUser(string $token): ?User
+    {
         $query = <<< 'QUERY'
         SELECT * FROM usersPending WHERE token=:token
         QUERY;
@@ -156,50 +228,8 @@ final class MySQLUserRepository implements UserRepository {
         );
     }
 
-    // Mira si un token existeix en la taula de pending users
-    public function getUserToken(User $user) : ?string{
-        $query = <<< 'QUERY'
-        SELECT token FROM usersPending WHERE username=:username
-        QUERY;
-
-        $username = $user->getUsername();
-
-        $statement = $this->database->connection()->prepare($query);
-        $statement->bindParam('username', $username, PDO::PARAM_STR);
-
-        $statement->execute();
-        $res = $statement->fetch();
-
-        if (count($res) == 0) return NULL;
-
-        return $res['token'];
-    }
-
-    public function getUser(int $id) : ?User{
-        $query = <<< 'QUERY'
-        SELECT * FROM users WHERE id=:id
-        QUERY;
-        $statement = $this->database->connection()->prepare($query);
-        $statement->bindParam('id', $id, PDO::PARAM_STR);
-
-        $statement->execute();
-        $res = $statement->fetch();
-
-        if (!is_array($res)) return NULL;
-
-        return new User(
-            (int) $res['id'],
-            $res['username'],
-            $res['email'],
-            $res['password'],
-            new DateTime($res['birthday']),
-            $res['phone'] ?? '',
-            $res['profilePic'] ?? 'default.jpg',
-        );
-    }
-
-    // Mira si un token existeix en la taula de pending users
-    public function deletePendingUser(string $token) : bool{
+    public function deletePendingUser(string $token): bool
+    {
         $query = <<< 'QUERY'
         DELETE FROM usersPending WHERE token=:token
         QUERY;
@@ -212,29 +242,14 @@ final class MySQLUserRepository implements UserRepository {
         return $res != NULL; // TODO: verificar que funciona
     }
 
-    public function verifyUser(string $token) : bool{
-
-        error_log(print_r($token, TRUE));
-        $user = $this->getPendingUser($token);
-
-        error_log(print_r("ABOUT TO VERIFY", TRUE));
-        error_log(print_r($user, TRUE));
-        if ($user != NULL) {
-            $this->deletePendingUser($token);
-            $this->saveUser($user);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public function saveUser(User $user): void {
+    public function saveUser(User $user): void
+    {
 
         $query = <<<'QUERY'
         INSERT INTO users(username, email, password, birthday, phone, money)
         VALUES(:username, :email, :password, :birthday, :phone, 0)
         QUERY;
-        
+
         $statement = $this->database->connection()->prepare($query);
 
         $username = $user->getUsername();
@@ -252,7 +267,8 @@ final class MySQLUserRepository implements UserRepository {
         $statement->execute();
     }
 
-    public function updateUser(User $user): void {
+    public function updateUser(User $user): void
+    {
 
         $query = <<<'QUERY'
         UPDATE users
@@ -280,7 +296,8 @@ final class MySQLUserRepository implements UserRepository {
     }
 
 
-    public function savePendingUser(User $user): void {
+    public function savePendingUser(User $user): void
+    {
 
         $query = <<<'QUERY'
         INSERT INTO usersPending(username, email, password, birthday, phone)
@@ -303,7 +320,9 @@ final class MySQLUserRepository implements UserRepository {
 
         $statement->execute();
     }
-    public function setMoney(int $id, int $money): void {
+
+    public function setMoney(int $id, int $money): void
+    {
 
         $query = <<<'QUERY'
         UPDATE users
@@ -320,22 +339,25 @@ final class MySQLUserRepository implements UserRepository {
 
         $statement->execute();
     }
-    public function getMoney(int $id): int{
+
+    public function getMoney(int $id): int
+    {
         $query = <<< 'QUERY'
         SELECT users.money FROM users WHERE id=:id
         QUERY;
         $statement = $this->database->connection()->prepare($query);
         $statement->bindParam('id', $id, PDO::PARAM_STR);
-       
+
         $statement->execute();
         $res = $statement->fetch();
 
         if (!is_array($res)) return -1;
         error_log(print_r($res, true));
-        return (int) $res['money'];
+        return (int)$res['money'];
     }
 
-    public function getIdByGivenEmail(String $email): int{
+    public function getIdByGivenEmail(string $email): int
+    {
         $query = <<< 'QUERY'
         SELECT * FROM users WHERE email=:email
         QUERY;
@@ -350,6 +372,6 @@ final class MySQLUserRepository implements UserRepository {
         error_log(print_r($res, true));
         if (!is_array($res)) return -1;
 
-        return (int) $res['id'];
+        return (int)$res['id'];
     }
 }

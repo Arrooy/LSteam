@@ -24,22 +24,6 @@ final class MySQLGameRepository implements GameRepository
         $this->database = $database;
     }
 
-    private function checkGame(int $gameId, float $price): bool {
-        $query = <<<'QUERY'
-            SELECT * FROM Game WHERE gameId=:id and ROUND(price, 2)=:price
-            QUERY;
-
-        $statement = $this->database->connection()->prepare($query);
-
-        $statement->bindParam('id', $gameId, PDO::PARAM_STR);
-        $statement->bindParam('price', $price, PDO::PARAM_STR);
-
-        $statement->execute();
-        $res = $statement->fetch();
-
-        return $res == false;
-    }
-
     public function addBoughtGame(Game $game, int $userId): bool
     {
         try {
@@ -77,7 +61,7 @@ final class MySQLGameRepository implements GameRepository
                 $statement->bindParam('releaseDate', $getReleaseDate, PDO::PARAM_STR);
 
                 $statement->bindParam('cheapestPrice', $cheapestPrice, PDO::PARAM_STR);
-                $statement->bindParam('isWished', $isWished , PDO::PARAM_STR);
+                $statement->bindParam('isWished', $isWished, PDO::PARAM_STR);
 
                 $statement->execute();
                 error_log(print_r("8", true));
@@ -103,12 +87,30 @@ final class MySQLGameRepository implements GameRepository
             error_log(print_r("14", true));
             return true;
         } catch (Exception $e) {
-            error_log(print_r($e->getMessage(),true));
+            error_log(print_r($e->getMessage(), true));
             return false;
         }
     }
 
-    public function getBoughtGamesIds(int $userId): array{
+    private function checkGame(int $gameId, float $price): bool
+    {
+        $query = <<<'QUERY'
+            SELECT * FROM Game WHERE gameId=:id and ROUND(price, 2)=:price
+            QUERY;
+
+        $statement = $this->database->connection()->prepare($query);
+
+        $statement->bindParam('id', $gameId, PDO::PARAM_STR);
+        $statement->bindParam('price', $price, PDO::PARAM_STR);
+
+        $statement->execute();
+        $res = $statement->fetch();
+
+        return $res == false;
+    }
+
+    public function getBoughtGamesIds(int $userId): array
+    {
         try {
 
             $query = <<< 'QUERY'
@@ -124,52 +126,53 @@ final class MySQLGameRepository implements GameRepository
             if (!is_array($res)) return [];
 
             $ids = [];
-            foreach ($res as $id){
+            foreach ($res as $id) {
                 array_push($ids, $id['gameId']);
             }
             return $ids;
 
         } catch (Exception $e) {
             error_log("EXception!");
-            error_log(print_r($e->getMessage(),true));
+            error_log(print_r($e->getMessage(), true));
 
             return [];
         }
     }
 
-    public function getOwnedGames(int $userId): array {
+    public function getOwnedGames(int $userId): array
+    {
         try {
 
-        $query = <<<'QUERY'
+            $query = <<<'QUERY'
         SELECT * 
         FROM ownedGames, Game 
         WHERE ownedGames.userId =:id AND Game.id = ownedGames.gameId;
         QUERY;
 
-        $statement = $this->database->connection()->prepare($query);
-        $statement->bindParam('id', $userId, PDO::PARAM_STR);
+            $statement = $this->database->connection()->prepare($query);
+            $statement->bindParam('id', $userId, PDO::PARAM_STR);
 
-        $statement->execute();
+            $statement->execute();
 
-        $games = [];
+            $games = [];
 
-        while(true) {
-            $res = $statement->fetch();
-            if (!$res) break;
-            array_push($games, new Game($res['titol'], (int)$res['gameId'], (float)$res['price'], $res['thumbnail'],
-                (int)$res['metacriticStore'], new DateTime($res['releaseDate']),(float) $res['cheapestPrice'], false,true));
-        }
+            while (true) {
+                $res = $statement->fetch();
+                if (!$res) break;
+                array_push($games, new Game($res['titol'], (int)$res['gameId'], (float)$res['price'], $res['thumbnail'],
+                    (int)$res['metacriticStore'], new DateTime($res['releaseDate']), (float)$res['cheapestPrice'], false, true));
+            }
 
             return $games;
-        }catch (Exception $e){
-            error_log(print_r($e->getMessage(),true));
+        } catch (Exception $e) {
+            error_log(print_r($e->getMessage(), true));
             return [];
         }
     }
 
     public function addWishedGame(int $gameId, int $userId): bool
     {
-        try{
+        try {
             $query = <<<'QUERY'
             INSERT INTO wishedGames(gameId, userId)
             VALUES(:gameId, :userId)
@@ -178,12 +181,12 @@ final class MySQLGameRepository implements GameRepository
             $statement = $this->database->connection()->prepare($query);
 
             $statement->bindParam('gameId', $gameId, PDO::PARAM_STR);
-            $statement->bindParam('userId', $userId , PDO::PARAM_STR);
+            $statement->bindParam('userId', $userId, PDO::PARAM_STR);
 
             $statement->execute();
             return true;
-        }catch (Exception $e) {
-            error_log(print_r($e->getMessage(),true));
+        } catch (Exception $e) {
+            error_log(print_r($e->getMessage(), true));
             return false;
         }
     }
@@ -191,7 +194,7 @@ final class MySQLGameRepository implements GameRepository
 
     public function removeWishedGame(int $gameId, int $userId): bool
     {
-        try{
+        try {
             $query = <<<'QUERY'
             DELETE FROM wishedGames as wg
             WHERE wg.gameId=:gameId and wg.userId=:userId
@@ -200,13 +203,13 @@ final class MySQLGameRepository implements GameRepository
             $statement = $this->database->connection()->prepare($query);
 
             $statement->bindParam('gameId', $gameId, PDO::PARAM_STR);
-            $statement->bindParam('userId', $userId , PDO::PARAM_STR);
+            $statement->bindParam('userId', $userId, PDO::PARAM_STR);
 
             $statement->execute();
 
             return true;
-        }catch (Exception $e) {
-            error_log(print_r($e->getMessage(),true));
+        } catch (Exception $e) {
+            error_log(print_r($e->getMessage(), true));
             return false;
         }
     }
@@ -228,7 +231,7 @@ final class MySQLGameRepository implements GameRepository
 
         $game_ids = [];
         foreach ($res as $gid) {
-            array_push($game_ids,$gid['gameId']);
+            array_push($game_ids, $gid['gameId']);
         }
         return $game_ids;
     }

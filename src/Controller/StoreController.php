@@ -4,24 +4,26 @@
 namespace SallePW\SlimApp\Controller;
 
 use Psr\Http\Message\ResponseInterface as Response;
-
-use SallePW\SlimApp\Model\CheapSharkRepository;
+use SallePW\SlimApp\Model\RetailGamesRepository;
 use SallePW\SlimApp\Model\GameRepository;
 use SallePW\SlimApp\Model\UserRepository;
+use Slim\Flash\Messages;
 use Slim\Psr7\Request;
 use Slim\Routing\RouteContext;
 use Slim\Views\Twig;
-use Slim\Flash\Messages;
 
 class StoreController
 {
     public function __construct(private Twig $twig,
-    private UserRepository $userRepository,
-    private CheapSharkRepository $cheapSharkRepository,
-    private GameRepository $gameRepository,
-    private Messages $flash){}
+                                private UserRepository $userRepository,
+                                private RetailGamesRepository $cheapSharkRepository,
+                                private GameRepository $gameRepository,
+                                private Messages $flash)
+    {
+    }
 
-    public function show(Request $request, Response $response): Response {
+    public function show(Request $request, Response $response): Response
+    {
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
 
         $messages = $this->flash->getMessages();
@@ -29,7 +31,7 @@ class StoreController
         $deals = $this->cheapSharkRepository->getDeals();
 
         // Si user ha fet login
-        if (isset($_SESSION['id'])){
+        if (isset($_SESSION['id'])) {
 
             //TODO: PENSAMENT A PENSAR -> SI TREBALLEM AMB GAMEID COM A IDENTIFICADOR UNIC,
             //SI LA STORE PRESENTA DOS DEALS DEL MATEIX GAME, QUE PASA?
@@ -67,7 +69,7 @@ class StoreController
                 'is_user_logged' => isset($_SESSION['id']),
 
                 // Nota: El game id s'ignora aqui. Twig fa repace per al valor correcte.
-                'buyAction' => $routeParser->urlFor('handle-store-buy',['gameId' => 1]),
+                'buyAction' => $routeParser->urlFor('handle-store-buy', ['gameId' => 1]),
 
                 // Hrefs de la base
                 'profilePic' => (!isset($_SESSION['profilePic']) ? "" : $routeParser->urlFor('home') . $_SESSION['profilePic']),
@@ -76,8 +78,8 @@ class StoreController
                 'sign_up_href' => $routeParser->urlFor('register'),
                 'profile_href' => $routeParser->urlFor('profile'),
                 'home_href' => $routeParser->urlFor('home'),
-                'store_href' =>  $routeParser->urlFor('store'),
-                'friends_href' =>  $routeParser->urlFor('friends'),
+                'store_href' => $routeParser->urlFor('store'),
+                'friends_href' => $routeParser->urlFor('friends'),
                 'wallet_href' => $routeParser->urlFor('getWallet'),
                 'myGames_href' => $routeParser->urlFor('myGames'),
                 'wishlist_href' => $routeParser->urlFor('wishlist'),
@@ -89,7 +91,7 @@ class StoreController
     {
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
 
-        if(isset($_SESSION['id'])){
+        if (isset($_SESSION['id'])) {
 
             $gameId = basename($request->getUri());
 
@@ -104,7 +106,7 @@ class StoreController
 
                 foreach ($wishedGame_ids as $game_id) {
                     if (strcmp($game->getGameId(), $game_id) == 0) {
-                        $this->gameRepository->removeWishedGame($gameId,$_SESSION['id']);
+                        $this->gameRepository->removeWishedGame($gameId, $_SESSION['id']);
                         break;
                     }
                 }
@@ -112,16 +114,16 @@ class StoreController
                 // Comprem el joc.
                 $this->gameRepository->addBoughtGame($game, (int)$_SESSION['id']);
                 return $response->withStatus(200);
-            }else{
-                $this->flash->addMessage('buy-error',"Error: There is not enough money in your wallet to buy that item. You need " . $resulting_money * -1 . " coins");
+            } else {
+                $this->flash->addMessage('buy-error', "Error: There is not enough money in your wallet to buy that item. You need " . $resulting_money * -1 . " coins");
 
                 return $response
                     ->withStatus(403);
 //                    ->withHeader('Location', $routeParser->urlFor("store"));
 
             }
-        }else{
-            $this->flash->addMessage('buy-error',"Error: You are not logged in. Please login!");
+        } else {
+            $this->flash->addMessage('buy-error', "Error: You are not logged in. Please login!");
             return $response
 //                ->withHeader('Location', $routeParser->urlFor("store"))
                 ->withStatus(403);
@@ -147,7 +149,7 @@ class StoreController
                 'is_user_logged' => isset($_SESSION['id']),
 
                 // Nota: El game id s'ignora aqui. Twig fa repace per al valor correcte.
-                'buyAction' => $routeParser->urlFor('handle-store-buy',['gameId' => 1]),
+                'buyAction' => $routeParser->urlFor('handle-store-buy', ['gameId' => 1]),
 
                 'profilePic' => (!isset($_SESSION['profilePic']) ? "" : $routeParser->urlFor('home') . $_SESSION['profilePic']),
                 'log_in_href' => $routeParser->urlFor('login'),
@@ -155,11 +157,11 @@ class StoreController
                 'sign_up_href' => $routeParser->urlFor('register'),
                 'profile_href' => $routeParser->urlFor('profile'),
                 'home_href' => $routeParser->urlFor('home'),
-                'store_href' =>  $routeParser->urlFor('store'),
+                'store_href' => $routeParser->urlFor('store'),
                 'wallet_href' => $routeParser->urlFor('getWallet'),
                 'myGames_href' => $routeParser->urlFor('myGames'),
                 'wishlist_href' => $routeParser->urlFor('wishlist'),
-                ]
+            ]
         );
     }
 }

@@ -15,9 +15,9 @@ use SallePW\SlimApp\Controller\WishListController;
 use SallePW\SlimApp\Middleware\VerifySessionMiddleware;
 use SallePW\SlimApp\Model\FriendsRepository;
 use SallePW\SlimApp\Model\GameRepository;
-use SallePW\SlimApp\Repository\API_CheapSharkRepository;
-use SallePW\SlimApp\Repository\API_GifRepository;
-use SallePW\SlimApp\Repository\CachingCheapSharkRepository;
+use SallePW\SlimApp\Repository\HTTPCheapSharkRepository;
+use SallePW\SlimApp\Repository\GiphyRepository;
+use SallePW\SlimApp\Repository\CachingRetailGamesRepository;
 use SallePW\SlimApp\Repository\MySQLFriendsRepository;
 use SallePW\SlimApp\Repository\MySQLGameRepository;
 use Slim\Views\Twig;
@@ -53,7 +53,7 @@ $container->set('db', function () {
 });
 
 $container->set('gif_api', function () {
-    return API_GifRepository::getInstance($_ENV['GIPHY_API_KEY']);
+    return GiphyRepository::getInstance($_ENV['GIPHY_API_KEY']);
 });
 
 $container->set('cache',
@@ -64,9 +64,9 @@ $container->set('cache',
 
 $container->set('game_api', function (Container $c) {
     // Sense cache
-    //return API_CheapSharkRepository::getInstance();
+    //return HTTPCheapSharkRepository::getInstance();
     // Amb cache
-    return new CachingCheapSharkRepository(API_CheapSharkRepository::getInstance(), $c->get('cache'));
+    return new CachingRetailGamesRepository(HTTPCheapSharkRepository::getInstance(), $c->get('cache'));
 });
 
 $container->set(

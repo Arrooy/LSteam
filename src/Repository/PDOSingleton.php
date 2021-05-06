@@ -19,7 +19,8 @@ final class PDOSingleton
         string $host,
         string $port,
         string $database
-    ) {
+    )
+    {
         $db = new PDO(
             sprintf(self::CONNECTION_STRING, $host, $port, $database),
             $username,
@@ -37,7 +38,8 @@ final class PDOSingleton
         string $host,
         string $port,
         string $database
-    ): PDOSingleton {
+    ): PDOSingleton
+    {
         if (self::$instance === null) {
             self::$instance = new self(
                 $username,

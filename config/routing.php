@@ -144,9 +144,9 @@ $app->get(
 $app->post(
     '/user/wishlist/{gameId}',
     WishListController::class . ":addWish"
-)->setName('handle-wishlist-add-wish')->add($app->getContainer()->get('verifySessionMiddleware'));;
+)->setName('handle-wishlist-add-wish')->add($app->getContainer()->get('verifySessionMiddleware'));
 
 $app->delete(
     '/user/wishlist/{gameId}',
     WishListController::class . ":deleteWish"
-)->setName('handle-wishlist-delete-wish')->add($app->getContainer()->get('verifySessionMiddleware'));;
+)->setName('handle-wishlist-delete-wish')->add($app->getContainer()->get('verifySessionMiddleware'));
