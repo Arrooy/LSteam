@@ -1,5 +1,7 @@
 /vendor/
 /var/
 /public/uploads/
+/public/cachedData/
+/public/cachedData/**/**
 .idea
 .idea/**/*

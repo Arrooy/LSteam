@@ -1,4 +1,4 @@
-class Code {
+class Server {
 
     constructor(baseUrl) {
         this.baseUrl = baseUrl;
@@ -43,14 +43,15 @@ class Code {
 
 const DEBUG = true;
 
-var server = new Code("");
+var server = new Server("");
 
 var buy_buttons = document.getElementsByName('BUY_BUTTON');
 
 // # Permet eliminar un element de la generic game display
 function fadeAwayFromChildItem(item) {
 
-    pr = item.parentElement.parentElement.parentElement;
+    // UF que feo que es esto....
+    pr = item.parentElement.parentElement.parentElement.parentElement;
 
 
     if( document.querySelectorAll(".gameContainer").length - document.querySelectorAll(".gameContainer.ksk").length === 1)
@@ -84,8 +85,7 @@ if (buy_buttons !== undefined) {
                     button.disabled = true;
 
                     // Borrem el boto de fav.
-                    button.parentElement.removeChild( button.parentElement.querySelector(".icon"));
-                    console.log("PATH NAM EIS " + window.location.pathname)
+                    button.parentElement.parentElement.removeChild( button.parentElement.parentElement.querySelector(".star"));
 
                     // Si estem a l'apartat de wishlist. Fem fade away.
                     if(window.location.pathname === "/user/wishlist") {

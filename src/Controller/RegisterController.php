@@ -87,6 +87,7 @@ final class RegisterController extends GenericFormController
             [
                 'user_email' => $user->email(),
                 'gif_url' => $this->gifRepository->getRandomGif("success"),
+
                 'formTitle' => "Register",
 
 

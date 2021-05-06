@@ -3,7 +3,6 @@
 
 namespace SallePW\SlimApp\Controller;
 
-
 use DateInterval;
 use DateTime;
 use Exception;
