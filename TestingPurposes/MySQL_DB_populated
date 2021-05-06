@@ -1,0 +1,127 @@
+-- Adminer 4.8.0 MySQL 8.0.23 dump
+
+SET NAMES utf8;
+SET time_zone = '+00:00';
+SET foreign_key_checks = 0;
+SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
+
+SET NAMES utf8mb4;
+
+DROP TABLE IF EXISTS `Game`;
+CREATE TABLE `Game` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `gameId` int DEFAULT NULL,
+  `titol` varchar(1000) DEFAULT NULL,
+  `price` float DEFAULT NULL,
+  `thumbnail` varchar(1000) DEFAULT NULL,
+  `metacriticStore` int DEFAULT NULL,
+  `releaseDate` datetime DEFAULT NULL,
+  `cheapestPrice` float DEFAULT NULL,
+  `wished` tinyint(1) DEFAULT NULL,
+  UNIQUE KEY `id` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO `Game` (`id`, `gameId`, `titol`, `price`, `thumbnail`, `metacriticStore`, `releaseDate`, `cheapestPrice`, `wished`) VALUES
+(1,	155405,	'Candle',	9.99,	'https://cdn.cloudflare.steamstatic.com/steam/apps/420060/header.jpg?t=1562676294',	80,	'2016-11-11 00:00:00',	-1,	0),
+(2,	43,	'Left 4 Dead 2',	9.99,	'https://cdn.cloudflare.steamstatic.com/steam/apps/550/header.jpg?t=1601578341',	89,	'2009-11-16 00:00:00',	-1,	0),
+(3,	93503,	'BioShock Infinite',	29.99,	'https://cdn.cloudflare.steamstatic.com/steam/apps/8870/header.jpg?t=1602794480',	94,	'2013-03-25 00:00:00',	5.27,	0),
+(4,	146648,	'Pathologic Classic HD',	12.99,	'https://cdn.cloudflare.steamstatic.com/steam/apps/384110/header.jpg?t=1604189746',	76,	'2015-10-29 00:00:00',	0.98,	0),
+(5,	143048,	'Titan Souls',	14.99,	'https://cdn.cloudflare.steamstatic.com/steam/apps/297130/header.jpg?t=1603737892',	74,	'2015-04-14 00:00:00',	-1,	0),
+(6,	145330,	'Airscape: The Fall of Gravity',	4.99,	'https://cdn.cloudflare.steamstatic.com/steam/apps/317250/header.jpg?t=1574484005',	75,	'2015-08-11 00:00:00',	-1,	0),
+(7,	96462,	'Making History: The Calm and the Storm',	4.99,	'https://cdn.cloudflare.steamstatic.com/steam/apps/6250/header.jpg?t=1573746017',	70,	'2007-03-13 00:00:00',	0.37,	0);
+
+DROP TABLE IF EXISTS `friendRequests`;
+CREATE TABLE `friendRequests` (
+  `id_orig` int NOT NULL,
+  `id_dest` int NOT NULL,
+  `state` int DEFAULT '0',
+  `accept_time` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id_orig`,`id_dest`),
+  KEY `id_dest` (`id_dest`),
+  CONSTRAINT `friendRequests_ibfk_1` FOREIGN KEY (`id_orig`) REFERENCES `users` (`id`),
+  CONSTRAINT `friendRequests_ibfk_2` FOREIGN KEY (`id_dest`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO `friendRequests` (`id_orig`, `id_dest`, `state`, `accept_time`) VALUES
+(2,	1,	1,	'2021-05-06 22:02:52'),
+(4,	1,	0,	NULL);
+
+DROP TABLE IF EXISTS `ownedGames`;
+CREATE TABLE `ownedGames` (
+  `gameId` int NOT NULL,
+  `userId` int NOT NULL,
+  PRIMARY KEY (`gameId`,`userId`),
+  KEY `userId` (`userId`),
+  CONSTRAINT `ownedGames_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO `ownedGames` (`gameId`, `userId`) VALUES
+(1,	1),
+(4,	1),
+(5,	1),
+(6,	1),
+(7,	1),
+(1,	4),
+(2,	4),
+(3,	4);
+
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE `users` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `username` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `birthday` datetime NOT NULL,
+  `phone` varchar(20) NOT NULL,
+  `profilePic` varchar(255) DEFAULT NULL,
+  `money` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO `users` (`id`, `username`, `email`, `password`, `birthday`, `phone`, `profilePic`, `money`) VALUES
+(1,	'Guillem',	'guillem@students.salle.url.edu',	'$2y$10$TciaOIf9ZJhpF6usSeCNIOS.uiZ.XmnCwMHPdpkNujnzIcGd/9rou',	'1888-03-03 00:00:00',	'',	NULL,	2),
+(2,	'Maria',	'maria@students.salle.url.edu',	'$2y$10$dRD0zSzu0PUBCLwkRFGdq.UQTC3Yqz8.wWV4YzpF8BQHB8X01POyG',	'1999-05-05 00:00:00',	'666666666',	NULL,	100050),
+(3,	'Josep',	'josep@students.salle.url.edu',	'$2y$10$WamzU0QZWQVPzidTDWyvue7.hARKMbCzJFVOJOYpoRebNb4/uKqAy',	'1999-05-05 00:00:00',	'',	NULL,	0),
+(4,	'Joan',	'joan@students.salle.url.edu',	'$2y$10$/91vyXkiA3EiA7/6.kLT8OTE5OJhmzB6Q6izNFXeqxG.NgqzaG0p6',	'1999-05-05 00:00:00',	'',	NULL,	0);
+
+DROP TABLE IF EXISTS `usersPending`;
+CREATE TABLE `usersPending` (
+  `token` int NOT NULL AUTO_INCREMENT,
+  `username` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `birthday` datetime NOT NULL,
+  `phone` varchar(20) NOT NULL,
+  PRIMARY KEY (`token`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+DROP TABLE IF EXISTS `wishedGames`;
+CREATE TABLE `wishedGames` (
+  `gameId` int NOT NULL,
+  `userId` int NOT NULL,
+  PRIMARY KEY (`gameId`,`userId`),
+  KEY `userId` (`userId`),
+  CONSTRAINT `wishedGames_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO `wishedGames` (`gameId`, `userId`) VALUES
+(43,	1),
+(952,	1),
+(89908,	1),
+(93503,	1),
+(100790,	1),
+(117494,	1),
+(143337,	1),
+(145291,	1),
+(152810,	1),
+(155407,	1),
+(158443,	1),
+(174445,	1),
+(189551,	1),
+(206344,	1),
+(135790,	4),
+(146648,	4),
+(158443,	4);
+
+-- 2021-05-06 22:08:52
