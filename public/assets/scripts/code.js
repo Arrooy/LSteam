@@ -48,11 +48,7 @@ var server = new Server("");
 var buy_buttons = document.getElementsByName('BUY_BUTTON');
 
 // # Permet eliminar un element de la generic game display
-function fadeAwayFromChildItem(item) {
-
-    // UF que feo que es esto....
-    pr = item.parentElement.parentElement.parentElement.parentElement;
-
+function fadeAwayFromChildItem(pr) {
 
     if( document.querySelectorAll(".gameContainer").length - document.querySelectorAll(".gameContainer.ksk").length === 1)
     {
@@ -85,11 +81,11 @@ if (buy_buttons !== undefined) {
                     button.disabled = true;
 
                     // Borrem el boto de fav.
-                    button.parentElement.parentElement.removeChild( button.parentElement.parentElement.querySelector(".star"));
+                    button.parentElement.removeChild( button.parentElement.querySelector(".star"));
 
                     // Si estem a l'apartat de wishlist. Fem fade away.
                     if(window.location.pathname === "/user/wishlist") {
-                        fadeAwayFromChildItem(button);
+                        fadeAwayFromChildItem(button.parentElement.parentElement.parentElement.parentElement);
                     }
 
                 }else{
@@ -136,7 +132,7 @@ if (wish_buttons !== undefined) {
 
                         // Si estem a l'apartat de wishlist. Fem fade away.
                         if(window.location.pathname === "/user/wishlist") {
-                            fadeAwayFromChildItem(button);
+                            fadeAwayFromChildItem(button.parentElement.parentElement.parentElement.parentElement);
                         }
                     }
                 }else{
