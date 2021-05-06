@@ -5,16 +5,27 @@ namespace SallePW\SlimApp\Model;
 
 use DateTime;
 
-final class User
-{
+final class User {
+
+    private String $acceptDate;
+
     public function __construct(
+        private int $id,
         private string $username,
         private string $email,
         private string $password,
         private DateTime $birthday,
         private string $phone,
-        private ?string $profilePic = NULL
+        private string $profilePic
     ) {}
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
 
     /**
      * @param string $password
@@ -80,4 +91,19 @@ final class User
     {
         return $this->phone;
     }
+
+    /**
+     * @return DateTime
+     */
+    public function getAcceptDate(): String {
+        return $this->acceptDate;
+    }
+
+    /**
+     * @param DateTime $acceptDate
+     */
+    public function setAcceptDate(DateTime $acceptDate): void {
+        $this->acceptDate = $acceptDate->format('D d M Y G:i');
+    }
+
 }

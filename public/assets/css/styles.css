@@ -74,7 +74,6 @@ body{
     opacity: 1;
 }
 
-
 .ksk{
     display: none !important;
 }
@@ -89,4 +88,15 @@ body{
 @keyframes exit_item {
     from {left: 0;}
     to {left: 120%}
+}
+
+.image-rounded {
+    border-radius: 8px;
+}
+
+.circle-separator {
+    width: 7px;
+    height: 7px;
+    border-radius: 100%;
+    background: gray;
 }

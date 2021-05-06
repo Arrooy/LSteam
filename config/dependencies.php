@@ -6,16 +6,19 @@ use Psr\Container\ContainerInterface;
 
 use SallePW\SlimApp\Controller\Cache;
 use SallePW\SlimApp\Controller\ChangePasswordController;
+use SallePW\SlimApp\Controller\FriendsConroller;
 use SallePW\SlimApp\Controller\LogOutController;
 use SallePW\SlimApp\Controller\ProfileController;
 use SallePW\SlimApp\Controller\StoreController;
 use SallePW\SlimApp\Controller\VerifyUserController;
 use SallePW\SlimApp\Controller\WishListController;
 use SallePW\SlimApp\Middleware\VerifySessionMiddleware;
+use SallePW\SlimApp\Model\FriendsRepository;
 use SallePW\SlimApp\Model\GameRepository;
 use SallePW\SlimApp\Repository\API_CheapSharkRepository;
 use SallePW\SlimApp\Repository\API_GifRepository;
 use SallePW\SlimApp\Repository\CachingCheapSharkRepository;
+use SallePW\SlimApp\Repository\MySQLFriendsRepository;
 use SallePW\SlimApp\Repository\MySQLGameRepository;
 use Slim\Views\Twig;
 
@@ -87,6 +90,13 @@ $container->set(
     function (ContainerInterface $container) {
         return new MySQLUserRepository($container->get('db'));
     });
+
+$container->set(
+    FriendsRepository::class,
+    function (ContainerInterface $container) {
+        return new MySQLFriendsRepository($container->get('db'));
+    }
+);
 
 $container->set(
     GameRepository::class,
@@ -161,5 +171,12 @@ $container->set(
     WishListController::class,
     function (Container $c) {
         return new WishListController($c->get("view"), $c->get(GameRepository::class), $c->get('game_api'), $c->get('gif_api'));
+    }
+);
+
+$container->set(
+    FriendsConroller::class,
+    function (Container $c) {
+        return new FriendsConroller($c->get("view"), $c->get(UserRepository::class), $c->get(FriendsRepository::class));
     }
 );

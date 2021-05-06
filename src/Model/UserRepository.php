@@ -21,6 +21,7 @@ interface UserRepository
 
     public function getMoney(int $id): int;
 
-    public function getIdByGivenEmail(String $email): int;
+    public function getIdByGivenEmail(string $email): int;
 
+    public function getIdByUsername(string $username): int;
 }

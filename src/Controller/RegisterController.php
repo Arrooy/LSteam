@@ -52,11 +52,13 @@ final class RegisterController extends GenericFormController
             $data = $request->getParsedBody();
             
             $user = new User(
+                0,
                 $data['username'],
                 $data['email'],
                 password_hash($data['password'], PASSWORD_DEFAULT),
                 new DateTime($data['birthday']),
                 $data['phone'],
+                'default.jpg'
             );
 
             $this->userRepository->savePendingUser($user);
@@ -98,6 +100,7 @@ final class RegisterController extends GenericFormController
                 'sign_up_href' => $routeParser->urlFor('register'),
                 'profile_href' => $routeParser->urlFor('profile'),
                 'home_href' => $routeParser->urlFor('home'),
+                'friends_href' =>  $routeParser->urlFor('friends'),
                 'store_href' =>  $routeParser->urlFor('store'),
                 'wallet_href' => $routeParser->urlFor('getWallet'),
                 'myGames_href' => $routeParser->urlFor('myGames'),

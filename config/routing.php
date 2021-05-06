@@ -3,11 +3,11 @@
 declare(strict_types=1);
 
 use SallePW\SlimApp\Controller\ChangePasswordController;
+use SallePW\SlimApp\Controller\FriendsConroller;
 use SallePW\SlimApp\Controller\LogOutController;
 use SallePW\SlimApp\Controller\ProfileController;
 use SallePW\SlimApp\Controller\RegisterController;
 use SallePW\SlimApp\Controller\LogInController;
-use SallePW\SlimApp\Controller\SearchController;
 use SallePW\SlimApp\Controller\LandingController;
 use SallePW\SlimApp\Controller\WalletController;
 
@@ -98,6 +98,36 @@ $app->post(
     '/user/wallet',
     WalletController::class . ":handleUpdate"
 )->setName('postWallet')->add($app->getContainer()->get('verifySessionMiddleware'));
+
+$app->get(
+    '/user/friends',
+    FriendsConroller::class . ":show"
+)->setName('friends')->add($app->getContainer()->get('verifySessionMiddleware'));
+
+$app->get(
+    '/user/friendRequests',
+    FriendsConroller::class . ":showRequests"
+)->setName('friendRequests')->add($app->getContainer()->get('verifySessionMiddleware'));
+
+$app->get(
+    '/user/friendRequests/send',
+    FriendsConroller::class . ":showRequestCreation"
+)->setName('sendRequest')->add($app->getContainer()->get('verifySessionMiddleware'));
+
+$app->post(
+    '/user/friendRequests/send',
+    FriendsConroller::class . ":handleSendRequest"
+)->add($app->getContainer()->get('verifySessionMiddleware'));
+
+$app->get(
+    '/user/friendRequests/accept/{requestId}',
+    FriendsConroller::class . ":acceptRequest"
+)->setName('acceptFriendRequest')->add($app->getContainer()->get('verifySessionMiddleware'));
+
+$app->get(
+    '/user/friendRequests/decline/{requestId}',
+    FriendsConroller::class . ":declineRequest"
+)->setName('declineFriendRequest')->add($app->getContainer()->get('verifySessionMiddleware'));
 
 
 $app->get(

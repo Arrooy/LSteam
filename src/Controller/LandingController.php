@@ -35,6 +35,7 @@ final class LandingController
                 'profile_href' => $routeParser->urlFor('profile'),
                 'home_href' => $routeParser->urlFor('home'),
                 'store_href' =>  $routeParser->urlFor('store'),
+                'friends_href' =>  $routeParser->urlFor('friends'),
                 'wallet_href' => $routeParser->urlFor('getWallet'),
                 'myGames_href' => $routeParser->urlFor('myGames'),
                 'wishlist_href' => $routeParser->urlFor('wishlist'),
