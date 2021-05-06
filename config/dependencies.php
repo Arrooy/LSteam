@@ -4,7 +4,8 @@ declare(strict_types=1);
 use DI\Container;
 use Psr\Container\ContainerInterface;
 
-use SallePW\SlimApp\Controller\Cache;
+
+use SallePW\SlimApp\CacheManipulation\Cache;
 use SallePW\SlimApp\Controller\ChangePasswordController;
 use SallePW\SlimApp\Controller\FriendsController;
 use SallePW\SlimApp\Controller\LogOutController;
@@ -57,7 +58,7 @@ $container->set('gif_api', function () {
 });
 
 $container->set('cache',
-    function (ContainerInterface $c) {
+    function () {
         return new Cache();
 
     });
@@ -71,7 +72,7 @@ $container->set('game_api', function (Container $c) {
 
 $container->set(
     'flash',
-    function (ContainerInterface $c) {
+    function () {
         if (session_status() != PHP_SESSION_ACTIVE)
             session_start();
         return new Messages();
@@ -134,7 +135,7 @@ $container->set(
 
 $container->set(
     LogOutController::class,
-    function (Container $c) {
+    function () {
         return new LogOutController();
     }
 );

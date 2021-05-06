@@ -100,3 +100,11 @@ body{
     border-radius: 100%;
     background: gray;
 }
+
+.mainTitleSpecial{
+    color: #DD4a4a;
+}
+
+.bigTitle{
+    font-size: 5rem!important;
+}

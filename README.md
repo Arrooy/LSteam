@@ -70,7 +70,11 @@
    FOREIGN KEY (userId) REFERENCES users(id)
    );
    ~~~~
-4 - sudo chmod 777 public/uploads/
+4 -
+   ~~~~
+   sudo chmod 777 public/*   
+   ~~~~
+
 5 - Ja hauria de funcionar tot. 
 
     Login: http://localhost:8030/login
@@ -80,10 +84,10 @@
 
 Nota. L'entorn php requereix de la llibreria composer.
 
-
 ## Comandos útils per Docker
 
 Eliminar tots els containers <br>
+
 ```
 sudo docker rm $(sudo docker ps -aq)
 ```
