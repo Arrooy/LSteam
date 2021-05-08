@@ -34,18 +34,8 @@ final class FriendsController
             'requests_href' => $routeParser->urlFor('friendRequests'),
             'sendRequest_href' => $routeParser->urlFor('sendRequest'),
 
-            // Hrefs de la base
             'is_user_logged' => isset($_SESSION['id']),
             'profilePic' => (!isset($_SESSION['profilePic']) ? "" : $routeParser->urlFor('home') . $_SESSION['profilePic']),
-            'log_in_href' => $routeParser->urlFor('login'),
-            'log_out_href' => $routeParser->urlFor('logOut'),
-            'sign_up_href' => $routeParser->urlFor('register'),
-            'profile_href' => $routeParser->urlFor('profile'),
-            'home_href' => $routeParser->urlFor('home'),
-            'store_href' => $routeParser->urlFor('store'),
-            'friends_href' => $routeParser->urlFor('friends'),
-            'wallet_href' => $routeParser->urlFor('getWallet'),
-            'myGames_href' => $routeParser->urlFor('myGames'),
         ]);
     }
 
@@ -64,18 +54,8 @@ final class FriendsController
             'accept_href' => $routeParser->urlFor('acceptFriendRequest', ['requestId' => 0]),
             'decline_href' => $routeParser->urlFor('declineFriendRequest', ['requestId' => 0]),
 
-            // Hrefs de la base
             'is_user_logged' => isset($_SESSION['id']),
             'profilePic' => (!isset($_SESSION['profilePic']) ? "" : $routeParser->urlFor('home') . $_SESSION['profilePic']),
-            'log_in_href' => $routeParser->urlFor('login'),
-            'log_out_href' => $routeParser->urlFor('logOut'),
-            'sign_up_href' => $routeParser->urlFor('register'),
-            'profile_href' => $routeParser->urlFor('profile'),
-            'home_href' => $routeParser->urlFor('home'),
-            'store_href' => $routeParser->urlFor('store'),
-            'friends_href' => $routeParser->urlFor('friends'),
-            'wallet_href' => $routeParser->urlFor('getWallet'),
-            'myGames_href' => $routeParser->urlFor('myGames'),
         ]);
     }
 
@@ -126,15 +106,6 @@ final class FriendsController
             // Hrefs de la base
             'is_user_logged' => isset($_SESSION['id']),
             'profilePic' => (!isset($_SESSION['profilePic']) ? "" : $routeParser->urlFor('home') . $_SESSION['profilePic']),
-            'log_in_href' => $routeParser->urlFor('login'),
-            'log_out_href' => $routeParser->urlFor('logOut'),
-            'sign_up_href' => $routeParser->urlFor('register'),
-            'profile_href' => $routeParser->urlFor('profile'),
-            'home_href' => $routeParser->urlFor('home'),
-            'store_href' => $routeParser->urlFor('store'),
-            'friends_href' => $routeParser->urlFor('friends'),
-            'wallet_href' => $routeParser->urlFor('getWallet'),
-            'myGames_href' => $routeParser->urlFor('myGames'),
         ]);
     }
 

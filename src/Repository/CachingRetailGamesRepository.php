@@ -4,7 +4,8 @@
 namespace SallePW\SlimApp\Repository;
 
 
-use SallePW\SlimApp\Controller\Cache;
+
+use SallePW\SlimApp\CacheManipulation\Cache;
 use SallePW\SlimApp\Model\RetailGamesRepository;
 use SallePW\SlimApp\Model\Game;
 

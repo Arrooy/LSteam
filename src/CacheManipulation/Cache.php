@@ -1,7 +1,7 @@
 <?php
 
 
-namespace SallePW\SlimApp\Controller;
+namespace SallePW\SlimApp\CacheManipulation;
 
 use DateInterval;
 use DateTime;
