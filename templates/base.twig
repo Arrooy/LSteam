@@ -13,10 +13,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
     <link rel="icon" href="{{ full_url_for('home') }}../assets/img/logo.svg">
-
+    {% block styles %}
+    {% endblock %}
 </head>
 <body>
 <header>
+    {% block header %}
+    {% endblock %}
     <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <a class="navbar-item" href="{{ full_url_for('home') }}">
@@ -94,6 +97,8 @@
     </section>
 </main>
 <footer class="footer">
+    {% block footer %}
+    {% endblock %}
     <div class="content has-text-centered">
         <p>
             <strong>LSteam</strong> by Adrià Arroyo, Miquel Saula & Guillem Serra. The website code is hosted <a href="https://atlassian.salle.url.edu:7943/projects/PWI2021/repos/pw2_grupo_22/browse">here</a>.

@@ -1,8 +1,8 @@
 {% extends 'base.twig' %}
 
 {% block title %}Friends{% endblock %}
-{% block content %}
-
+{% block styles %}
+    
     <style>
         .image-rounded {
             border-radius: 8px;
@@ -14,6 +14,9 @@
             background: gray;
         }
     </style>
+    {% endblock %}
+
+{% block content %}
 
     <section class="content">
         <div class="mb-3 is-flex is-flex-direction-row is-flex-wrap-nowrap is-justify-content-space-between is-align-items-center">
