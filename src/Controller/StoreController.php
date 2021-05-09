@@ -33,9 +33,6 @@ class StoreController
         // Si user ha fet login
         if (isset($_SESSION['id'])) {
 
-            //TODO: PENSAMENT A PENSAR -> SI TREBALLEM AMB GAMEID COM A IDENTIFICADOR UNIC,
-            //SI LA STORE PRESENTA DOS DEALS DEL MATEIX GAME, QUE PASA?
-
             $ownedGames = $this->gameRepository->getOwnedGames($_SESSION['id']);
             $wishedGame_ids = $this->gameRepository->getWishedGamesIds($_SESSION['id']);
 

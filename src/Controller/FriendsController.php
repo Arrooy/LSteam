@@ -113,7 +113,6 @@ final class FriendsController
     {
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
 
-        //TODO: en cas de que hi hagi error cal mostrar algo
         $this->friendsRepository->updateRequest((int)$request->getAttribute('requestId'), $_SESSION['id'], MySQLFriendsRepository::REQUEST_ACCEPTED);
         return $response
             ->withHeader('Location', $routeParser->urlFor("friendRequests"))

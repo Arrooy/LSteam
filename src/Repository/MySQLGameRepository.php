@@ -12,8 +12,6 @@ use SallePW\SlimApp\Model\GameRepository;
 final class MySQLGameRepository implements GameRepository
 {
 
-    // TODO: Fer be les comprovacions de la DB. Si la query falla que pasa?
-
     public const DATE_FORMAT = 'Y-m-d H:i:s';
 
 
@@ -27,9 +25,6 @@ final class MySQLGameRepository implements GameRepository
     public function addBoughtGame(Game $game, int $userId): bool
     {
         try {
-            if (!$this->checkGame($game->getGameId(), $game->getPrice())) {
-                error_log(print_r("what", true));
-            }
 
             $gameId = $game->getGameId();
             $title = $game->getTitle();
@@ -41,10 +36,8 @@ final class MySQLGameRepository implements GameRepository
             $cheapestPrice = $game->getCheapestPriceEver();
             $isWished = $game->isWished() ? "1" : "0";
 
-            error_log("WISHED IS ");
             error_log(print_r($game, true));
             if ($this->checkGame($game->getGameId(), $game->getPrice())) {
-                error_log(print_r("is innn", true));
 
                 $query = <<<'QUERY'
                 INSERT INTO Game(gameId, titol, price, thumbnail, metacriticStore, releaseDate, cheapestPrice, wished)
@@ -64,12 +57,9 @@ final class MySQLGameRepository implements GameRepository
                 $statement->bindParam('isWished', $isWished, PDO::PARAM_STR);
 
                 $statement->execute();
-                error_log(print_r("8", true));
 
             }
 
-            // TODO: Check que execute no peta
-            error_log(print_r("10", true));
             $query = <<<'QUERY'
             INSERT INTO ownedGames(gameId, userId)
             SELECT id, :userId as userId
@@ -78,13 +68,11 @@ final class MySQLGameRepository implements GameRepository
             QUERY;
 
             $statement = $this->database->connection()->prepare($query);
-            error_log(print_r("12", true));
             $statement->bindParam('gameId', $gameId, PDO::PARAM_STR);
             $statement->bindParam('price', $price, PDO::PARAM_STR);
             $statement->bindParam('userId', $userId, PDO::PARAM_STR);
 
             $statement->execute();
-            error_log(print_r("14", true));
             return true;
         } catch (Exception $e) {
             error_log(print_r($e->getMessage(), true));
@@ -134,7 +122,6 @@ final class MySQLGameRepository implements GameRepository
         } catch (Exception $e) {
             error_log("EXception!");
             error_log(print_r($e->getMessage(), true));
-
             return [];
         }
     }
@@ -227,7 +214,6 @@ final class MySQLGameRepository implements GameRepository
 
         $statement->execute();
         $res = $statement->fetchAll();
-//        error_log(print_r($res,true));
 
         $game_ids = [];
         foreach ($res as $gid) {

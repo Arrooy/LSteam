@@ -53,7 +53,7 @@ class Game implements JsonSerializable
         //return $reflection->getProperties();
         //return get_class_vars ( __CLASS__ );
 
-        //TODO: POC ESCALABLE.
+        //Nota: POC ESCALABLE.
         return [
             'title' => $this->title,
             'gameid' => $this->gameid,

@@ -44,7 +44,7 @@ class HTTPCheapSharkRepository implements RetailGamesRepository
 
         $deal_id = $game['deals'][0]['dealID'];
 
-        //TODO:Mirar perque  no va be la quiery.
+        //No sabem perquè, pero no funciona si es passen parametres amb aquest endpoint...
         $res = $this->client->request('GET', 'https://www.cheapshark.com/api/1.0/deals' . '?id=' . $deal_id,
             [
 //                'query' => [

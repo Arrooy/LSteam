@@ -239,7 +239,7 @@ final class MySQLUserRepository implements UserRepository
         $statement->execute();
         $res = $statement->fetch();
 
-        return $res != NULL; // TODO: verificar que funciona
+        return $res != NULL;
     }
 
     public function saveUser(User $user): void

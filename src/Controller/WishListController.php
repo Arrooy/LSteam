@@ -93,10 +93,7 @@ class WishListController
     public function addWish(Request $request, Response $response): Response
     {
         $gameId = basename($request->getUri());
-        error_log("ADDING GAME " . print_r($gameId, true));
 
-        // TODO: verificar que sigui el codi adecuat.
-        // TODO: Posar els codis adecuats a la resta.
         if ($this->gameIsAlreadyBought($gameId)) {
             $response->withStatus(403);
         }
@@ -122,10 +119,7 @@ class WishListController
     public function deleteWish(Request $request, Response $response): Response
     {
         $gameId = basename($request->getUri());
-        error_log("DELETING GAME " . print_r($gameId, true));
 
-        // TODO: verificar que sigui el codi adecuat.
-        // TODO: Posar els codis adecuats a la resta.
         if ($this->gameIsAlreadyBought($gameId)) {
             $response->withStatus(403);
         }
