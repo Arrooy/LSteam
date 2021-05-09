@@ -145,9 +145,4 @@ final class ProfileController
             'change_password_href' => $routeParser->urlFor('changePassword'),
         ]);
     }
-
-    private function print(string $msg)
-    {
-        error_log(print_r($msg, TRUE));
-    }
 }

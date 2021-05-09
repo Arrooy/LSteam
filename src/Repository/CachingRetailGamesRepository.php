@@ -4,10 +4,9 @@
 namespace SallePW\SlimApp\Repository;
 
 
-
 use SallePW\SlimApp\CacheManipulation\Cache;
-use SallePW\SlimApp\Model\RetailGamesRepository;
 use SallePW\SlimApp\Model\Game;
+use SallePW\SlimApp\Model\RetailGamesRepository;
 
 class CachingRetailGamesRepository implements RetailGamesRepository
 {

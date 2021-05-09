@@ -3,9 +3,9 @@
 namespace SallePW\SlimApp\Controller;
 
 use Psr\Http\Message\ResponseInterface as Response;
-use SallePW\SlimApp\Model\RetailGamesRepository;
 use SallePW\SlimApp\Model\GameRepository;
 use SallePW\SlimApp\Model\GifRepository;
+use SallePW\SlimApp\Model\RetailGamesRepository;
 use Slim\Psr7\Request;
 use Slim\Routing\RouteContext;
 use Slim\Views\Twig;

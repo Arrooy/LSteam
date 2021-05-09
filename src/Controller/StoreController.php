@@ -4,8 +4,8 @@
 namespace SallePW\SlimApp\Controller;
 
 use Psr\Http\Message\ResponseInterface as Response;
-use SallePW\SlimApp\Model\RetailGamesRepository;
 use SallePW\SlimApp\Model\GameRepository;
+use SallePW\SlimApp\Model\RetailGamesRepository;
 use SallePW\SlimApp\Model\UserRepository;
 use Slim\Flash\Messages;
 use Slim\Psr7\Request;
@@ -73,24 +73,12 @@ class StoreController
 
                 // Hrefs de la base
                 'profilePic' => (!isset($_SESSION['profilePic']) ? "" : $routeParser->urlFor('home') . $_SESSION['profilePic']),
-                'log_in_href' => $routeParser->urlFor('login'),
-                'log_out_href' => $routeParser->urlFor('logOut'),
-                'sign_up_href' => $routeParser->urlFor('register'),
-                'profile_href' => $routeParser->urlFor('profile'),
-                'home_href' => $routeParser->urlFor('home'),
-                'store_href' => $routeParser->urlFor('store'),
-                'friends_href' => $routeParser->urlFor('friends'),
-                'wallet_href' => $routeParser->urlFor('getWallet'),
-                'myGames_href' => $routeParser->urlFor('myGames'),
-                'wishlist_href' => $routeParser->urlFor('wishlist'),
             ]
         );
     }
 
     public function buy(Request $request, Response $response): Response
     {
-        $routeParser = RouteContext::fromRequest($request)->getRouteParser();
-
         if (isset($_SESSION['id'])) {
 
             $gameId = basename($request->getUri());

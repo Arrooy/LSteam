@@ -6,10 +6,8 @@ namespace SallePW\SlimApp\Repository;
 
 use DateTime;
 use GuzzleHttp\Client;
-use SallePW\SlimApp\Model\RetailGamesRepository;
-use SallePW\SlimApp\Model\Deal;
-use SallePW\SlimApp\Model\DetailedGame;
 use SallePW\SlimApp\Model\Game;
+use SallePW\SlimApp\Model\RetailGamesRepository;
 
 class HTTPCheapSharkRepository implements RetailGamesRepository
 {
