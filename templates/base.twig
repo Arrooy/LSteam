@@ -1,25 +1,27 @@
 <!doctype html>
 <html lang="en">
 <head>
+    {% block head %}
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>LSteam - {% block title %}{% endblock %}</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
-    {% block head %}
     {% endblock %}
+    {% block styles %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
+    
     <link rel="stylesheet" href="{{ full_url_for('home') }}../assets/css/styles.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
     <link rel="icon" href="{{ full_url_for('home') }}../assets/img/logo.svg">
-    {% block styles %}
     {% endblock %}
 </head>
 <body>
+{% block header %}
 <header>
-    {% block header %}
-    {% endblock %}
+    
+    
     <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <a class="navbar-item" href="{{ full_url_for('home') }}">
@@ -87,6 +89,7 @@
         </div>
     </nav>
 </header>
+{% endblock %}
 <main>
     <section class="hero is-fullheight-with-navbar">
         <div class="hero-body">
@@ -96,9 +99,8 @@
         </div>
     </section>
 </main>
+{% block footer %}
 <footer class="footer">
-    {% block footer %}
-    {% endblock %}
     <div class="content has-text-centered">
         <p>
             <strong>LSteam</strong> by Adrià Arroyo, Miquel Saula & Guillem Serra. The website code is hosted <a href="https://atlassian.salle.url.edu:7943/projects/PWI2021/repos/pw2_grupo_22/browse">here</a>.
@@ -108,7 +110,9 @@
         </p>
     </div>
 </footer>
+{% endblock %}
 </body>
+{% block script %}
 <script>
     {#    Script per a tancar les alertes de l'usauri#}
     document.addEventListener('DOMContentLoaded', () => {
@@ -122,4 +126,5 @@
     });
 </script>
 <script src="{{ full_url_for('home') }}../assets/scripts/code.js"></script>
+{% endblock %}
 </html>
